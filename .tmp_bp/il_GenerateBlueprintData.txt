@@ -1,0 +1,1914 @@
+﻿METHOD System.Void BlueprintUtils::GenerateBlueprintData(BlueprintData,PlanetData,PlanetAuxData,System.Int32[],System.Int32,System.Single,System.UInt32[],System.Boolean)
+  0000  ldarg.0  
+  0001  callvirt  System.Void BlueprintData::ResetContentAsEmpty()
+  0006  ldarg.1  
+  0007  brtrue.s  IL_000a: ldarg.1
+  0009  ret  
+  000A  ldarg.1  
+  000B  ldfld  PlanetFactory PlanetData::factory
+  0010  stloc.0  
+  0011  ldloc.0  
+  0012  brfalse.s  IL_001c: ret
+  0014  ldarg.1  
+  0015  ldfld  System.Boolean PlanetData::factoryLoaded
+  001A  brtrue.s  IL_001d: ldarg.s hasReform
+  001C  ret  
+  001D  ldarg.s  hasReform
+  001F  brtrue.s  IL_002a: ldloc.0
+  0021  ldarg.s  _objCount
+  0023  ldc.i4.0  
+  0024  ble.s  IL_0029: ret
+  0026  ldarg.3  
+  0027  brtrue.s  IL_002a: ldloc.0
+  0029  ret  
+  002A  ldloc.0  
+  002B  ldfld  EntityData[] PlanetFactory::entityPool
+  0030  stloc.1  
+  0031  ldloc.0  
+  0032  ldfld  PrebuildData[] PlanetFactory::prebuildPool
+  0037  stloc.2  
+  0038  ldarg.1  
+  0039  ldfld  PlanetFactory PlanetData::factory
+  003E  ldfld  FactorySystem PlanetFactory::factorySystem
+  0043  stloc.3  
+  0044  ldc.i4  200
+  0049  stloc.s  V_4
+  004B  ldarg.1  
+  004C  ldfld  PlanetAuxData PlanetData::aux
+  0051  brfalse.s  IL_0072: ldarg.1
+  0053  ldarg.1  
+  0054  ldfld  PlanetAuxData PlanetData::aux
+  0059  callvirt  PlanetGrid PlanetAuxData::get_activeGrid()
+  005E  brfalse.s  IL_0072: ldarg.1
+  0060  ldarg.1  
+  0061  ldfld  PlanetAuxData PlanetData::aux
+  0066  callvirt  PlanetGrid PlanetAuxData::get_activeGrid()
+  006B  ldfld  System.Int32 PlanetGrid::segment
+  0070  stloc.s  V_4
+  0072  ldarg.1  
+  0073  brtrue.s  IL_0078: ldarg.1
+  0075  ldnull  
+  0076  br.s  IL_008a: stloc.s V_5
+  0078  ldarg.1  
+  0079  ldfld  PlanetFactory PlanetData::factory
+  007E  dup  
+  007F  brtrue.s  IL_0085: ldfld PlatformSystem PlanetFactory::platformSystem
+  0081  pop  
+  0082  ldnull  
+  0083  br.s  IL_008a: stloc.s V_5
+  0085  ldfld  PlatformSystem PlanetFactory::platformSystem
+  008A  stloc.s  V_5
+  008C  ldloc.s  V_5
+  008E  brtrue.s  IL_0093: ldloc.s V_5
+  0090  ldnull  
+  0091  br.s  IL_009a: stloc.s V_6
+  0093  ldloc.s  V_5
+  0095  ldfld  System.Byte[] PlatformSystem::reformData
+  009A  stloc.s  V_6
+  009C  ldc.i4.0  
+  009D  stloc.s  V_7
+  009F  ldarg.1  
+  00A0  ldarg.2  
+  00A1  ldarg.3  
+  00A2  ldarg.s  _objCount
+  00A4  ldarg.s  _divideLongitude
+  00A6  ldarg.s  _reformIds
+  00A8  call  BPGratBox BlueprintUtils::GetBoundingRange(PlanetData,PlanetAuxData,System.Int32[],System.Int32,System.Single,System.UInt32[])
+  00AD  stloc.s  V_8
+  00AF  ldloc.s  V_8
+  00B1  ldfld  System.Single BPGratBox::y
+  00B6  ldloc.s  V_8
+  00B8  ldfld  System.Single BPGratBox::w
+  00BD  ldloc.s  V_4
+  00BF  call  System.Int32 BlueprintUtils::GetAreaCount(System.Single,System.Single,System.Int32)
+  00C4  stloc.s  V_9
+  00C6  ldloc.s  V_9
+  00C8  newarr  BPGratBox
+  00CD  stloc.s  V_10
+  00CF  ldloc.s  V_9
+  00D1  newarr  BPGratBox
+  00D6  stloc.s  V_11
+  00D8  ldloc.s  V_8
+  00DA  ldloc.s  V_10
+  00DC  ldloc.s  V_11
+  00DE  ldloc.s  V_4
+  00E0  call  System.Int32 BlueprintUtils::SplitGratBoxInTropicAreas(BPGratBox,BPGratBox[],BPGratBox[],System.Int32)
+  00E5  pop  
+  00E6  ldsfld  System.Collections.Generic.Dictionary`2<System.Int32,BlueprintBuilding> BlueprintUtils::_tmp_building_dict
+  00EB  brtrue.s  IL_00f7: ldsfld System.Collections.Generic.Dictionary`2<System.Int32,BlueprintBuilding> BlueprintUtils::_tmp_building_dict
+  00ED  newobj  System.Void System.Collections.Generic.Dictionary`2<System.Int32,BlueprintBuilding>::.ctor()
+  00F2  stsfld  System.Collections.Generic.Dictionary`2<System.Int32,BlueprintBuilding> BlueprintUtils::_tmp_building_dict
+  00F7  ldsfld  System.Collections.Generic.Dictionary`2<System.Int32,BlueprintBuilding> BlueprintUtils::_tmp_building_dict
+  00FC  callvirt  System.Void System.Collections.Generic.Dictionary`2<System.Int32,BlueprintBuilding>::Clear()
+  0101  ldarg.0  
+  0102  ldloc.s  V_9
+  0104  newarr  BlueprintArea
+  0109  stfld  BlueprintArea[] BlueprintData::areas
+  010E  ldarg.0  
+  010F  ldarg.s  _objCount
+  0111  newarr  BlueprintBuilding
+  0116  stfld  BlueprintBuilding[] BlueprintData::buildings
+  011B  ldc.i4.0  
+  011C  stloc.s  V_21
+  011E  br.s  IL_016a: ldloc.s V_21
+  0120  ldarg.0  
+  0121  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  0126  ldloc.s  V_21
+  0128  newobj  System.Void BlueprintBuilding::.ctor()
+  012D  stelem.ref  
+  012E  ldarg.0  
+  012F  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  0134  ldloc.s  V_21
+  0136  ldelem.ref  
+  0137  ldloc.s  V_21
+  0139  stfld  System.Int32 BlueprintBuilding::index
+  013E  ldarg.0  
+  013F  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  0144  ldloc.s  V_21
+  0146  ldelem.ref  
+  0147  ldc.i4.m1  
+  0148  stfld  System.Int32 BlueprintBuilding::areaIndex
+  014D  ldsfld  System.Collections.Generic.Dictionary`2<System.Int32,BlueprintBuilding> BlueprintUtils::_tmp_building_dict
+  0152  ldarg.3  
+  0153  ldloc.s  V_21
+  0155  ldelem.i4  
+  0156  ldarg.0  
+  0157  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  015C  ldloc.s  V_21
+  015E  ldelem.ref  
+  015F  callvirt  System.Void System.Collections.Generic.Dictionary`2<System.Int32,BlueprintBuilding>::set_Item(!0,!1)
+  0164  ldloc.s  V_21
+  0166  ldc.i4.1  
+  0167  add  
+  0168  stloc.s  V_21
+  016A  ldloc.s  V_21
+  016C  ldarg.s  _objCount
+  016E  blt.s  IL_0120: ldarg.0
+  0170  ldc.i4.0  
+  0171  stloc.s  V_12
+  0173  ldc.i4.0  
+  0174  stloc.s  V_13
+  0176  ldloc.s  V_4
+  0178  call  System.Single BlueprintUtils::GetLatitudeRadPerGrid(System.Int32)
+  017D  stloc.s  V_14
+  017F  ldc.i4.0  
+  0180  ldloc.s  V_4
+  0182  call  System.Int32 PlanetGrid::DetermineLongitudeSegmentCount(System.Int32,System.Int32)
+  0187  ldc.i4.5  
+  0188  mul  
+  0189  stloc.s  V_15
+  018B  ldloc.s  V_15
+  018D  ldc.i4.4  
+  018E  div  
+  018F  stloc.s  V_16
+  0191  ldloca.s  V_17
+  0193  initobj  BuildingParameters
+  0199  ldc.i4.0  
+  019A  stloc.s  V_22
+  019C  br  IL_0e5d: ldloc.s V_22
+  01A1  ldloc.s  V_11
+  01A3  ldloc.s  V_22
+  01A5  ldelem.any  BPGratBox
+  01AA  stloc.s  V_23
+  01AC  ldloc.s  V_10
+  01AE  ldloc.s  V_22
+  01B0  ldelema  BPGratBox
+  01B5  ldfld  System.Single BPGratBox::x
+  01BA  ldloc.s  V_10
+  01BC  ldloc.s  V_22
+  01BE  ldelema  BPGratBox
+  01C3  ldfld  System.Single BPGratBox::y
+  01C8  call  UnityEngine.Vector3 BlueprintUtils::GetDir(System.Single,System.Single)
+  01CD  ldloc.s  V_4
+  01CF  call  System.Int32 BlueprintUtils::GetLongitudeSegmentCount(UnityEngine.Vector3,System.Int32)
+  01D4  stloc.s  V_24
+  01D6  ldloc.s  V_24
+  01D8  ldloc.s  V_4
+  01DA  call  System.Single BlueprintUtils::GetLongitudeRadPerGrid(System.Int32,System.Int32)
+  01DF  stloc.s  V_25
+  01E1  ldloc.s  V_24
+  01E3  ldc.i4.5  
+  01E4  mul  
+  01E5  stloc.s  V_26
+  01E7  ldloc.s  V_26
+  01E9  ldc.i4.2  
+  01EA  div  
+  01EB  stloc.s  V_27
+  01ED  ldloc.s  V_24
+  01EF  ldloc.s  V_13
+  01F1  ble.s  IL_01fb: ldc.i4.0
+  01F3  ldloc.s  V_24
+  01F5  stloc.s  V_13
+  01F7  ldloc.s  V_22
+  01F9  stloc.s  V_12
+  01FB  ldc.i4.0  
+  01FC  stloc.s  V_28
+  01FE  br  IL_0ca8: ldloc.s V_28
+  0203  ldarg.0  
+  0204  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  0209  ldloc.s  V_28
+  020B  ldelem.ref  
+  020C  ldfld  System.Int32 BlueprintBuilding::areaIndex
+  0211  ldc.i4.0  
+  0212  bge  IL_0ca2: ldloc.s V_28
+  0217  ldarg.3  
+  0218  ldloc.s  V_28
+  021A  ldelem.i4  
+  021B  stloc.s  V_29
+  021D  ldloc.s  V_29
+  021F  ldc.i4.0  
+  0220  clt  
+  0222  stloc.s  V_30
+  0224  ldloc.s  V_30
+  0226  brtrue.s  IL_0237: ldloc.2
+  0228  ldloc.1  
+  0229  ldloc.s  V_29
+  022B  ldelema  EntityData
+  0230  ldfld  UnityEngine.Vector3 EntityData::pos
+  0235  br.s  IL_0245: stloc.s V_31
+  0237  ldloc.2  
+  0238  ldloc.s  V_29
+  023A  neg  
+  023B  ldelema  PrebuildData
+  0240  ldfld  UnityEngine.Vector3 PrebuildData::pos
+  0245  stloc.s  V_31
+  0247  ldloca.s  V_31
+  0249  call  UnityEngine.Vector3 UnityEngine.Vector3::get_normalized()
+  024E  stloc.s  V_32
+  0250  ldloc.s  V_32
+  0252  call  System.Single BlueprintUtils::GetLatitudeRad(UnityEngine.Vector3)
+  0257  stloc.s  V_33
+  0259  ldloc.s  V_32
+  025B  call  System.Single BlueprintUtils::GetLongitudeRad(UnityEngine.Vector3)
+  0260  stloc.s  V_34
+  0262  call  UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+  0267  stloc.s  V_35
+  0269  call  UnityEngine.Quaternion UnityEngine.Quaternion::get_identity()
+  026E  stloc.s  V_36
+  0270  call  UnityEngine.Quaternion UnityEngine.Quaternion::get_identity()
+  0275  stloc.s  V_37
+  0277  ldc.r4  0
+  027C  stloc.s  V_38
+  027E  ldc.i4.0  
+  027F  stloc.s  V_39
+  0281  ldc.i4.0  
+  0282  stloc.s  V_40
+  0284  ldc.i4.0  
+  0285  stloc.s  V_41
+  0287  ldloc.s  V_30
+  0289  brfalse.s  IL_0300: ldloc.1
+  028B  ldloc.2  
+  028C  ldloc.s  V_29
+  028E  neg  
+  028F  ldelema  PrebuildData
+  0294  ldfld  UnityEngine.Vector3 PrebuildData::pos2
+  0299  stloc.s  V_35
+  029B  ldloc.2  
+  029C  ldloc.s  V_29
+  029E  neg  
+  029F  ldelema  PrebuildData
+  02A4  ldfld  UnityEngine.Quaternion PrebuildData::rot
+  02A9  stloc.s  V_36
+  02AB  ldloc.2  
+  02AC  ldloc.s  V_29
+  02AE  neg  
+  02AF  ldelema  PrebuildData
+  02B4  ldfld  UnityEngine.Quaternion PrebuildData::rot2
+  02B9  stloc.s  V_37
+  02BB  ldloc.2  
+  02BC  ldloc.s  V_29
+  02BE  neg  
+  02BF  ldelema  PrebuildData
+  02C4  ldfld  System.Int16 PrebuildData::protoId
+  02C9  stloc.s  V_39
+  02CB  ldloc.2  
+  02CC  ldloc.s  V_29
+  02CE  neg  
+  02CF  ldelema  PrebuildData
+  02D4  ldfld  System.Int16 PrebuildData::modelIndex
+  02D9  stloc.s  V_40
+  02DB  ldloc.2  
+  02DC  ldloc.s  V_29
+  02DE  neg  
+  02DF  ldelema  PrebuildData
+  02E4  ldfld  System.Int32 PrebuildData::colliderId
+  02E9  stloc.s  V_41
+  02EB  ldloc.2  
+  02EC  ldloc.s  V_29
+  02EE  neg  
+  02EF  ldelema  PrebuildData
+  02F4  ldfld  System.Single PrebuildData::tilt
+  02F9  stloc.s  V_38
+  02FB  br  IL_0395: ldloca.s V_35
+  0300  ldloc.1  
+  0301  ldloc.s  V_29
+  0303  ldelema  EntityData
+  0308  ldfld  UnityEngine.Vector3 EntityData::pos
+  030D  stloc.s  V_35
+  030F  ldloc.1  
+  0310  ldloc.s  V_29
+  0312  ldelema  EntityData
+  0317  ldfld  UnityEngine.Quaternion EntityData::rot
+  031C  stloc.s  V_36
+  031E  ldloc.1  
+  031F  ldloc.s  V_29
+  0321  ldelema  EntityData
+  0326  ldfld  UnityEngine.Quaternion EntityData::rot
+  032B  stloc.s  V_37
+  032D  ldloc.1  
+  032E  ldloc.s  V_29
+  0330  ldelema  EntityData
+  0335  ldfld  System.Int16 EntityData::protoId
+  033A  stloc.s  V_39
+  033C  ldloc.1  
+  033D  ldloc.s  V_29
+  033F  ldelema  EntityData
+  0344  ldfld  System.Int16 EntityData::modelIndex
+  0349  stloc.s  V_40
+  034B  ldloc.1  
+  034C  ldloc.s  V_29
+  034E  ldelema  EntityData
+  0353  ldfld  System.Int32 EntityData::inserterId
+  0358  stloc.s  V_52
+  035A  ldloc.s  V_52
+  035C  brfalse.s  IL_0386: ldloc.1
+  035E  ldloc.3  
+  035F  ldfld  InserterPose[] FactorySystem::inserterPosePool
+  0364  ldloc.s  V_52
+  0366  ldelema  InserterPose
+  036B  ldfld  UnityEngine.Vector3 InserterPose::pos2
+  0370  stloc.s  V_35
+  0372  ldloc.3  
+  0373  ldfld  InserterPose[] FactorySystem::inserterPosePool
+  0378  ldloc.s  V_52
+  037A  ldelema  InserterPose
+  037F  ldfld  UnityEngine.Quaternion InserterPose::rot2
+  0384  stloc.s  V_37
+  0386  ldloc.1  
+  0387  ldloc.s  V_29
+  0389  ldelema  EntityData
+  038E  ldfld  System.Single EntityData::tilt
+  0393  stloc.s  V_38
+  0395  ldloca.s  V_35
+  0397  call  UnityEngine.Vector3 UnityEngine.Vector3::get_normalized()
+  039C  stloc.s  V_42
+  039E  ldloc.s  V_42
+  03A0  call  System.Single BlueprintUtils::GetLatitudeRad(UnityEngine.Vector3)
+  03A5  stloc.s  V_43
+  03A7  ldloc.s  V_42
+  03A9  call  System.Single BlueprintUtils::GetLongitudeRad(UnityEngine.Vector3)
+  03AE  stloc.s  V_44
+  03B0  ldloca.s  V_31
+  03B2  call  System.Single UnityEngine.Vector3::get_magnitude()
+  03B7  ldarg.1  
+  03B8  callvirt  System.Single PlanetData::get_realRadius()
+  03BD  sub  
+  03BE  ldc.r4  0.2
+  03C3  sub  
+  03C4  ldc.r4  1.333333
+  03C9  div  
+  03CA  stloc.s  V_45
+  03CC  ldloca.s  V_35
+  03CE  call  System.Single UnityEngine.Vector3::get_magnitude()
+  03D3  ldarg.1  
+  03D4  callvirt  System.Single PlanetData::get_realRadius()
+  03D9  sub  
+  03DA  ldc.r4  0.2
+  03DF  sub  
+  03E0  ldc.r4  1.333333
+  03E5  div  
+  03E6  stloc.s  V_46
+  03E8  ldloc.s  V_32
+  03EA  ldc.r4  5E-07
+  03EF  call  System.Boolean BlueprintUtils::IsPolePoint(UnityEngine.Vector3,System.Single)
+  03F4  ldloc.s  V_42
+  03F6  ldc.r4  5E-07
+  03FB  call  System.Boolean BlueprintUtils::IsPolePoint(UnityEngine.Vector3,System.Single)
+  0400  stloc.s  V_47
+  0402  dup  
+  0403  brtrue.s  IL_0409: ldloc.s V_32
+  0405  ldloc.s  V_32
+  0407  br.s  IL_0423: stloc.s V_32
+  0409  ldloc.s  V_32
+  040B  ldfld  System.Single UnityEngine.Vector3::y
+  0410  ldc.r4  0
+  0415  bgt.s  IL_041e: call UnityEngine.Vector3 UnityEngine.Vector3::get_up()
+  0417  call  UnityEngine.Vector3 UnityEngine.Vector3::get_down()
+  041C  br.s  IL_0423: stloc.s V_32
+  041E  call  UnityEngine.Vector3 UnityEngine.Vector3::get_up()
+  0423  stloc.s  V_32
+  0425  ldloc.s  V_47
+  0427  brtrue.s  IL_042d: ldloc.s V_32
+  0429  ldloc.s  V_42
+  042B  br.s  IL_0447: stloc.s V_42
+  042D  ldloc.s  V_32
+  042F  ldfld  System.Single UnityEngine.Vector3::y
+  0434  ldc.r4  0
+  0439  bgt.s  IL_0442: call UnityEngine.Vector3 UnityEngine.Vector3::get_up()
+  043B  call  UnityEngine.Vector3 UnityEngine.Vector3::get_down()
+  0440  br.s  IL_0447: stloc.s V_42
+  0442  call  UnityEngine.Vector3 UnityEngine.Vector3::get_up()
+  0447  stloc.s  V_42
+  0449  ldarg.0  
+  044A  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  044F  ldloc.s  V_28
+  0451  ldelem.ref  
+  0452  ldloc.s  V_22
+  0454  stfld  System.Int32 BlueprintBuilding::areaIndex
+  0459  ldarg.0  
+  045A  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  045F  ldloc.s  V_28
+  0461  ldelem.ref  
+  0462  ldnull  
+  0463  stfld  BlueprintBuilding BlueprintBuilding::inputObj
+  0468  ldarg.0  
+  0469  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  046E  ldloc.s  V_28
+  0470  ldelem.ref  
+  0471  ldnull  
+  0472  stfld  BlueprintBuilding BlueprintBuilding::outputObj
+  0477  ldarg.0  
+  0478  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  047D  ldloc.s  V_28
+  047F  ldelem.ref  
+  0480  ldloc.s  V_34
+  0482  ldloc.s  V_10
+  0484  ldloc.s  V_22
+  0486  ldelema  BPGratBox
+  048B  ldfld  System.Single BPGratBox::x
+  0490  sub  
+  0491  ldloc.s  V_25
+  0493  div  
+  0494  stfld  System.Single BlueprintBuilding::localOffset_x
+  0499  ldarg.0  
+  049A  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  049F  ldloc.s  V_28
+  04A1  ldelem.ref  
+  04A2  ldloc.s  V_33
+  04A4  ldloc.s  V_10
+  04A6  ldloc.s  V_22
+  04A8  ldelema  BPGratBox
+  04AD  ldfld  System.Single BPGratBox::y
+  04B2  sub  
+  04B3  ldloc.s  V_14
+  04B5  div  
+  04B6  stfld  System.Single BlueprintBuilding::localOffset_y
+  04BB  ldarg.0  
+  04BC  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  04C1  ldloc.s  V_28
+  04C3  ldelem.ref  
+  04C4  ldloc.s  V_45
+  04C6  stfld  System.Single BlueprintBuilding::localOffset_z
+  04CB  ldarg.0  
+  04CC  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  04D1  ldloc.s  V_28
+  04D3  ldelem.ref  
+  04D4  ldloc.s  V_44
+  04D6  ldloc.s  V_10
+  04D8  ldloc.s  V_22
+  04DA  ldelema  BPGratBox
+  04DF  ldfld  System.Single BPGratBox::x
+  04E4  sub  
+  04E5  ldloc.s  V_25
+  04E7  div  
+  04E8  stfld  System.Single BlueprintBuilding::localOffset_x2
+  04ED  ldarg.0  
+  04EE  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  04F3  ldloc.s  V_28
+  04F5  ldelem.ref  
+  04F6  ldloc.s  V_43
+  04F8  ldloc.s  V_10
+  04FA  ldloc.s  V_22
+  04FC  ldelema  BPGratBox
+  0501  ldfld  System.Single BPGratBox::y
+  0506  sub  
+  0507  ldloc.s  V_14
+  0509  div  
+  050A  stfld  System.Single BlueprintBuilding::localOffset_y2
+  050F  ldarg.0  
+  0510  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  0515  ldloc.s  V_28
+  0517  ldelem.ref  
+  0518  ldloc.s  V_46
+  051A  stfld  System.Single BlueprintBuilding::localOffset_z2
+  051F  ldarg.0  
+  0520  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  0525  ldloc.s  V_28
+  0527  ldelem.ref  
+  0528  ldfld  System.Single BlueprintBuilding::localOffset_x
+  052D  ldc.r4  -0.5001
+  0532  bge.un.s  IL_054e: ldarg.0
+  0534  ldarg.0  
+  0535  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  053A  ldloc.s  V_28
+  053C  ldelem.ref  
+  053D  dup  
+  053E  ldfld  System.Single BlueprintBuilding::localOffset_x
+  0543  ldloc.s  V_24
+  0545  ldc.i4.5  
+  0546  mul  
+  0547  conv.r4  
+  0548  add  
+  0549  stfld  System.Single BlueprintBuilding::localOffset_x
+  054E  ldarg.0  
+  054F  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  0554  ldloc.s  V_28
+  0556  ldelem.ref  
+  0557  ldfld  System.Single BlueprintBuilding::localOffset_x2
+  055C  ldc.r4  -0.5001
+  0561  bge.un.s  IL_057d: ldarg.0
+  0563  ldarg.0  
+  0564  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  0569  ldloc.s  V_28
+  056B  ldelem.ref  
+  056C  dup  
+  056D  ldfld  System.Single BlueprintBuilding::localOffset_x2
+  0572  ldloc.s  V_24
+  0574  ldc.i4.5  
+  0575  mul  
+  0576  conv.r4  
+  0577  add  
+  0578  stfld  System.Single BlueprintBuilding::localOffset_x2
+  057D  ldarg.0  
+  057E  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  0583  ldloc.s  V_28
+  0585  ldelem.ref  
+  0586  ldfld  System.Single BlueprintBuilding::localOffset_x
+  058B  ldc.r4  -0.5001
+  0590  ldloc.s  V_24
+  0592  ldc.i4.5  
+  0593  mul  
+  0594  conv.r4  
+  0595  add  
+  0596  ble.un.s  IL_05b2: ldarg.0
+  0598  ldarg.0  
+  0599  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  059E  ldloc.s  V_28
+  05A0  ldelem.ref  
+  05A1  dup  
+  05A2  ldfld  System.Single BlueprintBuilding::localOffset_x
+  05A7  ldloc.s  V_24
+  05A9  ldc.i4.5  
+  05AA  mul  
+  05AB  conv.r4  
+  05AC  sub  
+  05AD  stfld  System.Single BlueprintBuilding::localOffset_x
+  05B2  ldarg.0  
+  05B3  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  05B8  ldloc.s  V_28
+  05BA  ldelem.ref  
+  05BB  ldfld  System.Single BlueprintBuilding::localOffset_x2
+  05C0  ldc.r4  -0.5001
+  05C5  ldloc.s  V_24
+  05C7  ldc.i4.5  
+  05C8  mul  
+  05C9  conv.r4  
+  05CA  add  
+  05CB  ble.un.s  IL_05e7: brfalse.s IL_05fc
+  05CD  ldarg.0  
+  05CE  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  05D3  ldloc.s  V_28
+  05D5  ldelem.ref  
+  05D6  dup  
+  05D7  ldfld  System.Single BlueprintBuilding::localOffset_x2
+  05DC  ldloc.s  V_24
+  05DE  ldc.i4.5  
+  05DF  mul  
+  05E0  conv.r4  
+  05E1  sub  
+  05E2  stfld  System.Single BlueprintBuilding::localOffset_x2
+  05E7  brfalse.s  IL_05fc: ldloc.s V_47
+  05E9  ldarg.0  
+  05EA  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  05EF  ldloc.s  V_28
+  05F1  ldelem.ref  
+  05F2  ldc.r4  0
+  05F7  stfld  System.Single BlueprintBuilding::localOffset_x
+  05FC  ldloc.s  V_47
+  05FE  brfalse.s  IL_0613: ldloc.s V_32
+  0600  ldarg.0  
+  0601  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  0606  ldloc.s  V_28
+  0608  ldelem.ref  
+  0609  ldc.r4  0
+  060E  stfld  System.Single BlueprintBuilding::localOffset_x2
+  0613  ldloc.s  V_32
+  0615  ldc.r4  0
+  061A  call  UnityEngine.Quaternion Maths::SphericalRotation(UnityEngine.Vector3,System.Single)
+  061F  stloc.s  V_48
+  0621  ldloc.s  V_42
+  0623  ldc.r4  0
+  0628  call  UnityEngine.Quaternion Maths::SphericalRotation(UnityEngine.Vector3,System.Single)
+  062D  stloc.s  V_49
+  062F  ldloca.s  V_48
+  0631  ldloc.s  V_48
+  0633  ldfld  System.Single UnityEngine.Quaternion::w
+  0638  neg  
+  0639  stfld  System.Single UnityEngine.Quaternion::w
+  063E  ldloca.s  V_49
+  0640  ldloc.s  V_49
+  0642  ldfld  System.Single UnityEngine.Quaternion::w
+  0647  neg  
+  0648  stfld  System.Single UnityEngine.Quaternion::w
+  064D  ldarg.0  
+  064E  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  0653  ldloc.s  V_28
+  0655  ldelem.ref  
+  0656  ldloc.s  V_48
+  0658  ldloc.s  V_36
+  065A  call  UnityEngine.Quaternion UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Quaternion)
+  065F  stloc.s  V_53
+  0661  ldloca.s  V_53
+  0663  call  UnityEngine.Vector3 UnityEngine.Quaternion::get_eulerAngles()
+  0668  ldfld  System.Single UnityEngine.Vector3::y
+  066D  stfld  System.Single BlueprintBuilding::yaw
+  0672  ldarg.0  
+  0673  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  0678  ldloc.s  V_28
+  067A  ldelem.ref  
+  067B  ldloc.s  V_49
+  067D  ldloc.s  V_37
+  067F  call  UnityEngine.Quaternion UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Quaternion)
+  0684  stloc.s  V_53
+  0686  ldloca.s  V_53
+  0688  call  UnityEngine.Vector3 UnityEngine.Quaternion::get_eulerAngles()
+  068D  ldfld  System.Single UnityEngine.Vector3::y
+  0692  stfld  System.Single BlueprintBuilding::yaw2
+  0697  ldarg.0  
+  0698  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  069D  ldloc.s  V_28
+  069F  ldelem.ref  
+  06A0  ldloc.s  V_38
+  06A2  stfld  System.Single BlueprintBuilding::tilt
+  06A7  ldarg.0  
+  06A8  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  06AD  ldloc.s  V_28
+  06AF  ldelem.ref  
+  06B0  ldloc.s  V_39
+  06B2  stfld  System.Int16 BlueprintBuilding::itemId
+  06B7  ldarg.0  
+  06B8  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  06BD  ldloc.s  V_28
+  06BF  ldelem.ref  
+  06C0  ldloc.s  V_40
+  06C2  stfld  System.Int16 BlueprintBuilding::modelIndex
+  06C7  call  ModelProtoSet LDB::get_models()
+  06CC  ldloc.s  V_40
+  06CE  callvirt  T ProtoSet`1<ModelProto>::Select(System.Int32)
+  06D3  stloc.s  V_50
+  06D5  ldloc.s  V_50
+  06D7  ldfld  PrefabDesc ModelProto::prefabDesc
+  06DC  ldfld  System.Boolean PrefabDesc::isInserter
+  06E1  brfalse  IL_0959: ldloc.s V_50
+  06E6  ldarg.0  
+  06E7  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  06EC  ldloc.s  V_28
+  06EE  ldelem.ref  
+  06EF  ldc.i4.1  
+  06F0  stfld  System.Int32 BlueprintBuilding::inputToSlot
+  06F5  ldarg.0  
+  06F6  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  06FB  ldloc.s  V_28
+  06FD  ldelem.ref  
+  06FE  ldc.i4.0  
+  06FF  stfld  System.Int32 BlueprintBuilding::outputFromSlot
+  0704  ldarg.0  
+  0705  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  070A  ldloc.s  V_28
+  070C  ldelem.ref  
+  070D  ldloc.s  V_48
+  070F  ldloc.s  V_36
+  0711  call  UnityEngine.Quaternion UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Quaternion)
+  0716  stloc.s  V_53
+  0718  ldloca.s  V_53
+  071A  call  UnityEngine.Vector3 UnityEngine.Quaternion::get_eulerAngles()
+  071F  ldfld  System.Single UnityEngine.Vector3::x
+  0724  stfld  System.Single BlueprintBuilding::pitch
+  0729  ldarg.0  
+  072A  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  072F  ldloc.s  V_28
+  0731  ldelem.ref  
+  0732  ldloc.s  V_49
+  0734  ldloc.s  V_37
+  0736  call  UnityEngine.Quaternion UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Quaternion)
+  073B  stloc.s  V_53
+  073D  ldloca.s  V_53
+  073F  call  UnityEngine.Vector3 UnityEngine.Quaternion::get_eulerAngles()
+  0744  ldfld  System.Single UnityEngine.Vector3::x
+  0749  stfld  System.Single BlueprintBuilding::pitch2
+  074E  ldarg.0  
+  074F  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  0754  ldloc.s  V_28
+  0756  ldelem.ref  
+  0757  ldloc.s  V_48
+  0759  ldloc.s  V_36
+  075B  call  UnityEngine.Quaternion UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Quaternion)
+  0760  stloc.s  V_53
+  0762  ldloca.s  V_53
+  0764  call  UnityEngine.Vector3 UnityEngine.Quaternion::get_eulerAngles()
+  0769  ldfld  System.Single UnityEngine.Vector3::z
+  076E  stfld  System.Single BlueprintBuilding::tilt
+  0773  ldarg.0  
+  0774  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  0779  ldloc.s  V_28
+  077B  ldelem.ref  
+  077C  ldloc.s  V_49
+  077E  ldloc.s  V_37
+  0780  call  UnityEngine.Quaternion UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Quaternion)
+  0785  stloc.s  V_53
+  0787  ldloca.s  V_53
+  0789  call  UnityEngine.Vector3 UnityEngine.Quaternion::get_eulerAngles()
+  078E  ldfld  System.Single UnityEngine.Vector3::z
+  0793  stfld  System.Single BlueprintBuilding::tilt2
+  0798  ldloc.0  
+  0799  ldloc.s  V_29
+  079B  ldc.i4.1  
+  079C  ldloca.s  V_54
+  079E  ldloca.s  V_55
+  07A0  ldloca.s  V_56
+  07A2  callvirt  System.Void PlanetFactory::ReadObjectConn(System.Int32,System.Int32,System.Boolean&,System.Int32&,System.Int32&)
+  07A7  ldloc.s  V_55
+  07A9  brfalse  IL_0876: ldloc.0
+  07AE  ldsfld  System.Collections.Generic.Dictionary`2<System.Int32,BlueprintBuilding> BlueprintUtils::_tmp_building_dict
+  07B3  ldloc.s  V_55
+  07B5  callvirt  System.Boolean System.Collections.Generic.Dictionary`2<System.Int32,BlueprintBuilding>::ContainsKey(!0)
+  07BA  brfalse  IL_0876: ldloc.0
+  07BF  ldarg.0  
+  07C0  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  07C5  ldloc.s  V_28
+  07C7  ldelem.ref  
+  07C8  ldsfld  System.Collections.Generic.Dictionary`2<System.Int32,BlueprintBuilding> BlueprintUtils::_tmp_building_dict
+  07CD  ldloc.s  V_55
+  07CF  callvirt  !1 System.Collections.Generic.Dictionary`2<System.Int32,BlueprintBuilding>::get_Item(!0)
+  07D4  stfld  BlueprintBuilding BlueprintBuilding::inputObj
+  07D9  ldloc.s  V_55
+  07DB  ldc.i4.0  
+  07DC  bgt.s  IL_07f8: call ModelProtoSet LDB::get_models()
+  07DE  call  ModelProtoSet LDB::get_models()
+  07E3  ldloc.0  
+  07E4  ldloc.s  V_55
+  07E6  neg  
+  07E7  callvirt  PrebuildData PlanetFactory::GetPrebuildData(System.Int32)
+  07EC  ldfld  System.Int16 PrebuildData::modelIndex
+  07F1  callvirt  T ProtoSet`1<ModelProto>::Select(System.Int32)
+  07F6  br.s  IL_080f: stloc.s V_57
+  07F8  call  ModelProtoSet LDB::get_models()
+  07FD  ldloc.0  
+  07FE  ldloc.s  V_55
+  0800  callvirt  EntityData PlanetFactory::GetEntityData(System.Int32)
+  0805  ldfld  System.Int16 EntityData::modelIndex
+  080A  callvirt  T ProtoSet`1<ModelProto>::Select(System.Int32)
+  080F  stloc.s  V_57
+  0811  ldarg.0  
+  0812  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  0817  ldloc.s  V_28
+  0819  ldelem.ref  
+  081A  ldloc.s  V_57
+  081C  ldfld  PrefabDesc ModelProto::prefabDesc
+  0821  ldfld  System.Boolean PrefabDesc::isBelt
+  0826  brtrue.s  IL_082c: ldc.i4.m1
+  0828  ldloc.s  V_56
+  082A  br.s  IL_082d: stfld System.Int32 BlueprintBuilding::inputFromSlot
+  082C  ldc.i4.m1  
+  082D  stfld  System.Int32 BlueprintBuilding::inputFromSlot
+  0832  ldarg.0  
+  0833  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  0838  ldloc.s  V_28
+  083A  ldelem.ref  
+  083B  ldloc.s  V_30
+  083D  brtrue.s  IL_0863: ldloc.2
+  083F  ldloc.0  
+  0840  ldfld  FactorySystem PlanetFactory::factorySystem
+  0845  ldfld  InserterComponent[] FactorySystem::inserterPool
+  084A  ldloc.1  
+  084B  ldloc.s  V_29
+  084D  ldelema  EntityData
+  0852  ldfld  System.Int32 EntityData::inserterId
+  0857  ldelema  InserterComponent
+  085C  ldfld  System.Int16 InserterComponent::pickOffset
+  0861  br.s  IL_0871: stfld System.Int32 BlueprintBuilding::inputOffset
+  0863  ldloc.2  
+  0864  ldloc.s  V_29
+  0866  neg  
+  0867  ldelema  PrebuildData
+  086C  ldfld  System.Int16 PrebuildData::pickOffset
+  0871  stfld  System.Int32 BlueprintBuilding::inputOffset
+  0876  ldloc.0  
+  0877  ldloc.s  V_29
+  0879  ldc.i4.0  
+  087A  ldloca.s  V_54
+  087C  ldloca.s  V_55
+  087E  ldloca.s  V_56
+  0880  callvirt  System.Void PlanetFactory::ReadObjectConn(System.Int32,System.Int32,System.Boolean&,System.Int32&,System.Int32&)
+  0885  ldloc.s  V_55
+  0887  brfalse  IL_0c09: ldc.i4.0
+  088C  ldsfld  System.Collections.Generic.Dictionary`2<System.Int32,BlueprintBuilding> BlueprintUtils::_tmp_building_dict
+  0891  ldloc.s  V_55
+  0893  callvirt  System.Boolean System.Collections.Generic.Dictionary`2<System.Int32,BlueprintBuilding>::ContainsKey(!0)
+  0898  brfalse  IL_0c09: ldc.i4.0
+  089D  ldarg.0  
+  089E  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  08A3  ldloc.s  V_28
+  08A5  ldelem.ref  
+  08A6  ldsfld  System.Collections.Generic.Dictionary`2<System.Int32,BlueprintBuilding> BlueprintUtils::_tmp_building_dict
+  08AB  ldloc.s  V_55
+  08AD  callvirt  !1 System.Collections.Generic.Dictionary`2<System.Int32,BlueprintBuilding>::get_Item(!0)
+  08B2  stfld  BlueprintBuilding BlueprintBuilding::outputObj
+  08B7  ldloc.s  V_55
+  08B9  ldc.i4.0  
+  08BA  bgt.s  IL_08d6: call ModelProtoSet LDB::get_models()
+  08BC  call  ModelProtoSet LDB::get_models()
+  08C1  ldloc.0  
+  08C2  ldloc.s  V_55
+  08C4  neg  
+  08C5  callvirt  PrebuildData PlanetFactory::GetPrebuildData(System.Int32)
+  08CA  ldfld  System.Int16 PrebuildData::modelIndex
+  08CF  callvirt  T ProtoSet`1<ModelProto>::Select(System.Int32)
+  08D4  br.s  IL_08ed: stloc.s V_58
+  08D6  call  ModelProtoSet LDB::get_models()
+  08DB  ldloc.0  
+  08DC  ldloc.s  V_55
+  08DE  callvirt  EntityData PlanetFactory::GetEntityData(System.Int32)
+  08E3  ldfld  System.Int16 EntityData::modelIndex
+  08E8  callvirt  T ProtoSet`1<ModelProto>::Select(System.Int32)
+  08ED  stloc.s  V_58
+  08EF  ldarg.0  
+  08F0  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  08F5  ldloc.s  V_28
+  08F7  ldelem.ref  
+  08F8  ldloc.s  V_58
+  08FA  ldfld  PrefabDesc ModelProto::prefabDesc
+  08FF  ldfld  System.Boolean PrefabDesc::isBelt
+  0904  brtrue.s  IL_090a: ldc.i4.m1
+  0906  ldloc.s  V_56
+  0908  br.s  IL_090b: stfld System.Int32 BlueprintBuilding::outputToSlot
+  090A  ldc.i4.m1  
+  090B  stfld  System.Int32 BlueprintBuilding::outputToSlot
+  0910  ldarg.0  
+  0911  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  0916  ldloc.s  V_28
+  0918  ldelem.ref  
+  0919  ldloc.s  V_30
+  091B  brtrue.s  IL_0941: ldloc.2
+  091D  ldloc.0  
+  091E  ldfld  FactorySystem PlanetFactory::factorySystem
+  0923  ldfld  InserterComponent[] FactorySystem::inserterPool
+  0928  ldloc.1  
+  0929  ldloc.s  V_29
+  092B  ldelema  EntityData
+  0930  ldfld  System.Int32 EntityData::inserterId
+  0935  ldelema  InserterComponent
+  093A  ldfld  System.Int16 InserterComponent::insertOffset
+  093F  br.s  IL_094f: stfld System.Int32 BlueprintBuilding::outputOffset
+  0941  ldloc.2  
+  0942  ldloc.s  V_29
+  0944  neg  
+  0945  ldelema  PrebuildData
+  094A  ldfld  System.Int16 PrebuildData::insertOffset
+  094F  stfld  System.Int32 BlueprintBuilding::outputOffset
+  0954  br  IL_0c09: ldc.i4.0
+  0959  ldloc.s  V_50
+  095B  ldfld  PrefabDesc ModelProto::prefabDesc
+  0960  ldfld  System.Boolean PrefabDesc::isBelt
+  0965  brfalse  IL_0afb: ldloc.s V_50
+  096A  ldloc.s  V_30
+  096C  brfalse  IL_09fa: ldarg.0
+  0971  ldloc.0  
+  0972  ldloc.s  V_29
+  0974  neg  
+  0975  ldc.i4.0  
+  0976  callvirt  System.Void PlanetFactory::PostRefreshPrebuildDisplay(System.Int32,System.Boolean)
+  097B  ldloc.s  V_41
+  097D  ldc.i4.s  20
+  097F  shr  
+  0980  stloc.s  V_62
+  0982  ldloc.s  V_41
+  0984  ldc.i4  1048575
+  0989  and  
+  098A  stloc.s  V_41
+  098C  ldarg.0  
+  098D  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  0992  ldloc.s  V_28
+  0994  ldelem.ref  
+  0995  ldloc.s  V_48
+  0997  ldarg.1  
+  0998  ldfld  PlanetPhysics PlanetData::physics
+  099D  ldfld  ColliderContainer[] PlanetPhysics::colChunks
+  09A2  ldloc.s  V_62
+  09A4  ldelem.ref  
+  09A5  ldfld  ColliderData[] ColliderContainer::colliderPool
+  09AA  ldloc.s  V_41
+  09AC  ldelema  ColliderData
+  09B1  ldfld  UnityEngine.Quaternion ColliderData::q
+  09B6  call  UnityEngine.Quaternion UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Quaternion)
+  09BB  stloc.s  V_53
+  09BD  ldloca.s  V_53
+  09BF  call  UnityEngine.Vector3 UnityEngine.Quaternion::get_eulerAngles()
+  09C4  ldfld  System.Single UnityEngine.Vector3::y
+  09C9  stfld  System.Single BlueprintBuilding::yaw
+  09CE  ldarg.0  
+  09CF  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  09D4  ldloc.s  V_28
+  09D6  ldelem.ref  
+  09D7  ldarg.0  
+  09D8  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  09DD  ldloc.s  V_28
+  09DF  ldelem.ref  
+  09E0  ldfld  System.Single BlueprintBuilding::yaw
+  09E5  stfld  System.Single BlueprintBuilding::yaw2
+  09EA  ldarg.0  
+  09EB  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  09F0  ldloc.s  V_28
+  09F2  ldelem.ref  
+  09F3  ldloc.s  V_38
+  09F5  stfld  System.Single BlueprintBuilding::tilt
+  09FA  ldarg.0  
+  09FB  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  0A00  ldloc.s  V_28
+  0A02  ldelem.ref  
+  0A03  ldc.i4.1  
+  0A04  stfld  System.Int32 BlueprintBuilding::inputToSlot
+  0A09  ldarg.0  
+  0A0A  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  0A0F  ldloc.s  V_28
+  0A11  ldelem.ref  
+  0A12  ldc.i4.0  
+  0A13  stfld  System.Int32 BlueprintBuilding::outputFromSlot
+  0A18  ldloc.0  
+  0A19  ldloc.s  V_29
+  0A1B  ldc.i4.1  
+  0A1C  ldloca.s  V_59
+  0A1E  ldloca.s  V_60
+  0A20  ldloca.s  V_61
+  0A22  callvirt  System.Void PlanetFactory::ReadObjectConn(System.Int32,System.Int32,System.Boolean&,System.Int32&,System.Int32&)
+  0A27  ldloc.s  V_60
+  0A29  brfalse.s  IL_0aa5: ldloc.0
+  0A2B  ldsfld  System.Collections.Generic.Dictionary`2<System.Int32,BlueprintBuilding> BlueprintUtils::_tmp_building_dict
+  0A30  ldloc.s  V_60
+  0A32  callvirt  System.Boolean System.Collections.Generic.Dictionary`2<System.Int32,BlueprintBuilding>::ContainsKey(!0)
+  0A37  brfalse.s  IL_0aa5: ldloc.0
+  0A39  ldloc.s  V_60
+  0A3B  ldc.i4.0  
+  0A3C  bgt.s  IL_0a58: call ModelProtoSet LDB::get_models()
+  0A3E  call  ModelProtoSet LDB::get_models()
+  0A43  ldloc.0  
+  0A44  ldloc.s  V_60
+  0A46  neg  
+  0A47  callvirt  PrebuildData PlanetFactory::GetPrebuildData(System.Int32)
+  0A4C  ldfld  System.Int16 PrebuildData::modelIndex
+  0A51  callvirt  T ProtoSet`1<ModelProto>::Select(System.Int32)
+  0A56  br.s  IL_0a6f: ldfld PrefabDesc ModelProto::prefabDesc
+  0A58  call  ModelProtoSet LDB::get_models()
+  0A5D  ldloc.0  
+  0A5E  ldloc.s  V_60
+  0A60  callvirt  EntityData PlanetFactory::GetEntityData(System.Int32)
+  0A65  ldfld  System.Int16 EntityData::modelIndex
+  0A6A  callvirt  T ProtoSet`1<ModelProto>::Select(System.Int32)
+  0A6F  ldfld  PrefabDesc ModelProto::prefabDesc
+  0A74  ldfld  System.Boolean PrefabDesc::isBelt
+  0A79  brtrue.s  IL_0aa5: ldloc.0
+  0A7B  ldarg.0  
+  0A7C  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  0A81  ldloc.s  V_28
+  0A83  ldelem.ref  
+  0A84  ldsfld  System.Collections.Generic.Dictionary`2<System.Int32,BlueprintBuilding> BlueprintUtils::_tmp_building_dict
+  0A89  ldloc.s  V_60
+  0A8B  callvirt  !1 System.Collections.Generic.Dictionary`2<System.Int32,BlueprintBuilding>::get_Item(!0)
+  0A90  stfld  BlueprintBuilding BlueprintBuilding::inputObj
+  0A95  ldarg.0  
+  0A96  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  0A9B  ldloc.s  V_28
+  0A9D  ldelem.ref  
+  0A9E  ldloc.s  V_61
+  0AA0  stfld  System.Int32 BlueprintBuilding::inputFromSlot
+  0AA5  ldloc.0  
+  0AA6  ldloc.s  V_29
+  0AA8  ldc.i4.0  
+  0AA9  ldloca.s  V_59
+  0AAB  ldloca.s  V_60
+  0AAD  ldloca.s  V_61
+  0AAF  callvirt  System.Void PlanetFactory::ReadObjectConn(System.Int32,System.Int32,System.Boolean&,System.Int32&,System.Int32&)
+  0AB4  ldloc.s  V_60
+  0AB6  brfalse  IL_0c09: ldc.i4.0
+  0ABB  ldsfld  System.Collections.Generic.Dictionary`2<System.Int32,BlueprintBuilding> BlueprintUtils::_tmp_building_dict
+  0AC0  ldloc.s  V_60
+  0AC2  callvirt  System.Boolean System.Collections.Generic.Dictionary`2<System.Int32,BlueprintBuilding>::ContainsKey(!0)
+  0AC7  brfalse  IL_0c09: ldc.i4.0
+  0ACC  ldarg.0  
+  0ACD  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  0AD2  ldloc.s  V_28
+  0AD4  ldelem.ref  
+  0AD5  ldsfld  System.Collections.Generic.Dictionary`2<System.Int32,BlueprintBuilding> BlueprintUtils::_tmp_building_dict
+  0ADA  ldloc.s  V_60
+  0ADC  callvirt  !1 System.Collections.Generic.Dictionary`2<System.Int32,BlueprintBuilding>::get_Item(!0)
+  0AE1  stfld  BlueprintBuilding BlueprintBuilding::outputObj
+  0AE6  ldarg.0  
+  0AE7  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  0AEC  ldloc.s  V_28
+  0AEE  ldelem.ref  
+  0AEF  ldloc.s  V_61
+  0AF1  stfld  System.Int32 BlueprintBuilding::outputToSlot
+  0AF6  br  IL_0c09: ldc.i4.0
+  0AFB  ldloc.s  V_50
+  0AFD  ldfld  PrefabDesc ModelProto::prefabDesc
+  0B02  ldfld  System.Boolean PrefabDesc::multiLevel
+  0B07  brfalse  IL_0ba0: ldloc.s V_50
+  0B0C  ldarg.0  
+  0B0D  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  0B12  ldloc.s  V_28
+  0B14  ldelem.ref  
+  0B15  ldc.i4.s  14
+  0B17  stfld  System.Int32 BlueprintBuilding::inputToSlot
+  0B1C  ldarg.0  
+  0B1D  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  0B22  ldloc.s  V_28
+  0B24  ldelem.ref  
+  0B25  ldc.i4.s  15
+  0B27  stfld  System.Int32 BlueprintBuilding::outputFromSlot
+  0B2C  ldarg.0  
+  0B2D  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  0B32  ldloc.s  V_28
+  0B34  ldelem.ref  
+  0B35  ldc.i4.s  15
+  0B37  stfld  System.Int32 BlueprintBuilding::inputFromSlot
+  0B3C  ldarg.0  
+  0B3D  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  0B42  ldloc.s  V_28
+  0B44  ldelem.ref  
+  0B45  ldc.i4.s  14
+  0B47  stfld  System.Int32 BlueprintBuilding::outputToSlot
+  0B4C  ldloc.0  
+  0B4D  ldloc.s  V_29
+  0B4F  ldc.i4.s  14
+  0B51  ldloca.s  V_63
+  0B53  ldloca.s  V_64
+  0B55  ldloca.s  V_65
+  0B57  callvirt  System.Void PlanetFactory::ReadObjectConn(System.Int32,System.Int32,System.Boolean&,System.Int32&,System.Int32&)
+  0B5C  ldloc.s  V_64
+  0B5E  brfalse  IL_0c09: ldc.i4.0
+  0B63  ldsfld  System.Collections.Generic.Dictionary`2<System.Int32,BlueprintBuilding> BlueprintUtils::_tmp_building_dict
+  0B68  ldloc.s  V_64
+  0B6A  callvirt  System.Boolean System.Collections.Generic.Dictionary`2<System.Int32,BlueprintBuilding>::ContainsKey(!0)
+  0B6F  brfalse  IL_0c09: ldc.i4.0
+  0B74  ldarg.0  
+  0B75  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  0B7A  ldloc.s  V_28
+  0B7C  ldelem.ref  
+  0B7D  ldsfld  System.Collections.Generic.Dictionary`2<System.Int32,BlueprintBuilding> BlueprintUtils::_tmp_building_dict
+  0B82  ldloc.s  V_64
+  0B84  callvirt  !1 System.Collections.Generic.Dictionary`2<System.Int32,BlueprintBuilding>::get_Item(!0)
+  0B89  stfld  BlueprintBuilding BlueprintBuilding::inputObj
+  0B8E  ldarg.0  
+  0B8F  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  0B94  ldloc.s  V_28
+  0B96  ldelem.ref  
+  0B97  ldloc.s  V_65
+  0B99  stfld  System.Int32 BlueprintBuilding::inputFromSlot
+  0B9E  br.s  IL_0c09: ldc.i4.0
+  0BA0  ldloc.s  V_50
+  0BA2  ldfld  PrefabDesc ModelProto::prefabDesc
+  0BA7  ldfld  EAddonType PrefabDesc::addonType
+  0BAC  ldc.i4.2  
+  0BAD  bne.un.s  IL_0c09: ldc.i4.0
+  0BAF  ldarg.0  
+  0BB0  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  0BB5  ldloc.s  V_28
+  0BB7  ldelem.ref  
+  0BB8  ldc.i4.0  
+  0BB9  stfld  System.Int32 BlueprintBuilding::inputToSlot
+  0BBE  ldloc.0  
+  0BBF  ldloc.s  V_29
+  0BC1  ldc.i4.0  
+  0BC2  ldloca.s  V_66
+  0BC4  ldloca.s  V_67
+  0BC6  ldloca.s  V_68
+  0BC8  callvirt  System.Void PlanetFactory::ReadObjectConn(System.Int32,System.Int32,System.Boolean&,System.Int32&,System.Int32&)
+  0BCD  ldloc.s  V_67
+  0BCF  brfalse.s  IL_0c09: ldc.i4.0
+  0BD1  ldsfld  System.Collections.Generic.Dictionary`2<System.Int32,BlueprintBuilding> BlueprintUtils::_tmp_building_dict
+  0BD6  ldloc.s  V_67
+  0BD8  callvirt  System.Boolean System.Collections.Generic.Dictionary`2<System.Int32,BlueprintBuilding>::ContainsKey(!0)
+  0BDD  brfalse.s  IL_0c09: ldc.i4.0
+  0BDF  ldarg.0  
+  0BE0  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  0BE5  ldloc.s  V_28
+  0BE7  ldelem.ref  
+  0BE8  ldsfld  System.Collections.Generic.Dictionary`2<System.Int32,BlueprintBuilding> BlueprintUtils::_tmp_building_dict
+  0BED  ldloc.s  V_67
+  0BEF  callvirt  !1 System.Collections.Generic.Dictionary`2<System.Int32,BlueprintBuilding>::get_Item(!0)
+  0BF4  stfld  BlueprintBuilding BlueprintBuilding::inputObj
+  0BF9  ldarg.0  
+  0BFA  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  0BFF  ldloc.s  V_28
+  0C01  ldelem.ref  
+  0C02  ldloc.s  V_68
+  0C04  stfld  System.Int32 BlueprintBuilding::inputFromSlot
+  0C09  ldc.i4.0  
+  0C0A  stloc.s  V_51
+  0C0C  ldarg.0  
+  0C0D  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  0C12  ldloc.s  V_28
+  0C14  ldelem.ref  
+  0C15  ldnull  
+  0C16  stfld  System.Int32[] BlueprintBuilding::parameters
+  0C1B  ldloca.s  V_17
+  0C1D  ldloc.s  V_29
+  0C1F  ldloc.0  
+  0C20  ldc.i4.1  
+  0C21  ldc.i4.0  
+  0C22  call  System.Boolean BuildingParameters::CopyFromFactoryObject(System.Int32,PlanetFactory,System.Boolean,System.Boolean)
+  0C27  pop  
+  0C28  ldloca.s  V_17
+  0C2A  ldarg.0  
+  0C2B  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  0C30  ldloc.s  V_28
+  0C32  ldelem.ref  
+  0C33  ldflda  System.Int32[] BlueprintBuilding::parameters
+  0C38  ldloca.s  V_51
+  0C3A  call  System.Void BuildingParameters::ToParamsArray(System.Int32[]&,System.Int32&)
+  0C3F  ldarg.0  
+  0C40  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  0C45  ldloc.s  V_28
+  0C47  ldelem.ref  
+  0C48  ldloc.s  V_17
+  0C4A  ldfld  System.Int32 BuildingParameters::recipeId
+  0C4F  stfld  System.Int32 BlueprintBuilding::recipeId
+  0C54  ldarg.0  
+  0C55  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  0C5A  ldloc.s  V_28
+  0C5C  ldelem.ref  
+  0C5D  ldloc.s  V_17
+  0C5F  ldfld  System.Int32 BuildingParameters::filterId
+  0C64  stfld  System.Int32 BlueprintBuilding::filterId
+  0C69  ldarg.0  
+  0C6A  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  0C6F  ldloc.s  V_28
+  0C71  ldelem.ref  
+  0C72  ldfld  System.Int32[] BlueprintBuilding::parameters
+  0C77  brtrue.s  IL_0c8d: ldarg.0
+  0C79  ldarg.0  
+  0C7A  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  0C7F  ldloc.s  V_28
+  0C81  ldelem.ref  
+  0C82  ldc.i4.0  
+  0C83  newarr  System.Int32
+  0C88  stfld  System.Int32[] BlueprintBuilding::parameters
+  0C8D  ldarg.0  
+  0C8E  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  0C93  ldloc.s  V_28
+  0C95  ldelem.ref  
+  0C96  ldloc.s  V_17
+  0C98  ldfld  System.String BuildingParameters::content
+  0C9D  stfld  System.String BlueprintBuilding::content
+  0CA2  ldloc.s  V_28
+  0CA4  ldc.i4.1  
+  0CA5  add  
+  0CA6  stloc.s  V_28
+  0CA8  ldloc.s  V_28
+  0CAA  ldarg.s  _objCount
+  0CAC  blt  IL_0203: ldarg.0
+  0CB1  ldarg.s  _reformIds
+  0CB3  brfalse  IL_0e57: ldloc.s V_22
+  0CB8  ldloc.s  V_6
+  0CBA  brfalse  IL_0e57: ldloc.s V_22
+  0CBF  ldloc.s  V_23
+  0CC1  ldfld  System.Single BPGratBox::y
+  0CC6  ldloc.s  V_14
+  0CC8  div  
+  0CC9  stloc.s  V_69
+  0CCB  ldloc.s  V_23
+  0CCD  ldfld  System.Single BPGratBox::w
+  0CD2  ldloc.s  V_14
+  0CD4  div  
+  0CD5  ldloc.s  V_10
+  0CD7  ldloc.s  V_22
+  0CD9  ldelema  BPGratBox
+  0CDE  ldfld  System.Single BPGratBox::x
+  0CE3  ldloc.s  V_25
+  0CE5  div  
+  0CE6  call  System.Int32 BlueprintUtils::_round2int(System.Single)
+  0CEB  stloc.s  V_70
+  0CED  ldloc.s  V_69
+  0CEF  sub  
+  0CF0  ldc.r4  1
+  0CF5  add  
+  0CF6  call  System.Int32 BlueprintUtils::_round2int(System.Single)
+  0CFB  stloc.s  V_71
+  0CFD  ldsfld  System.Byte[] BlueprintUtils::_tmp_reform_data
+  0D02  brfalse.s  IL_0d12: ldloc.s V_26
+  0D04  ldsfld  System.Byte[] BlueprintUtils::_tmp_reform_data
+  0D09  ldlen  
+  0D0A  conv.i4  
+  0D0B  ldloc.s  V_26
+  0D0D  ldloc.s  V_71
+  0D0F  mul  
+  0D10  bge.s  IL_0d23: ldsfld System.Byte[] BlueprintUtils::_tmp_reform_data
+  0D12  ldloc.s  V_26
+  0D14  ldloc.s  V_71
+  0D16  mul  
+  0D17  newarr  System.Byte
+  0D1C  stsfld  System.Byte[] BlueprintUtils::_tmp_reform_data
+  0D21  br.s  IL_0d33: ldc.i4.0
+  0D23  ldsfld  System.Byte[] BlueprintUtils::_tmp_reform_data
+  0D28  ldc.i4.0  
+  0D29  ldloc.s  V_26
+  0D2B  ldloc.s  V_71
+  0D2D  mul  
+  0D2E  call  System.Void System.Array::Clear(System.Array,System.Int32,System.Int32)
+  0D33  ldc.i4.0  
+  0D34  stloc.s  V_72
+  0D36  br  IL_0e33: ldloc.s V_72
+  0D3B  ldloc.s  V_69
+  0D3D  ldloc.s  V_72
+  0D3F  conv.r4  
+  0D40  add  
+  0D41  stloc.s  V_73
+  0D43  ldloc.s  V_73
+  0D45  ldc.r4  5
+  0D4A  div  
+  0D4B  conv.i4  
+  0D4C  ldloc.s  V_4
+  0D4E  call  System.Int32 PlanetGrid::DetermineLongitudeSegmentCount(System.Int32,System.Int32)
+  0D53  ldloc.s  V_24
+  0D55  bne.un  IL_0e2d: ldloc.s V_72
+  0D5A  ldloc.s  V_73
+  0D5C  ldc.r4  0
+  0D61  bge.s  IL_0d6b: ldloc.s V_73
+  0D63  ldloc.s  V_16
+  0D65  conv.r4  
+  0D66  ldloc.s  V_73
+  0D68  sub  
+  0D69  br.s  IL_0d6d: conv.i4
+  0D6B  ldloc.s  V_73
+  0D6D  conv.i4  
+  0D6E  stloc.s  V_74
+  0D70  ldc.i4.0  
+  0D71  stloc.s  V_75
+  0D73  br  IL_0e24: ldloc.s V_75
+  0D78  ldloc.s  V_74
+  0D7A  ldloc.s  V_15
+  0D7C  mul  
+  0D7D  ldloc.s  V_75
+  0D7F  add  
+  0D80  stloc.s  V_76
+  0D82  ldarg.s  _reformIds
+  0D84  ldloc.s  V_76
+  0D86  ldc.i4.5  
+  0D87  shr  
+  0D88  ldelem.u4  
+  0D89  brtrue.s  IL_0d9d: ldarg.s _reformIds
+  0D8B  ldloc.s  V_76
+  0D8D  ldc.i4.s  31
+  0D8F  or  
+  0D90  ldloc.s  V_74
+  0D92  ldloc.s  V_15
+  0D94  mul  
+  0D95  sub  
+  0D96  stloc.s  V_75
+  0D98  br  IL_0e1e: ldloc.s V_75
+  0D9D  ldarg.s  _reformIds
+  0D9F  ldloc.s  V_76
+  0DA1  ldc.i4.5  
+  0DA2  shr  
+  0DA3  ldelem.u4  
+  0DA4  ldc.i4.1  
+  0DA5  ldloc.s  V_76
+  0DA7  ldc.i4.s  31
+  0DA9  and  
+  0DAA  ldc.i4.s  31
+  0DAC  and  
+  0DAD  shl  
+  0DAE  and  
+  0DAF  brfalse.s  IL_0e1e: ldloc.s V_75
+  0DB1  ldloc.s  V_6
+  0DB3  ldloc.s  V_5
+  0DB5  ldloc.s  V_75
+  0DB7  ldloc.s  V_74
+  0DB9  callvirt  System.Int32 PlatformSystem::GetReformIndex(System.Int32,System.Int32)
+  0DBE  ldelem.u1  
+  0DBF  stloc.s  V_77
+  0DC1  ldloc.s  V_77
+  0DC3  ldc.i4  224
+  0DC8  and  
+  0DC9  ldc.i4  224
+  0DCE  bne.un.s  IL_0dd9: ldloc.s V_7
+  0DD0  ldc.i4  224
+  0DD5  stloc.s  V_77
+  0DD7  br.s  IL_0de8: ldloc.s V_75
+  0DD9  ldloc.s  V_7
+  0DDB  ldc.i4.1  
+  0DDC  ldloc.s  V_77
+  0DDE  ldc.i4.s  31
+  0DE0  and  
+  0DE1  ldc.i4.s  31
+  0DE3  and  
+  0DE4  shl  
+  0DE5  or  
+  0DE6  stloc.s  V_7
+  0DE8  ldloc.s  V_75
+  0DEA  ldloc.s  V_27
+  0DEC  bge.s  IL_0df2: ldloc.s V_27
+  0DEE  ldloc.s  V_75
+  0DF0  br.s  IL_0df9: stloc.s V_78
+  0DF2  ldloc.s  V_27
+  0DF4  ldloc.s  V_75
+  0DF6  sub  
+  0DF7  ldc.i4.1  
+  0DF8  sub  
+  0DF9  stloc.s  V_78
+  0DFB  ldloc.s  V_78
+  0DFD  ldloc.s  V_70
+  0DFF  sub  
+  0E00  ldloc.s  V_78
+  0E02  ldloc.s  V_70
+  0E04  bge.s  IL_0e0a: ldc.i4.0
+  0E06  ldloc.s  V_26
+  0E08  br.s  IL_0e0b: add
+  0E0A  ldc.i4.0  
+  0E0B  add  
+  0E0C  stloc.s  V_79
+  0E0E  ldsfld  System.Byte[] BlueprintUtils::_tmp_reform_data
+  0E13  ldloc.s  V_72
+  0E15  ldloc.s  V_26
+  0E17  mul  
+  0E18  ldloc.s  V_79
+  0E1A  add  
+  0E1B  ldloc.s  V_77
+  0E1D  stelem.i1  
+  0E1E  ldloc.s  V_75
+  0E20  ldc.i4.1  
+  0E21  add  
+  0E22  stloc.s  V_75
+  0E24  ldloc.s  V_75
+  0E26  ldloc.s  V_26
+  0E28  blt  IL_0d78: ldloc.s V_74
+  0E2D  ldloc.s  V_72
+  0E2F  ldc.i4.1  
+  0E30  add  
+  0E31  stloc.s  V_72
+  0E33  ldloc.s  V_72
+  0E35  ldloc.s  V_71
+  0E37  blt  IL_0d3b: ldloc.s V_69
+  0E3C  ldsflda  System.Collections.Generic.List`1<BPReformRect> BlueprintUtils::_tmp_reform_list
+  0E41  ldsflda  System.UInt32[] BlueprintUtils::_tmp_reform_open_list
+  0E46  ldsfld  System.Byte[] BlueprintUtils::_tmp_reform_data
+  0E4B  ldloc.s  V_26
+  0E4D  ldloc.s  V_71
+  0E4F  ldloc.s  V_22
+  0E51  conv.u1  
+  0E52  call  System.Void BlueprintUtils::GenerateReformRect(System.Collections.Generic.List`1<BPReformRect>&,System.UInt32[]&,System.Byte[],System.Int32,System.Int32,System.Byte)
+  0E57  ldloc.s  V_22
+  0E59  ldc.i4.1  
+  0E5A  add  
+  0E5B  stloc.s  V_22
+  0E5D  ldloc.s  V_22
+  0E5F  ldloc.s  V_9
+  0E61  blt  IL_01a1: ldloc.s V_11
+  0E66  ldsfld  System.Collections.Generic.List`1<BPReformRect> BlueprintUtils::_tmp_reform_list
+  0E6B  brfalse  IL_0f22: ldloc.s V_10
+  0E70  ldarg.0  
+  0E71  ldflda  BPReformData BlueprintData::reformData
+  0E76  stloc.s  V_80
+  0E78  ldloc.s  V_80
+  0E7A  ldind.ref  
+  0E7B  ldsfld  System.Collections.Generic.List`1<BPReformRect> BlueprintUtils::_tmp_reform_list
+  0E80  callvirt  System.Int32 System.Collections.Generic.List`1<BPReformRect>::get_Count()
+  0E85  newarr  BPReformRect
+  0E8A  stfld  BPReformRect[] BPReformData::rects
+  0E8F  ldsfld  System.Collections.Generic.List`1<BPReformRect> BlueprintUtils::_tmp_reform_list
+  0E94  ldloc.s  V_80
+  0E96  ldind.ref  
+  0E97  ldfld  BPReformRect[] BPReformData::rects
+  0E9C  callvirt  System.Void System.Collections.Generic.List`1<BPReformRect>::CopyTo(!0[])
+  0EA1  ldsfld  System.Collections.Generic.List`1<BPReformRect> BlueprintUtils::_tmp_reform_list
+  0EA6  callvirt  System.Void System.Collections.Generic.List`1<BPReformRect>::Clear()
+  0EAB  ldloc.s  V_80
+  0EAD  ldind.ref  
+  0EAE  ldloc.s  V_7
+  0EB0  ldc.i4  -65536
+  0EB5  and  
+  0EB6  stfld  System.UInt32 BPReformData::customReformColorMask
+  0EBB  ldc.i4.0  
+  0EBC  stloc.s  V_81
+  0EBE  br.s  IL_0f1c: ldloc.s V_81
+  0EC0  ldloc.s  V_7
+  0EC2  ldc.i4.1  
+  0EC3  ldloc.s  V_81
+  0EC5  ldc.i4.s  16
+  0EC7  add  
+  0EC8  ldc.i4.s  31
+  0ECA  and  
+  0ECB  shl  
+  0ECC  and  
+  0ECD  brfalse.s  IL_0f16: ldloc.s V_81
+  0ECF  ldloc.s  V_5
+  0ED1  ldfld  UnityEngine.Color[] PlatformSystem::reformCustomColors
+  0ED6  ldloc.s  V_81
+  0ED8  ldelem.any  UnityEngine.Color
+  0EDD  call  UnityEngine.Color32 UnityEngine.Color32::op_Implicit(UnityEngine.Color)
+  0EE2  stloc.s  V_82
+  0EE4  ldloc.s  V_80
+  0EE6  ldind.ref  
+  0EE7  ldfld  System.UInt32[] BPReformData::customReformColors
+  0EEC  ldloc.s  V_81
+  0EEE  ldloc.s  V_82
+  0EF0  ldfld  System.Byte UnityEngine.Color32::r
+  0EF5  ldc.i4.s  24
+  0EF7  shl  
+  0EF8  ldloc.s  V_82
+  0EFA  ldfld  System.Byte UnityEngine.Color32::g
+  0EFF  ldc.i4.s  16
+  0F01  shl  
+  0F02  or  
+  0F03  ldloc.s  V_82
+  0F05  ldfld  System.Byte UnityEngine.Color32::b
+  0F0A  ldc.i4.8  
+  0F0B  shl  
+  0F0C  or  
+  0F0D  ldloc.s  V_82
+  0F0F  ldfld  System.Byte UnityEngine.Color32::a
+  0F14  or  
+  0F15  stelem.i4  
+  0F16  ldloc.s  V_81
+  0F18  ldc.i4.1  
+  0F19  add  
+  0F1A  stloc.s  V_81
+  0F1C  ldloc.s  V_81
+  0F1E  ldc.i4.s  16
+  0F20  blt.s  IL_0ec0: ldloc.s V_7
+  0F22  ldloc.s  V_10
+  0F24  ldloc.s  V_12
+  0F26  ldelema  BPGratBox
+  0F2B  ldfld  System.Single BPGratBox::x
+  0F30  ldloc.s  V_10
+  0F32  ldloc.s  V_12
+  0F34  ldelema  BPGratBox
+  0F39  ldfld  System.Single BPGratBox::y
+  0F3E  call  UnityEngine.Vector3 BlueprintUtils::GetDir(System.Single,System.Single)
+  0F43  stloc.s  V_18
+  0F45  ldloc.s  V_12
+  0F47  stloc.s  V_19
+  0F49  ldloc.s  V_12
+  0F4B  ldc.i4.1  
+  0F4C  sub  
+  0F4D  stloc.s  V_83
+  0F4F  br  IL_109d: ldloc.s V_83
+  0F54  ldloc.s  V_10
+  0F56  ldloc.s  V_83
+  0F58  ldelema  BPGratBox
+  0F5D  ldfld  System.Single BPGratBox::x
+  0F62  ldloc.s  V_10
+  0F64  ldloc.s  V_83
+  0F66  ldelema  BPGratBox
+  0F6B  ldfld  System.Single BPGratBox::y
+  0F70  call  UnityEngine.Vector3 BlueprintUtils::GetDir(System.Single,System.Single)
+  0F75  dup  
+  0F76  ldloc.s  V_4
+  0F78  call  System.Int32 BlueprintUtils::GetLongitudeSegmentCount(UnityEngine.Vector3,System.Int32)
+  0F7D  stloc.s  V_84
+  0F7F  ldloc.s  V_84
+  0F81  ldloc.s  V_4
+  0F83  call  System.Single BlueprintUtils::GetLongitudeRadPerGrid(System.Int32,System.Int32)
+  0F88  stloc.s  V_85
+  0F8A  ldarg.0  
+  0F8B  ldfld  BlueprintArea[] BlueprintData::areas
+  0F90  ldloc.s  V_83
+  0F92  newobj  System.Void BlueprintArea::.ctor()
+  0F97  stelem.ref  
+  0F98  ldarg.0  
+  0F99  ldfld  BlueprintArea[] BlueprintData::areas
+  0F9E  ldloc.s  V_83
+  0FA0  ldelem.ref  
+  0FA1  ldloc.s  V_83
+  0FA3  stfld  System.Int32 BlueprintArea::index
+  0FA8  ldarg.0  
+  0FA9  ldfld  BlueprintArea[] BlueprintData::areas
+  0FAE  ldloc.s  V_83
+  0FB0  ldelem.ref  
+  0FB1  ldloc.s  V_19
+  0FB3  stfld  System.Int32 BlueprintArea::parentIndex
+  0FB8  ldarg.0  
+  0FB9  ldfld  BlueprintArea[] BlueprintData::areas
+  0FBE  ldloc.s  V_83
+  0FC0  ldelem.ref  
+  0FC1  ldloc.s  V_84
+  0FC3  stfld  System.Int32 BlueprintArea::areaSegments
+  0FC8  dup  
+  0FC9  ldloc.s  V_18
+  0FCB  ldloc.s  V_10
+  0FCD  ldloc.s  V_83
+  0FCF  ldelema  BPGratBox
+  0FD4  ldfld  System.Single BPGratBox::x
+  0FD9  ldc.i4.1  
+  0FDA  ldloc.s  V_4
+  0FDC  call  IntVector2 BlueprintUtils::GetTropicAnchorOffset(UnityEngine.Vector3,UnityEngine.Vector3,System.Single,System.Boolean,System.Int32)
+  0FE1  stloc.s  V_86
+  0FE3  ldarg.0  
+  0FE4  ldfld  BlueprintArea[] BlueprintData::areas
+  0FE9  ldloc.s  V_83
+  0FEB  ldelem.ref  
+  0FEC  ldloc.s  V_86
+  0FEE  ldfld  System.Int32 IntVector2::y
+  0FF3  stfld  System.Int32 BlueprintArea::tropicAnchor
+  0FF8  ldarg.0  
+  0FF9  ldfld  BlueprintArea[] BlueprintData::areas
+  0FFE  ldloc.s  V_83
+  1000  ldelem.ref  
+  1001  ldloc.s  V_86
+  1003  ldfld  System.Int32 IntVector2::x
+  1008  stfld  System.Int32 BlueprintArea::anchorLocalOffsetX
+  100D  ldloc.s  V_10
+  100F  ldloc.s  V_83
+  1011  ldelema  BPGratBox
+  1016  ldfld  System.Single BPGratBox::y
+  101B  ldloc.s  V_18
+  101D  call  System.Single BlueprintUtils::GetLatitudeRad(UnityEngine.Vector3)
+  1022  sub  
+  1023  stloc.s  V_87
+  1025  ldarg.0  
+  1026  ldfld  BlueprintArea[] BlueprintData::areas
+  102B  ldloc.s  V_83
+  102D  ldelem.ref  
+  102E  ldloc.s  V_87
+  1030  ldloc.s  V_14
+  1032  div  
+  1033  call  System.Int32 BlueprintUtils::_round2int(System.Single)
+  1038  stfld  System.Int32 BlueprintArea::anchorLocalOffsetY
+  103D  ldloc.s  V_10
+  103F  ldloc.s  V_83
+  1041  ldelema  BPGratBox
+  1046  call  System.Single BPGratBox::get_width()
+  104B  ldloc.s  V_85
+  104D  div  
+  104E  stloc.s  V_88
+  1050  ldloc.s  V_10
+  1052  ldloc.s  V_83
+  1054  ldelema  BPGratBox
+  1059  call  System.Single BPGratBox::get_height()
+  105E  ldloc.s  V_14
+  1060  div  
+  1061  stloc.s  V_89
+  1063  ldarg.0  
+  1064  ldfld  BlueprintArea[] BlueprintData::areas
+  1069  ldloc.s  V_83
+  106B  ldelem.ref  
+  106C  ldloc.s  V_88
+  106E  ldc.r4  1.5
+  1073  add  
+  1074  conv.i4  
+  1075  stfld  System.Int32 BlueprintArea::width
+  107A  ldarg.0  
+  107B  ldfld  BlueprintArea[] BlueprintData::areas
+  1080  ldloc.s  V_83
+  1082  ldelem.ref  
+  1083  ldloc.s  V_89
+  1085  ldc.r4  1.5
+  108A  add  
+  108B  conv.i4  
+  108C  stfld  System.Int32 BlueprintArea::height
+  1091  ldloc.s  V_83
+  1093  stloc.s  V_19
+  1095  stloc.s  V_18
+  1097  ldloc.s  V_83
+  1099  ldc.i4.1  
+  109A  sub  
+  109B  stloc.s  V_83
+  109D  ldloc.s  V_83
+  109F  ldc.i4.0  
+  10A0  bge  IL_0f54: ldloc.s V_10
+  10A5  ldloc.s  V_10
+  10A7  ldloc.s  V_12
+  10A9  ldelema  BPGratBox
+  10AE  ldfld  System.Single BPGratBox::x
+  10B3  ldloc.s  V_10
+  10B5  ldloc.s  V_12
+  10B7  ldelema  BPGratBox
+  10BC  ldfld  System.Single BPGratBox::y
+  10C1  call  UnityEngine.Vector3 BlueprintUtils::GetDir(System.Single,System.Single)
+  10C6  stloc.s  V_18
+  10C8  ldloc.s  V_12
+  10CA  stloc.s  V_19
+  10CC  ldloc.s  V_12
+  10CE  ldc.i4.1  
+  10CF  add  
+  10D0  stloc.s  V_90
+  10D2  br  IL_1220: ldloc.s V_90
+  10D7  ldloc.s  V_10
+  10D9  ldloc.s  V_90
+  10DB  ldelema  BPGratBox
+  10E0  ldfld  System.Single BPGratBox::x
+  10E5  ldloc.s  V_10
+  10E7  ldloc.s  V_90
+  10E9  ldelema  BPGratBox
+  10EE  ldfld  System.Single BPGratBox::y
+  10F3  call  UnityEngine.Vector3 BlueprintUtils::GetDir(System.Single,System.Single)
+  10F8  dup  
+  10F9  ldloc.s  V_4
+  10FB  call  System.Int32 BlueprintUtils::GetLongitudeSegmentCount(UnityEngine.Vector3,System.Int32)
+  1100  stloc.s  V_91
+  1102  ldloc.s  V_91
+  1104  ldloc.s  V_4
+  1106  call  System.Single BlueprintUtils::GetLongitudeRadPerGrid(System.Int32,System.Int32)
+  110B  stloc.s  V_92
+  110D  ldarg.0  
+  110E  ldfld  BlueprintArea[] BlueprintData::areas
+  1113  ldloc.s  V_90
+  1115  newobj  System.Void BlueprintArea::.ctor()
+  111A  stelem.ref  
+  111B  ldarg.0  
+  111C  ldfld  BlueprintArea[] BlueprintData::areas
+  1121  ldloc.s  V_90
+  1123  ldelem.ref  
+  1124  ldloc.s  V_90
+  1126  stfld  System.Int32 BlueprintArea::index
+  112B  ldarg.0  
+  112C  ldfld  BlueprintArea[] BlueprintData::areas
+  1131  ldloc.s  V_90
+  1133  ldelem.ref  
+  1134  ldloc.s  V_19
+  1136  stfld  System.Int32 BlueprintArea::parentIndex
+  113B  ldarg.0  
+  113C  ldfld  BlueprintArea[] BlueprintData::areas
+  1141  ldloc.s  V_90
+  1143  ldelem.ref  
+  1144  ldloc.s  V_91
+  1146  stfld  System.Int32 BlueprintArea::areaSegments
+  114B  dup  
+  114C  ldloc.s  V_18
+  114E  ldloc.s  V_10
+  1150  ldloc.s  V_90
+  1152  ldelema  BPGratBox
+  1157  ldfld  System.Single BPGratBox::x
+  115C  ldc.i4.1  
+  115D  ldloc.s  V_4
+  115F  call  IntVector2 BlueprintUtils::GetTropicAnchorOffset(UnityEngine.Vector3,UnityEngine.Vector3,System.Single,System.Boolean,System.Int32)
+  1164  stloc.s  V_93
+  1166  ldarg.0  
+  1167  ldfld  BlueprintArea[] BlueprintData::areas
+  116C  ldloc.s  V_90
+  116E  ldelem.ref  
+  116F  ldloc.s  V_93
+  1171  ldfld  System.Int32 IntVector2::y
+  1176  stfld  System.Int32 BlueprintArea::tropicAnchor
+  117B  ldarg.0  
+  117C  ldfld  BlueprintArea[] BlueprintData::areas
+  1181  ldloc.s  V_90
+  1183  ldelem.ref  
+  1184  ldloc.s  V_93
+  1186  ldfld  System.Int32 IntVector2::x
+  118B  stfld  System.Int32 BlueprintArea::anchorLocalOffsetX
+  1190  ldloc.s  V_10
+  1192  ldloc.s  V_90
+  1194  ldelema  BPGratBox
+  1199  ldfld  System.Single BPGratBox::y
+  119E  ldloc.s  V_18
+  11A0  call  System.Single BlueprintUtils::GetLatitudeRad(UnityEngine.Vector3)
+  11A5  sub  
+  11A6  stloc.s  V_94
+  11A8  ldarg.0  
+  11A9  ldfld  BlueprintArea[] BlueprintData::areas
+  11AE  ldloc.s  V_90
+  11B0  ldelem.ref  
+  11B1  ldloc.s  V_94
+  11B3  ldloc.s  V_14
+  11B5  div  
+  11B6  call  System.Int32 BlueprintUtils::_round2int(System.Single)
+  11BB  stfld  System.Int32 BlueprintArea::anchorLocalOffsetY
+  11C0  ldloc.s  V_10
+  11C2  ldloc.s  V_90
+  11C4  ldelema  BPGratBox
+  11C9  call  System.Single BPGratBox::get_width()
+  11CE  ldloc.s  V_92
+  11D0  div  
+  11D1  stloc.s  V_95
+  11D3  ldloc.s  V_10
+  11D5  ldloc.s  V_90
+  11D7  ldelema  BPGratBox
+  11DC  call  System.Single BPGratBox::get_height()
+  11E1  ldloc.s  V_14
+  11E3  div  
+  11E4  stloc.s  V_96
+  11E6  ldarg.0  
+  11E7  ldfld  BlueprintArea[] BlueprintData::areas
+  11EC  ldloc.s  V_90
+  11EE  ldelem.ref  
+  11EF  ldloc.s  V_95
+  11F1  ldc.r4  1.5
+  11F6  add  
+  11F7  conv.i4  
+  11F8  stfld  System.Int32 BlueprintArea::width
+  11FD  ldarg.0  
+  11FE  ldfld  BlueprintArea[] BlueprintData::areas
+  1203  ldloc.s  V_90
+  1205  ldelem.ref  
+  1206  ldloc.s  V_96
+  1208  ldc.r4  1.5
+  120D  add  
+  120E  conv.i4  
+  120F  stfld  System.Int32 BlueprintArea::height
+  1214  ldloc.s  V_90
+  1216  stloc.s  V_19
+  1218  stloc.s  V_18
+  121A  ldloc.s  V_90
+  121C  ldc.i4.1  
+  121D  add  
+  121E  stloc.s  V_90
+  1220  ldloc.s  V_90
+  1222  ldloc.s  V_9
+  1224  blt  IL_10d7: ldloc.s V_10
+  1229  ldloc.s  V_10
+  122B  ldloc.s  V_12
+  122D  ldelema  BPGratBox
+  1232  ldfld  System.Single BPGratBox::x
+  1237  ldloc.s  V_10
+  1239  ldloc.s  V_12
+  123B  ldelema  BPGratBox
+  1240  ldfld  System.Single BPGratBox::y
+  1245  call  UnityEngine.Vector3 BlueprintUtils::GetDir(System.Single,System.Single)
+  124A  ldloc.s  V_4
+  124C  call  System.Int32 BlueprintUtils::GetLongitudeSegmentCount(UnityEngine.Vector3,System.Int32)
+  1251  stloc.s  V_97
+  1253  ldloc.s  V_97
+  1255  ldloc.s  V_4
+  1257  call  System.Single BlueprintUtils::GetLongitudeRadPerGrid(System.Int32,System.Int32)
+  125C  stloc.s  V_98
+  125E  ldarg.0  
+  125F  ldfld  BlueprintArea[] BlueprintData::areas
+  1264  ldloc.s  V_12
+  1266  newobj  System.Void BlueprintArea::.ctor()
+  126B  stelem.ref  
+  126C  ldarg.0  
+  126D  ldfld  BlueprintArea[] BlueprintData::areas
+  1272  ldloc.s  V_12
+  1274  ldelem.ref  
+  1275  ldloc.s  V_12
+  1277  stfld  System.Int32 BlueprintArea::index
+  127C  ldarg.0  
+  127D  ldfld  BlueprintArea[] BlueprintData::areas
+  1282  ldloc.s  V_12
+  1284  ldelem.ref  
+  1285  ldc.i4.m1  
+  1286  stfld  System.Int32 BlueprintArea::parentIndex
+  128B  ldarg.0  
+  128C  ldfld  BlueprintArea[] BlueprintData::areas
+  1291  ldloc.s  V_12
+  1293  ldelem.ref  
+  1294  ldloc.s  V_97
+  1296  stfld  System.Int32 BlueprintArea::areaSegments
+  129B  ldarg.0  
+  129C  ldfld  BlueprintArea[] BlueprintData::areas
+  12A1  ldloc.s  V_12
+  12A3  ldelem.ref  
+  12A4  ldc.i4.0  
+  12A5  stfld  System.Int32 BlueprintArea::tropicAnchor
+  12AA  ldarg.0  
+  12AB  ldfld  BlueprintArea[] BlueprintData::areas
+  12B0  ldloc.s  V_12
+  12B2  ldelem.ref  
+  12B3  ldc.i4.0  
+  12B4  stfld  System.Int32 BlueprintArea::anchorLocalOffsetX
+  12B9  ldarg.0  
+  12BA  ldfld  BlueprintArea[] BlueprintData::areas
+  12BF  ldloc.s  V_12
+  12C1  ldelem.ref  
+  12C2  ldc.i4.0  
+  12C3  stfld  System.Int32 BlueprintArea::anchorLocalOffsetY
+  12C8  ldloc.s  V_10
+  12CA  ldloc.s  V_12
+  12CC  ldelema  BPGratBox
+  12D1  call  System.Single BPGratBox::get_width()
+  12D6  ldloc.s  V_98
+  12D8  div  
+  12D9  stloc.s  V_99
+  12DB  ldloc.s  V_10
+  12DD  ldloc.s  V_12
+  12DF  ldelema  BPGratBox
+  12E4  call  System.Single BPGratBox::get_height()
+  12E9  ldloc.s  V_14
+  12EB  div  
+  12EC  stloc.s  V_100
+  12EE  ldarg.0  
+  12EF  ldfld  BlueprintArea[] BlueprintData::areas
+  12F4  ldloc.s  V_12
+  12F6  ldelem.ref  
+  12F7  ldloc.s  V_99
+  12F9  ldc.r4  1.5
+  12FE  add  
+  12FF  conv.i4  
+  1300  stfld  System.Int32 BlueprintArea::width
+  1305  ldarg.0  
+  1306  ldfld  BlueprintArea[] BlueprintData::areas
+  130B  ldloc.s  V_12
+  130D  ldelem.ref  
+  130E  ldloc.s  V_100
+  1310  ldc.r4  1.5
+  1315  add  
+  1316  conv.i4  
+  1317  stfld  System.Int32 BlueprintArea::height
+  131C  ldc.i4.0  
+  131D  stloc.s  V_20
+  131F  ldc.i4.0  
+  1320  stloc.s  V_101
+  1322  br.s  IL_133d: ldloc.s V_101
+  1324  ldloc.s  V_20
+  1326  ldarg.0  
+  1327  ldfld  BlueprintArea[] BlueprintData::areas
+  132C  ldloc.s  V_101
+  132E  ldelem.ref  
+  132F  ldfld  System.Int32 BlueprintArea::height
+  1334  add  
+  1335  stloc.s  V_20
+  1337  ldloc.s  V_101
+  1339  ldc.i4.1  
+  133A  add  
+  133B  stloc.s  V_101
+  133D  ldloc.s  V_101
+  133F  ldarg.0  
+  1340  ldfld  BlueprintArea[] BlueprintData::areas
+  1345  ldlen  
+  1346  conv.i4  
+  1347  blt.s  IL_1324: ldloc.s V_20
+  1349  ldarg.0  
+  134A  ldarg.0  
+  134B  ldfld  BlueprintArea[] BlueprintData::areas
+  1350  ldloc.s  V_12
+  1352  ldelem.ref  
+  1353  ldfld  System.Int32 BlueprintArea::width
+  1358  stfld  System.Int32 BlueprintData::dragBoxSize_x
+  135D  ldarg.0  
+  135E  ldloc.s  V_20
+  1360  stfld  System.Int32 BlueprintData::dragBoxSize_y
+  1365  ldloc.s  V_9
+  1367  ldc.i4.1  
+  1368  bne.un.s  IL_13b8: ldloc.s V_8
+  136A  ldarg.0  
+  136B  ldarg.0  
+  136C  ldfld  BlueprintArea[] BlueprintData::areas
+  1371  ldloc.s  V_12
+  1373  ldelem.ref  
+  1374  ldfld  System.Int32 BlueprintArea::width
+  1379  conv.r4  
+  137A  ldc.r4  0.5
+  137F  mul  
+  1380  ldc.r4  0.01
+  1385  sub  
+  1386  call  System.Int32 BlueprintUtils::_round2int(System.Single)
+  138B  stfld  System.Int32 BlueprintData::cursorOffset_x
+  1390  ldarg.0  
+  1391  ldarg.0  
+  1392  ldfld  BlueprintArea[] BlueprintData::areas
+  1397  ldloc.s  V_12
+  1399  ldelem.ref  
+  139A  ldfld  System.Int32 BlueprintArea::height
+  139F  conv.r4  
+  13A0  ldc.r4  0.5
+  13A5  mul  
+  13A6  ldc.r4  0.01
+  13AB  sub  
+  13AC  call  System.Int32 BlueprintUtils::_round2int(System.Single)
+  13B1  stfld  System.Int32 BlueprintData::cursorOffset_y
+  13B6  br.s  IL_141c: ldarg.0
+  13B8  ldloc.s  V_8
+  13BA  ldfld  System.Single BPGratBox::w
+  13BF  ldloc.s  V_8
+  13C1  ldfld  System.Single BPGratBox::y
+  13C6  sub  
+  13C7  ldc.r4  0.5
+  13CC  mul  
+  13CD  ldloc.s  V_8
+  13CF  ldfld  System.Single BPGratBox::y
+  13D4  add  
+  13D5  stloc.s  V_102
+  13D7  ldarg.0  
+  13D8  ldarg.0  
+  13D9  ldfld  BlueprintArea[] BlueprintData::areas
+  13DE  ldloc.s  V_12
+  13E0  ldelem.ref  
+  13E1  ldfld  System.Int32 BlueprintArea::width
+  13E6  conv.r4  
+  13E7  ldc.r4  0.5
+  13EC  mul  
+  13ED  ldc.r4  0.01
+  13F2  sub  
+  13F3  call  System.Int32 BlueprintUtils::_round2int(System.Single)
+  13F8  stfld  System.Int32 BlueprintData::cursorOffset_x
+  13FD  ldarg.0  
+  13FE  ldloc.s  V_102
+  1400  ldloc.s  V_10
+  1402  ldloc.s  V_12
+  1404  ldelema  BPGratBox
+  1409  ldfld  System.Single BPGratBox::y
+  140E  sub  
+  140F  ldloc.s  V_14
+  1411  div  
+  1412  call  System.Int32 BlueprintUtils::_round2int(System.Single)
+  1417  stfld  System.Int32 BlueprintData::cursorOffset_y
+  141C  ldarg.0  
+  141D  ldloc.s  V_12
+  141F  stfld  System.Int32 BlueprintData::cursorTargetArea
+  1424  ldarg.0  
+  1425  ldloc.s  V_12
+  1427  stfld  System.Int32 BlueprintData::primaryAreaIdx
+  142C  ldsfld  System.Collections.Generic.Dictionary`2<System.Int32,BlueprintBuilding> BlueprintUtils::_tmp_building_dict
+  1431  callvirt  System.Void System.Collections.Generic.Dictionary`2<System.Int32,BlueprintBuilding>::Clear()
+  1436  ret  

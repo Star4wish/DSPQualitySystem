@@ -1,0 +1,10 @@
+{
+  "name": "DSPQualitySystem",
+  "version_number": "{{VERSION}}",
+  "website_url": "",
+  "description": "DSP 品质系统：把增产剂点数变成 0-10 级品质经济。八类加成共用一条曲线（10 点=2.00×），含电力塔供电范围；矿机每两级固定 +1、制造台按曲线升品；分流器每口「物品+最低品质」规则与分拣器阈值可随 Shift/蓝图迁移；带点数的物品可在喷涂机催化剂口回炉成喷涂次数；16 项中文开关，品质数据写入 .dsv 尾部。",
+  "dependencies": [
+    "xiaoye97-BepInEx-5.4.17",
+    "CommonAPI-CommonAPI-1.6.7"
+  ]
+}

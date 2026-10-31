@@ -1,0 +1,923 @@
+﻿METHOD System.Void BuildTool_BlueprintPaste::CreatePrebuilds()
+  0000  ldarg.0  
+  0001  ldfld  System.Int32[] BuildTool_BlueprintPaste::bpIdWitchWillRebuildCoverBelt
+  0006  brtrue.s  IL_0018: ldarg.0
+  0008  ldarg.0  
+  0009  ldc.i4  1024
+  000E  newarr  System.Int32
+  0013  stfld  System.Int32[] BuildTool_BlueprintPaste::bpIdWitchWillRebuildCoverBelt
+  0018  ldarg.0  
+  0019  ldc.i4.0  
+  001A  stfld  System.Int32 BuildTool_BlueprintPaste::bpIdWitchWillRebuildCoverBeltCursor
+  001F  ldc.i4.0  
+  0020  stloc.2  
+  0021  br  IL_0344: ldloc.2
+  0026  ldarg.0  
+  0027  ldfld  BuildPreview[] BuildTool_BlueprintPaste::bpPool
+  002C  ldloc.2  
+  002D  ldelem.ref  
+  002E  stloc.3  
+  002F  ldloc.3  
+  0030  ldfld  System.Int32 BuildPreview::bpgpuiModelId
+  0035  ldc.i4.0  
+  0036  ble  IL_0340: ldloc.2
+  003B  ldloc.3  
+  003C  ldfld  EBuildCondition BuildPreview::condition
+  0041  brfalse.s  IL_004f: ldloc.3
+  0043  ldloc.3  
+  0044  ldfld  EBuildCondition BuildPreview::condition
+  0049  ldc.i4.2  
+  004A  bne.un  IL_0340: ldloc.2
+  004F  ldloc.3  
+  0050  ldfld  PrefabDesc BuildPreview::desc
+  0055  ldfld  System.Boolean PrefabDesc::multiLevel
+  005A  brfalse.s  IL_00b6: ldloc.3
+  005C  ldloc.3  
+  005D  ldfld  System.Int32 BuildPreview::inputFromSlot
+  0062  ldc.i4.s  15
+  0064  bne.un.s  IL_00b6: ldloc.3
+  0066  ldloc.3  
+  0067  ldfld  BuildPreview BuildPreview::input
+  006C  stloc.s  V_4
+  006E  ldc.i4.1  
+  006F  stloc.s  V_5
+  0071  ldc.i4  256
+  0076  stloc.s  V_6
+  0078  br.s  IL_00ab: ldloc.s V_4
+  007A  ldloc.s  V_4
+  007C  ldfld  EBuildCondition BuildPreview::condition
+  0081  brfalse.s  IL_0092: ldloc.s V_4
+  0083  ldloc.s  V_4
+  0085  ldfld  EBuildCondition BuildPreview::condition
+  008A  ldc.i4.2  
+  008B  beq.s  IL_0092: ldloc.s V_4
+  008D  ldc.i4.0  
+  008E  stloc.s  V_5
+  0090  br.s  IL_00af: ldloc.s V_5
+  0092  ldloc.s  V_4
+  0094  ldfld  BuildPreview BuildPreview::input
+  0099  stloc.s  V_4
+  009B  ldloc.s  V_6
+  009D  dup  
+  009E  ldc.i4.1  
+  009F  sub  
+  00A0  stloc.s  V_6
+  00A2  brtrue.s  IL_00ab: ldloc.s V_4
+  00A4  call  System.Void Assert::CannotBeReached()
+  00A9  br.s  IL_00af: ldloc.s V_5
+  00AB  ldloc.s  V_4
+  00AD  brtrue.s  IL_007a: ldloc.s V_4
+  00AF  ldloc.s  V_5
+  00B1  brfalse  IL_0340: ldloc.2
+  00B6  ldloc.3  
+  00B7  ldfld  PrefabDesc BuildPreview::desc
+  00BC  ldfld  EAddonType PrefabDesc::addonType
+  00C1  brfalse.s  IL_012f: ldloc.3
+  00C3  ldloc.3  
+  00C4  ldfld  PrefabDesc BuildPreview::desc
+  00C9  ldfld  EAddonType PrefabDesc::addonType
+  00CE  ldc.i4.2  
+  00CF  bne.un.s  IL_012f: ldloc.3
+  00D1  ldloc.3  
+  00D2  ldfld  BuildPreview BuildPreview::input
+  00D7  stloc.s  V_7
+  00D9  ldloc.s  V_7
+  00DB  brfalse.s  IL_00f8: ldloc.s V_7
+  00DD  ldloc.s  V_7
+  00DF  ldfld  PrefabDesc BuildPreview::desc
+  00E4  ldfld  System.Boolean PrefabDesc::isBattleBase
+  00E9  brfalse.s  IL_00f8: ldloc.s V_7
+  00EB  ldloc.3  
+  00EC  ldc.i4.s  30
+  00EE  stfld  EBuildCondition BuildPreview::condition
+  00F3  br  IL_0340: ldloc.2
+  00F8  ldloc.s  V_7
+  00FA  brfalse.s  IL_012f: ldloc.3
+  00FC  ldloc.s  V_7
+  00FE  ldfld  PrefabDesc BuildPreview::desc
+  0103  ldfld  System.Boolean PrefabDesc::isStorage
+  0108  brfalse.s  IL_012f: ldloc.3
+  010A  ldloc.s  V_7
+  010C  ldfld  EBuildCondition BuildPreview::condition
+  0111  brfalse.s  IL_012f: ldloc.3
+  0113  ldloc.s  V_7
+  0115  ldfld  EBuildCondition BuildPreview::condition
+  011A  ldc.i4.2  
+  011B  beq.s  IL_012f: ldloc.3
+  011D  ldloc.3  
+  011E  ldloc.s  V_7
+  0120  ldfld  EBuildCondition BuildPreview::condition
+  0125  stfld  EBuildCondition BuildPreview::condition
+  012A  br  IL_0340: ldloc.2
+  012F  ldloc.3  
+  0130  ldfld  System.Int32 BuildPreview::coverObjId
+  0135  ldc.i4.0  
+  0136  ble.s  IL_0196: ldloc.3
+  0138  ldloc.3  
+  0139  ldfld  PrefabDesc BuildPreview::desc
+  013E  ldfld  System.Boolean PrefabDesc::isBelt
+  0143  brfalse.s  IL_0196: ldloc.3
+  0145  ldloc.3  
+  0146  ldfld  BuildPreview BuildPreview::output
+  014B  brfalse.s  IL_0196: ldloc.3
+  014D  ldloc.3  
+  014E  ldfld  BuildPreview BuildPreview::output
+  0153  ldfld  PrefabDesc BuildPreview::desc
+  0158  ldfld  System.Boolean PrefabDesc::isBelt
+  015D  brfalse.s  IL_0196: ldloc.3
+  015F  ldloc.3  
+  0160  ldfld  BuildPreview BuildPreview::output
+  0165  ldfld  System.Int32 BuildPreview::coverObjId
+  016A  ldc.i4.0  
+  016B  ble.s  IL_0196: ldloc.3
+  016D  ldloc.3  
+  016E  ldfld  BuildPreview BuildPreview::output
+  0173  ldfld  EBuildCondition BuildPreview::condition
+  0178  brtrue.s  IL_0196: ldloc.3
+  017A  ldarg.0  
+  017B  ldfld  System.Int32[] BuildTool_BlueprintPaste::bpIdWitchWillRebuildCoverBelt
+  0180  ldarg.0  
+  0181  ldarg.0  
+  0182  ldfld  System.Int32 BuildTool_BlueprintPaste::bpIdWitchWillRebuildCoverBeltCursor
+  0187  stloc.s  V_8
+  0189  ldloc.s  V_8
+  018B  ldc.i4.1  
+  018C  add  
+  018D  stfld  System.Int32 BuildTool_BlueprintPaste::bpIdWitchWillRebuildCoverBeltCursor
+  0192  ldloc.s  V_8
+  0194  ldloc.2  
+  0195  stelem.i4  
+  0196  ldloc.3  
+  0197  ldfld  System.Int32 BuildPreview::coverObjId
+  019C  brtrue  IL_0340: ldloc.2
+  01A1  ldloc.3  
+  01A2  ldfld  System.Boolean BuildPreview::isConnNode
+  01A7  brfalse.s  IL_01bf: ldloca.s V_9
+  01A9  ldloc.3  
+  01AA  ldloc.3  
+  01AB  ldfld  UnityEngine.Vector3 BuildPreview::lpos
+  01B0  ldc.r4  0
+  01B5  call  UnityEngine.Quaternion Maths::SphericalRotation(UnityEngine.Vector3,System.Single)
+  01BA  stfld  UnityEngine.Quaternion BuildPreview::lrot
+  01BF  ldloca.s  V_9
+  01C1  initobj  PrebuildData
+  01C7  ldloca.s  V_9
+  01C9  ldc.i4.0  
+  01CA  stfld  System.Boolean PrebuildData::isDestroyed
+  01CF  ldloca.s  V_9
+  01D1  ldloc.3  
+  01D2  ldfld  ItemProto BuildPreview::item
+  01D7  ldfld  System.Int32 Proto::ID
+  01DC  conv.i2  
+  01DD  stfld  System.Int16 PrebuildData::protoId
+  01E2  ldloca.s  V_9
+  01E4  ldloc.3  
+  01E5  ldfld  PrefabDesc BuildPreview::desc
+  01EA  ldfld  System.Int32 PrefabDesc::modelIndex
+  01EF  conv.i2  
+  01F0  stfld  System.Int16 PrebuildData::modelIndex
+  01F5  ldloca.s  V_9
+  01F7  ldloc.3  
+  01F8  ldfld  UnityEngine.Vector3 BuildPreview::lpos
+  01FD  stfld  UnityEngine.Vector3 PrebuildData::pos
+  0202  ldloca.s  V_9
+  0204  ldloc.3  
+  0205  ldfld  UnityEngine.Vector3 BuildPreview::lpos2
+  020A  stfld  UnityEngine.Vector3 PrebuildData::pos2
+  020F  ldloca.s  V_9
+  0211  ldloc.3  
+  0212  ldfld  UnityEngine.Quaternion BuildPreview::lrot
+  0217  stfld  UnityEngine.Quaternion PrebuildData::rot
+  021C  ldloca.s  V_9
+  021E  ldloc.3  
+  021F  ldfld  UnityEngine.Quaternion BuildPreview::lrot2
+  0224  stfld  UnityEngine.Quaternion PrebuildData::rot2
+  0229  ldloca.s  V_9
+  022B  ldloc.3  
+  022C  ldfld  System.Single BuildPreview::tilt
+  0231  stfld  System.Single PrebuildData::tilt
+  0236  ldloca.s  V_9
+  0238  ldloc.3  
+  0239  ldfld  System.Int32 BuildPreview::inputOffset
+  023E  conv.i2  
+  023F  stfld  System.Int16 PrebuildData::pickOffset
+  0244  ldloca.s  V_9
+  0246  ldloc.3  
+  0247  ldfld  System.Int32 BuildPreview::outputOffset
+  024C  conv.i2  
+  024D  stfld  System.Int16 PrebuildData::insertOffset
+  0252  ldloca.s  V_9
+  0254  ldloc.3  
+  0255  ldfld  System.Int32 BuildPreview::recipeId
+  025A  stfld  System.Int32 PrebuildData::recipeId
+  025F  ldloca.s  V_9
+  0261  ldloc.3  
+  0262  ldfld  System.Int32 BuildPreview::filterId
+  0267  stfld  System.Int32 PrebuildData::filterId
+  026C  ldloca.s  V_9
+  026E  ldloc.3  
+  026F  ldfld  System.Int32 BuildPreview::paramCount
+  0274  call  System.Void PrebuildData::InitParametersArray(System.Int32)
+  0279  ldc.i4.0  
+  027A  stloc.s  V_12
+  027C  br.s  IL_0297: ldloc.s V_12
+  027E  ldloc.s  V_9
+  0280  ldfld  System.Int32[] PrebuildData::parameters
+  0285  ldloc.s  V_12
+  0287  ldloc.3  
+  0288  ldfld  System.Int32[] BuildPreview::parameters
+  028D  ldloc.s  V_12
+  028F  ldelem.i4  
+  0290  stelem.i4  
+  0291  ldloc.s  V_12
+  0293  ldc.i4.1  
+  0294  add  
+  0295  stloc.s  V_12
+  0297  ldloc.s  V_12
+  0299  ldloc.3  
+  029A  ldfld  System.Int32 BuildPreview::paramCount
+  029F  blt.s  IL_027e: ldloc.s V_9
+  02A1  ldloca.s  V_9
+  02A3  ldloc.3  
+  02A4  ldfld  System.String BuildPreview::content
+  02A9  stfld  System.String PrebuildData::content
+  02AE  ldloc.3  
+  02AF  ldfld  ItemProto BuildPreview::item
+  02B4  ldfld  System.Int32 Proto::ID
+  02B9  stloc.s  V_10
+  02BB  ldarg.0  
+  02BC  call  Player BuildTool::get_player()
+  02C1  callvirt  System.Int32 Player::get_inhandItemId()
+  02C6  ldloc.s  V_10
+  02C8  bne.un.s  IL_02ed: ldc.i4.1
+  02CA  ldarg.0  
+  02CB  call  Player BuildTool::get_player()
+  02D0  callvirt  System.Int32 Player::get_inhandItemCount()
+  02D5  ldc.i4.0  
+  02D6  ble.s  IL_02ed: ldc.i4.1
+  02D8  ldc.i4.1  
+  02D9  stloc.s  V_11
+  02DB  ldarg.0  
+  02DC  call  Player BuildTool::get_player()
+  02E1  ldloc.s  V_11
+  02E3  ldloca.s  V_13
+  02E5  callvirt  System.Int32 Player::UseHandItems(System.Int32,System.Int32&)
+  02EA  pop  
+  02EB  br.s  IL_0307: ldloc.s V_11
+  02ED  ldc.i4.1  
+  02EE  stloc.s  V_11
+  02F0  ldarg.0  
+  02F1  call  Player BuildTool::get_player()
+  02F6  callvirt  StorageComponent Player::get_package()
+  02FB  ldloca.s  V_10
+  02FD  ldloca.s  V_11
+  02FF  ldloca.s  V_14
+  0301  ldc.i4.0  
+  0302  callvirt  System.Void StorageComponent::TakeTailItems(System.Int32&,System.Int32&,System.Int32&,System.Boolean)
+  0307  ldloc.s  V_11
+  0309  ldc.i4.1  
+  030A  ceq  
+  030C  brfalse.s  IL_0324: ldloca.s V_9
+  030E  ldloc.3  
+  030F  ldarg.0  
+  0310  ldfld  PlanetFactory BuildTool::factory
+  0315  ldloc.s  V_9
+  0317  callvirt  System.Int32 PlanetFactory::AddPrebuildDataWithComponents(PrebuildData)
+  031C  neg  
+  031D  stfld  System.Int32 BuildPreview::objId
+  0322  br.s  IL_0340: ldloc.2
+  0324  ldloca.s  V_9
+  0326  ldc.i4.1  
+  0327  stfld  System.Int32 PrebuildData::itemRequired
+  032C  ldloc.3  
+  032D  ldarg.0  
+  032E  ldfld  PlanetFactory BuildTool::factory
+  0333  ldloc.s  V_9
+  0335  callvirt  System.Int32 PlanetFactory::AddPrebuildDataWithComponents(PrebuildData)
+  033A  neg  
+  033B  stfld  System.Int32 BuildPreview::objId
+  0340  ldloc.2  
+  0341  ldc.i4.1  
+  0342  add  
+  0343  stloc.2  
+  0344  ldloc.2  
+  0345  ldarg.0  
+  0346  ldfld  System.Int32 BuildTool_BlueprintPaste::bpCursor
+  034B  blt  IL_0026: ldarg.0
+  0350  ldc.i4.0  
+  0351  stloc.s  V_15
+  0353  br  IL_0427: ldloc.s V_15
+  0358  ldarg.0  
+  0359  ldfld  BuildPreview[] BuildTool_BlueprintPaste::bpPool
+  035E  ldloc.s  V_15
+  0360  ldelem.ref  
+  0361  stloc.s  V_16
+  0363  ldloc.s  V_16
+  0365  ldfld  PrefabDesc BuildPreview::desc
+  036A  ldfld  System.Boolean PrefabDesc::geothermal
+  036F  brfalse  IL_0421: ldloc.s V_15
+  0374  ldloc.s  V_16
+  0376  ldfld  System.Int32 BuildPreview::paramCount
+  037B  brfalse  IL_0421: ldloc.s V_15
+  0380  ldloc.s  V_16
+  0382  ldfld  System.Int32[] BuildPreview::parameters
+  0387  ldc.i4.0  
+  0388  ldelem.i4  
+  0389  stloc.s  V_17
+  038B  ldloc.s  V_17
+  038D  brfalse  IL_0421: ldloc.s V_15
+  0392  ldarg.0  
+  0393  ldfld  PlanetFactory BuildTool::factory
+  0398  ldfld  EnemyDFGroundSystem PlanetFactory::enemySystem
+  039D  ldfld  ObjectPool`1<DFGBaseComponent> EnemyDFGroundSystem::bases
+  03A2  dup  
+  03A3  ldfld  T[] ObjectPool`1<DFGBaseComponent>::buffer
+  03A8  stloc.s  V_18
+  03AA  ldfld  System.Int32 ObjectPool`1<DFGBaseComponent>::cursor
+  03AF  stloc.s  V_19
+  03B1  ldc.i4.1  
+  03B2  stloc.s  V_20
+  03B4  br.s  IL_041b: ldloc.s V_20
+  03B6  ldloc.s  V_18
+  03B8  ldloc.s  V_20
+  03BA  ldelem.ref  
+  03BB  stloc.s  V_21
+  03BD  ldloc.s  V_21
+  03BF  brfalse.s  IL_0415: ldloc.s V_20
+  03C1  ldloc.s  V_21
+  03C3  ldfld  System.Int32 DFGBaseComponent::id
+  03C8  ldloc.s  V_20
+  03CA  bne.un.s  IL_0415: ldloc.s V_20
+  03CC  ldarg.0  
+  03CD  ldfld  PlanetFactory BuildTool::factory
+  03D2  ldfld  EnemyDFGroundSystem PlanetFactory::enemySystem
+  03D7  ldloc.s  V_21
+  03D9  ldfld  System.Int32 DFGBaseComponent::id
+  03DE  callvirt  System.Int32 EnemyDFGroundSystem::CheckBaseCanRemoved(System.Int32)
+  03E3  brtrue.s  IL_0415: ldloc.s V_20
+  03E5  ldloc.s  V_21
+  03E7  ldfld  System.Int32 DFGBaseComponent::ruinId
+  03EC  ldloc.s  V_17
+  03EE  bne.un.s  IL_0415: ldloc.s V_20
+  03F0  ldarg.0  
+  03F1  ldfld  PlanetFactory BuildTool::factory
+  03F6  ldfld  EnemyDFGroundSystem PlanetFactory::enemySystem
+  03FB  ldloc.s  V_21
+  03FD  ldfld  System.Int32 DFGBaseComponent::id
+  0402  ldc.i4.0  
+  0403  callvirt  System.Boolean EnemyDFGroundSystem::RemoveBase(System.Int32,System.Boolean)
+  0408  pop  
+  0409  ldsfld  GameScenarioLogic GameMain::gameScenario
+  040E  callvirt  System.Void GameScenarioLogic::NotifyOnRemovePit()
+  0413  br.s  IL_0421: ldloc.s V_15
+  0415  ldloc.s  V_20
+  0417  ldc.i4.1  
+  0418  add  
+  0419  stloc.s  V_20
+  041B  ldloc.s  V_20
+  041D  ldloc.s  V_19
+  041F  blt.s  IL_03b6: ldloc.s V_18
+  0421  ldloc.s  V_15
+  0423  ldc.i4.1  
+  0424  add  
+  0425  stloc.s  V_15
+  0427  ldloc.s  V_15
+  0429  ldarg.0  
+  042A  ldfld  System.Int32 BuildTool_BlueprintPaste::bpCursor
+  042F  blt  IL_0358: ldarg.0
+  0434  ldc.i4.0  
+  0435  stloc.0  
+  0436  ldc.i4.0  
+  0437  stloc.1  
+  0438  ldc.i4.0  
+  0439  stloc.s  V_22
+  043B  br  IL_0513: ldloc.s V_22
+  0440  ldarg.0  
+  0441  ldfld  BuildPreview[] BuildTool_BlueprintPaste::bpPool
+  0446  ldloc.s  V_22
+  0448  ldelem.ref  
+  0449  stloc.s  V_23
+  044B  ldloc.s  V_23
+  044D  ldfld  System.Int32 BuildPreview::coverObjId
+  0452  brfalse  IL_050d: ldloc.s V_22
+  0457  ldloc.s  V_23
+  0459  ldfld  System.Boolean BuildPreview::willReconstructCover
+  045E  brtrue  IL_050d: ldloc.s V_22
+  0463  ldloc.s  V_23
+  0465  ldfld  System.Boolean BuildPreview::willRemoveCover
+  046A  brfalse.s  IL_04b2: ldloca.s V_24
+  046C  ldc.i4.0  
+  046D  stloc.s  V_25
+  046F  ldarg.0  
+  0470  call  PlayerAction_Build BuildTool::get_actionBuild()
+  0475  ldloc.s  V_23
+  0477  ldfld  System.Int32 BuildPreview::coverObjId
+  047C  ldloc.s  V_23
+  047E  ldfld  ItemProto BuildPreview::item
+  0483  ldfld  System.Int32 ItemProto::Grade
+  0488  ldc.i4.0  
+  0489  ldloca.s  V_25
+  048B  callvirt  System.Boolean PlayerAction_Build::DoUpgradeObject(System.Int32,System.Int32,System.Int32,System.Int32&)
+  0490  brfalse.s  IL_0496: ldloc.s V_25
+  0492  ldloc.1  
+  0493  ldc.i4.1  
+  0494  add  
+  0495  stloc.1  
+  0496  ldloc.s  V_25
+  0498  ldc.i4.1  
+  0499  bne.un.s  IL_049d: ldarg.0
+  049B  ldc.i4.1  
+  049C  stloc.0  
+  049D  ldarg.0  
+  049E  ldfld  PlanetFactory BuildTool::factory
+  04A3  callvirt  PlanetData PlanetFactory::get_planet()
+  04A8  ldfld  PlanetPhysics PlanetData::physics
+  04AD  callvirt  System.Void PlanetPhysics::SetPlanetPhysicsColliderDirty()
+  04B2  ldloca.s  V_24
+  04B4  initobj  BuildingParameters
+  04BA  ldloca.s  V_24
+  04BC  ldloc.s  V_23
+  04BE  call  System.Void BuildingParameters::CopyFromBuildPreview(BuildPreview)
+  04C3  ldloca.s  V_24
+  04C5  ldloc.s  V_23
+  04C7  ldfld  System.Int32 BuildPreview::coverObjId
+  04CC  ldarg.0  
+  04CD  ldfld  PlanetFactory BuildTool::factory
+  04D2  call  System.Boolean BuildingParameters::PasteToFactoryObject(System.Int32,PlanetFactory)
+  04D7  brfalse.s  IL_04ff: ldloc.s V_23
+  04D9  ldloc.1  
+  04DA  ldc.i4.1  
+  04DB  add  
+  04DC  stloc.1  
+  04DD  ldloc.s  V_23
+  04DF  ldfld  System.Int32 BuildPreview::coverObjId
+  04E4  ldc.i4.0  
+  04E5  ble.s  IL_04ff: ldloc.s V_23
+  04E7  ldarg.0  
+  04E8  ldfld  PlanetFactory BuildTool::factory
+  04ED  ldloc.s  V_23
+  04EF  ldfld  System.Int32 BuildPreview::coverObjId
+  04F4  call  UnityEngine.Vector2 UnityEngine.Vector2::get_zero()
+  04F9  ldc.i4.0  
+  04FA  callvirt  System.Void PlanetFactory::EntityAutoReplenishIfNeeded(System.Int32,UnityEngine.Vector2,System.Boolean)
+  04FF  ldloc.s  V_23
+  0501  ldloc.s  V_23
+  0503  ldfld  System.Int32 BuildPreview::coverObjId
+  0508  stfld  System.Int32 BuildPreview::objId
+  050D  ldloc.s  V_22
+  050F  ldc.i4.1  
+  0510  add  
+  0511  stloc.s  V_22
+  0513  ldloc.s  V_22
+  0515  ldarg.0  
+  0516  ldfld  System.Int32 BuildTool_BlueprintPaste::bpCursor
+  051B  blt  IL_0440: ldarg.0
+  0520  ldc.i4.0  
+  0521  stloc.s  V_26
+  0523  br  IL_05d4: ldloc.s V_26
+  0528  ldarg.0  
+  0529  ldfld  BuildPreview[] BuildTool_BlueprintPaste::bpPool
+  052E  ldloc.s  V_26
+  0530  ldelem.ref  
+  0531  stloc.s  V_27
+  0533  ldloc.s  V_27
+  0535  ldfld  System.Int32 BuildPreview::coverObjId
+  053A  brfalse  IL_05ce: ldloc.s V_26
+  053F  ldloc.s  V_27
+  0541  ldfld  System.Int32 BuildPreview::coverObjId
+  0546  brfalse  IL_05ce: ldloc.s V_26
+  054B  ldloc.s  V_27
+  054D  ldfld  System.Boolean BuildPreview::willReconstructCover
+  0552  brfalse.s  IL_05ce: ldloc.s V_26
+  0554  ldloc.s  V_27
+  0556  ldfld  System.Boolean BuildPreview::willRemoveCover
+  055B  brfalse.s  IL_05a3: ldloc.s V_27
+  055D  ldc.i4.0  
+  055E  stloc.s  V_28
+  0560  ldarg.0  
+  0561  call  PlayerAction_Build BuildTool::get_actionBuild()
+  0566  ldloc.s  V_27
+  0568  ldfld  System.Int32 BuildPreview::coverObjId
+  056D  ldloc.s  V_27
+  056F  ldfld  ItemProto BuildPreview::item
+  0574  ldfld  System.Int32 ItemProto::Grade
+  0579  ldc.i4.0  
+  057A  ldloca.s  V_28
+  057C  callvirt  System.Boolean PlayerAction_Build::DoUpgradeObject(System.Int32,System.Int32,System.Int32,System.Int32&)
+  0581  brfalse.s  IL_0587: ldloc.s V_28
+  0583  ldloc.1  
+  0584  ldc.i4.1  
+  0585  add  
+  0586  stloc.1  
+  0587  ldloc.s  V_28
+  0589  ldc.i4.1  
+  058A  bne.un.s  IL_058e: ldarg.0
+  058C  ldc.i4.1  
+  058D  stloc.0  
+  058E  ldarg.0  
+  058F  ldfld  PlanetFactory BuildTool::factory
+  0594  callvirt  PlanetData PlanetFactory::get_planet()
+  0599  ldfld  PlanetPhysics PlanetData::physics
+  059E  callvirt  System.Void PlanetPhysics::SetPlanetPhysicsColliderDirty()
+  05A3  ldloc.s  V_27
+  05A5  ldfld  System.Int32 BuildPreview::coverObjId
+  05AA  ldc.i4.0  
+  05AB  bge.s  IL_05c0: ldloc.s V_27
+  05AD  ldarg.0  
+  05AE  ldfld  PlanetFactory BuildTool::factory
+  05B3  ldloc.s  V_27
+  05B5  ldfld  System.Int32 BuildPreview::coverObjId
+  05BA  neg  
+  05BB  callvirt  System.Void PlanetFactory::ReconstructTargetFinally(System.Int32)
+  05C0  ldloc.s  V_27
+  05C2  ldloc.s  V_27
+  05C4  ldfld  System.Int32 BuildPreview::coverObjId
+  05C9  stfld  System.Int32 BuildPreview::objId
+  05CE  ldloc.s  V_26
+  05D0  ldc.i4.1  
+  05D1  add  
+  05D2  stloc.s  V_26
+  05D4  ldloc.s  V_26
+  05D6  ldarg.0  
+  05D7  ldfld  System.Int32 BuildTool_BlueprintPaste::bpCursor
+  05DC  blt  IL_0528: ldarg.0
+  05E1  ldloc.1  
+  05E2  ldc.i4.0  
+  05E3  ble.s  IL_05fb: ldloc.0
+  05E5  ldstr  ui-click-2
+  05EA  ldnull  
+  05EB  call  UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+  05F0  ldc.i4.1  
+  05F1  ldc.i4.7  
+  05F2  ldc.i4.m1  
+  05F3  ldc.i4.m1  
+  05F4  conv.i8  
+  05F5  call  VFAudio VFAudio::Create(System.String,UnityEngine.Transform,UnityEngine.Vector3,System.Boolean,System.Int32,System.Int32,System.Int64)
+  05FA  pop  
+  05FB  ldloc.0  
+  05FC  brfalse.s  IL_0625: ldc.i4.0
+  05FE  ldstr  ui-error
+  0603  ldnull  
+  0604  call  UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+  0609  ldc.i4.1  
+  060A  ldc.i4.5  
+  060B  ldc.i4.m1  
+  060C  ldc.i4.m1  
+  060D  conv.i8  
+  060E  call  VFAudio VFAudio::Create(System.String,UnityEngine.Transform,UnityEngine.Vector3,System.Boolean,System.Int32,System.Int32,System.Int64)
+  0613  pop  
+  0614  ldstr  升级物品不足
+  0619  call  System.String Localization::Translate(System.String)
+  061E  ldc.i4.0  
+  061F  ldc.i4.0  
+  0620  call  System.Void UIRealtimeTip::Popup(System.String,System.Boolean,System.Int32)
+  0625  ldc.i4.0  
+  0626  stloc.s  V_29
+  0628  br  IL_0796: ldloc.s V_29
+  062D  ldarg.0  
+  062E  ldfld  BuildPreview[] BuildTool_BlueprintPaste::bpPool
+  0633  ldloc.s  V_29
+  0635  ldelem.ref  
+  0636  stloc.s  V_30
+  0638  ldloc.s  V_30
+  063A  ldfld  EBuildCondition BuildPreview::condition
+  063F  brfalse.s  IL_065c: ldloc.s V_30
+  0641  ldloc.s  V_30
+  0643  ldfld  EBuildCondition BuildPreview::condition
+  0648  ldc.i4.2  
+  0649  beq.s  IL_065c: ldloc.s V_30
+  064B  ldloc.s  V_30
+  064D  ldfld  EBuildCondition BuildPreview::condition
+  0652  ldc.i4  201
+  0657  bne.un  IL_0790: ldloc.s V_29
+  065C  ldloc.s  V_30
+  065E  ldfld  System.Int32 BuildPreview::objId
+  0663  brfalse  IL_0790: ldloc.s V_29
+  0668  ldloc.s  V_30
+  066A  ldfld  System.Int32 BuildPreview::outputObjId
+  066F  brfalse.s  IL_069b: ldloc.s V_30
+  0671  ldarg.0  
+  0672  ldfld  PlanetFactory BuildTool::factory
+  0677  ldloc.s  V_30
+  0679  ldfld  System.Int32 BuildPreview::objId
+  067E  ldloc.s  V_30
+  0680  ldfld  System.Int32 BuildPreview::outputFromSlot
+  0685  ldc.i4.1  
+  0686  ldloc.s  V_30
+  0688  ldfld  System.Int32 BuildPreview::outputObjId
+  068D  ldloc.s  V_30
+  068F  ldfld  System.Int32 BuildPreview::outputToSlot
+  0694  callvirt  System.Void PlanetFactory::WriteObjectConn(System.Int32,System.Int32,System.Boolean,System.Int32,System.Int32)
+  0699  br.s  IL_06fc: ldloc.s V_30
+  069B  ldloc.s  V_30
+  069D  ldfld  BuildPreview BuildPreview::output
+  06A2  brfalse.s  IL_06fc: ldloc.s V_30
+  06A4  ldloc.s  V_30
+  06A6  ldfld  BuildPreview BuildPreview::output
+  06AB  ldfld  EBuildCondition BuildPreview::condition
+  06B0  brfalse.s  IL_06c1: ldloc.s V_30
+  06B2  ldloc.s  V_30
+  06B4  ldfld  BuildPreview BuildPreview::output
+  06B9  ldfld  EBuildCondition BuildPreview::condition
+  06BE  ldc.i4.2  
+  06BF  bne.un.s  IL_06fc: ldloc.s V_30
+  06C1  ldloc.s  V_30
+  06C3  ldfld  BuildPreview BuildPreview::output
+  06C8  ldfld  System.Int32 BuildPreview::objId
+  06CD  brfalse.s  IL_06fc: ldloc.s V_30
+  06CF  ldarg.0  
+  06D0  ldfld  PlanetFactory BuildTool::factory
+  06D5  ldloc.s  V_30
+  06D7  ldfld  System.Int32 BuildPreview::objId
+  06DC  ldloc.s  V_30
+  06DE  ldfld  System.Int32 BuildPreview::outputFromSlot
+  06E3  ldc.i4.1  
+  06E4  ldloc.s  V_30
+  06E6  ldfld  BuildPreview BuildPreview::output
+  06EB  ldfld  System.Int32 BuildPreview::objId
+  06F0  ldloc.s  V_30
+  06F2  ldfld  System.Int32 BuildPreview::outputToSlot
+  06F7  callvirt  System.Void PlanetFactory::WriteObjectConn(System.Int32,System.Int32,System.Boolean,System.Int32,System.Int32)
+  06FC  ldloc.s  V_30
+  06FE  ldfld  System.Int32 BuildPreview::inputObjId
+  0703  brfalse.s  IL_072f: ldloc.s V_30
+  0705  ldarg.0  
+  0706  ldfld  PlanetFactory BuildTool::factory
+  070B  ldloc.s  V_30
+  070D  ldfld  System.Int32 BuildPreview::objId
+  0712  ldloc.s  V_30
+  0714  ldfld  System.Int32 BuildPreview::inputToSlot
+  0719  ldc.i4.0  
+  071A  ldloc.s  V_30
+  071C  ldfld  System.Int32 BuildPreview::inputObjId
+  0721  ldloc.s  V_30
+  0723  ldfld  System.Int32 BuildPreview::inputFromSlot
+  0728  callvirt  System.Void PlanetFactory::WriteObjectConn(System.Int32,System.Int32,System.Boolean,System.Int32,System.Int32)
+  072D  br.s  IL_0790: ldloc.s V_29
+  072F  ldloc.s  V_30
+  0731  ldfld  BuildPreview BuildPreview::input
+  0736  brfalse.s  IL_0790: ldloc.s V_29
+  0738  ldloc.s  V_30
+  073A  ldfld  BuildPreview BuildPreview::input
+  073F  ldfld  EBuildCondition BuildPreview::condition
+  0744  brfalse.s  IL_0755: ldloc.s V_30
+  0746  ldloc.s  V_30
+  0748  ldfld  BuildPreview BuildPreview::input
+  074D  ldfld  EBuildCondition BuildPreview::condition
+  0752  ldc.i4.2  
+  0753  bne.un.s  IL_0790: ldloc.s V_29
+  0755  ldloc.s  V_30
+  0757  ldfld  BuildPreview BuildPreview::input
+  075C  ldfld  System.Int32 BuildPreview::objId
+  0761  brfalse.s  IL_0790: ldloc.s V_29
+  0763  ldarg.0  
+  0764  ldfld  PlanetFactory BuildTool::factory
+  0769  ldloc.s  V_30
+  076B  ldfld  System.Int32 BuildPreview::objId
+  0770  ldloc.s  V_30
+  0772  ldfld  System.Int32 BuildPreview::inputToSlot
+  0777  ldc.i4.0  
+  0778  ldloc.s  V_30
+  077A  ldfld  BuildPreview BuildPreview::input
+  077F  ldfld  System.Int32 BuildPreview::objId
+  0784  ldloc.s  V_30
+  0786  ldfld  System.Int32 BuildPreview::inputFromSlot
+  078B  callvirt  System.Void PlanetFactory::WriteObjectConn(System.Int32,System.Int32,System.Boolean,System.Int32,System.Int32)
+  0790  ldloc.s  V_29
+  0792  ldc.i4.1  
+  0793  add  
+  0794  stloc.s  V_29
+  0796  ldloc.s  V_29
+  0798  ldarg.0  
+  0799  ldfld  System.Int32 BuildTool_BlueprintPaste::bpCursor
+  079E  blt  IL_062d: ldarg.0
+  07A3  ldc.i4.0  
+  07A4  stloc.s  V_31
+  07A6  br  IL_0995: ldloc.s V_31
+  07AB  ldarg.0  
+  07AC  ldfld  BuildPreview[] BuildTool_BlueprintPaste::bpPool
+  07B1  ldarg.0  
+  07B2  ldfld  System.Int32[] BuildTool_BlueprintPaste::bpIdWitchWillRebuildCoverBelt
+  07B7  ldloc.s  V_31
+  07B9  ldelem.i4  
+  07BA  ldelem.ref  
+  07BB  stloc.s  V_32
+  07BD  ldloca.s  V_33
+  07BF  initobj  PrebuildData
+  07C5  ldloca.s  V_33
+  07C7  ldc.i4.0  
+  07C8  stfld  System.Boolean PrebuildData::isDestroyed
+  07CD  ldloca.s  V_33
+  07CF  ldloc.s  V_32
+  07D1  ldfld  ItemProto BuildPreview::item
+  07D6  ldfld  System.Int32 Proto::ID
+  07DB  conv.i2  
+  07DC  stfld  System.Int16 PrebuildData::protoId
+  07E1  ldloca.s  V_33
+  07E3  ldloc.s  V_32
+  07E5  ldfld  PrefabDesc BuildPreview::desc
+  07EA  ldfld  System.Int32 PrefabDesc::modelIndex
+  07EF  conv.i2  
+  07F0  stfld  System.Int16 PrebuildData::modelIndex
+  07F5  ldloca.s  V_33
+  07F7  ldloc.s  V_32
+  07F9  ldfld  UnityEngine.Vector3 BuildPreview::lpos
+  07FE  stfld  UnityEngine.Vector3 PrebuildData::pos
+  0803  ldloca.s  V_33
+  0805  ldloc.s  V_32
+  0807  ldfld  UnityEngine.Vector3 BuildPreview::lpos2
+  080C  stfld  UnityEngine.Vector3 PrebuildData::pos2
+  0811  ldloca.s  V_33
+  0813  ldloc.s  V_32
+  0815  ldfld  UnityEngine.Quaternion BuildPreview::lrot
+  081A  stfld  UnityEngine.Quaternion PrebuildData::rot
+  081F  ldloca.s  V_33
+  0821  ldloc.s  V_32
+  0823  ldfld  UnityEngine.Quaternion BuildPreview::lrot2
+  0828  stfld  UnityEngine.Quaternion PrebuildData::rot2
+  082D  ldloca.s  V_33
+  082F  ldloc.s  V_32
+  0831  ldfld  System.Single BuildPreview::tilt
+  0836  stfld  System.Single PrebuildData::tilt
+  083B  ldloca.s  V_33
+  083D  ldloc.s  V_32
+  083F  ldfld  System.Int32 BuildPreview::inputOffset
+  0844  conv.i2  
+  0845  stfld  System.Int16 PrebuildData::pickOffset
+  084A  ldloca.s  V_33
+  084C  ldloc.s  V_32
+  084E  ldfld  System.Int32 BuildPreview::outputOffset
+  0853  conv.i2  
+  0854  stfld  System.Int16 PrebuildData::insertOffset
+  0859  ldloca.s  V_33
+  085B  ldloc.s  V_32
+  085D  ldfld  System.Int32 BuildPreview::recipeId
+  0862  stfld  System.Int32 PrebuildData::recipeId
+  0867  ldloca.s  V_33
+  0869  ldloc.s  V_32
+  086B  ldfld  System.Int32 BuildPreview::filterId
+  0870  stfld  System.Int32 PrebuildData::filterId
+  0875  ldloca.s  V_33
+  0877  ldloc.s  V_32
+  0879  ldfld  System.Int32 BuildPreview::paramCount
+  087E  call  System.Void PrebuildData::InitParametersArray(System.Int32)
+  0883  ldc.i4.0  
+  0884  stloc.s  V_39
+  0886  br.s  IL_08a2: ldloc.s V_39
+  0888  ldloc.s  V_33
+  088A  ldfld  System.Int32[] PrebuildData::parameters
+  088F  ldloc.s  V_39
+  0891  ldloc.s  V_32
+  0893  ldfld  System.Int32[] BuildPreview::parameters
+  0898  ldloc.s  V_39
+  089A  ldelem.i4  
+  089B  stelem.i4  
+  089C  ldloc.s  V_39
+  089E  ldc.i4.1  
+  089F  add  
+  08A0  stloc.s  V_39
+  08A2  ldloc.s  V_39
+  08A4  ldloc.s  V_32
+  08A6  ldfld  System.Int32 BuildPreview::paramCount
+  08AB  blt.s  IL_0888: ldloc.s V_33
+  08AD  ldloc.s  V_32
+  08AF  ldfld  ItemProto BuildPreview::item
+  08B4  ldfld  System.Int32 Proto::ID
+  08B9  stloc.s  V_34
+  08BB  ldarg.0  
+  08BC  call  Player BuildTool::get_player()
+  08C1  callvirt  System.Int32 Player::get_inhandItemId()
+  08C6  ldloc.s  V_34
+  08C8  bne.un.s  IL_08ed: ldc.i4.1
+  08CA  ldarg.0  
+  08CB  call  Player BuildTool::get_player()
+  08D0  callvirt  System.Int32 Player::get_inhandItemCount()
+  08D5  ldc.i4.0  
+  08D6  ble.s  IL_08ed: ldc.i4.1
+  08D8  ldc.i4.1  
+  08D9  stloc.s  V_35
+  08DB  ldarg.0  
+  08DC  call  Player BuildTool::get_player()
+  08E1  ldloc.s  V_35
+  08E3  ldloca.s  V_40
+  08E5  callvirt  System.Int32 Player::UseHandItems(System.Int32,System.Int32&)
+  08EA  pop  
+  08EB  br.s  IL_0907: ldloc.s V_32
+  08ED  ldc.i4.1  
+  08EE  stloc.s  V_35
+  08F0  ldarg.0  
+  08F1  call  Player BuildTool::get_player()
+  08F6  callvirt  StorageComponent Player::get_package()
+  08FB  ldloca.s  V_34
+  08FD  ldloca.s  V_35
+  08FF  ldloca.s  V_41
+  0901  ldc.i4.0  
+  0902  callvirt  System.Void StorageComponent::TakeTailItems(System.Int32&,System.Int32&,System.Int32&,System.Boolean)
+  0907  ldloc.s  V_32
+  0909  ldarg.0  
+  090A  ldfld  PlanetFactory BuildTool::factory
+  090F  ldloc.s  V_33
+  0911  callvirt  System.Int32 PlanetFactory::AddPrebuildDataWithComponents(PrebuildData)
+  0916  neg  
+  0917  stfld  System.Int32 BuildPreview::objId
+  091C  ldc.i4.0  
+  091D  stloc.s  V_42
+  091F  br.s  IL_095b: ldloc.s V_42
+  0921  ldarg.0  
+  0922  ldfld  PlanetFactory BuildTool::factory
+  0927  ldloc.s  V_32
+  0929  ldfld  System.Int32 BuildPreview::coverObjId
+  092E  ldloc.s  V_42
+  0930  ldloca.s  V_36
+  0932  ldloca.s  V_37
+  0934  ldloca.s  V_38
+  0936  callvirt  System.Void PlanetFactory::ReadObjectConn(System.Int32,System.Int32,System.Boolean&,System.Int32&,System.Int32&)
+  093B  ldarg.0  
+  093C  ldfld  PlanetFactory BuildTool::factory
+  0941  ldloc.s  V_32
+  0943  ldfld  System.Int32 BuildPreview::objId
+  0948  ldloc.s  V_42
+  094A  ldloc.s  V_36
+  094C  ldloc.s  V_37
+  094E  ldloc.s  V_38
+  0950  callvirt  System.Void PlanetFactory::WriteObjectConn(System.Int32,System.Int32,System.Boolean,System.Int32,System.Int32)
+  0955  ldloc.s  V_42
+  0957  ldc.i4.1  
+  0958  add  
+  0959  stloc.s  V_42
+  095B  ldloc.s  V_42
+  095D  ldc.i4.s  16
+  095F  blt.s  IL_0921: ldarg.0
+  0961  ldarg.0  
+  0962  call  PlayerAction_Build BuildTool::get_actionBuild()
+  0967  ldloc.s  V_32
+  0969  ldfld  System.Int32 BuildPreview::coverObjId
+  096E  callvirt  System.Boolean PlayerAction_Build::DoDismantleObject(System.Int32)
+  0973  pop  
+  0974  ldarg.0  
+  0975  ldfld  PlanetFactory BuildTool::factory
+  097A  ldarg.0  
+  097B  call  Player BuildTool::get_player()
+  0980  ldloc.s  V_32
+  0982  ldfld  System.Int32 BuildPreview::objId
+  0987  neg  
+  0988  ldc.i4.0  
+  0989  ldc.i4.0  
+  098A  callvirt  System.Void PlanetFactory::BuildFinally(Player,System.Int32,System.Boolean,System.Boolean)
+  098F  ldloc.s  V_31
+  0991  ldc.i4.1  
+  0992  add  
+  0993  stloc.s  V_31
+  0995  ldloc.s  V_31
+  0997  ldarg.0  
+  0998  ldfld  System.Int32 BuildTool_BlueprintPaste::bpIdWitchWillRebuildCoverBeltCursor
+  099D  blt  IL_07ab: ldarg.0
+  09A2  ldc.i4.0  
+  09A3  stloc.s  V_43
+  09A5  br.s  IL_09e9: ldloc.s V_43
+  09A7  ldarg.0  
+  09A8  ldfld  BuildPreview[] BuildTool_BlueprintPaste::bpPool
+  09AD  ldloc.s  V_43
+  09AF  ldelem.ref  
+  09B0  stloc.s  V_44
+  09B2  ldloc.s  V_44
+  09B4  ldfld  EBuildCondition BuildPreview::condition
+  09B9  brfalse.s  IL_09c5: ldloc.s V_44
+  09BB  ldloc.s  V_44
+  09BD  ldfld  EBuildCondition BuildPreview::condition
+  09C2  ldc.i4.2  
+  09C3  bne.un.s  IL_09e3: ldloc.s V_43
+  09C5  ldloc.s  V_44
+  09C7  ldfld  System.Int32 BuildPreview::objId
+  09CC  ldc.i4.0  
+  09CD  bge.s  IL_09e3: ldloc.s V_43
+  09CF  ldarg.0  
+  09D0  ldfld  PlanetFactory BuildTool::factory
+  09D5  ldloc.s  V_44
+  09D7  ldfld  System.Int32 BuildPreview::objId
+  09DC  neg  
+  09DD  ldc.i4.0  
+  09DE  callvirt  System.Void PlanetFactory::PostRefreshPrebuildDisplay(System.Int32,System.Boolean)
+  09E3  ldloc.s  V_43
+  09E5  ldc.i4.1  
+  09E6  add  
+  09E7  stloc.s  V_43
+  09E9  ldloc.s  V_43
+  09EB  ldarg.0  
+  09EC  ldfld  System.Int32 BuildTool_BlueprintPaste::bpCursor
+  09F1  blt.s  IL_09a7: ldarg.0
+  09F3  ldsfld  System.Boolean PlayerController::buildTargetAutoMove
+  09F8  brfalse.s  IL_0a0b: ldsfld GameScenarioLogic GameMain::gameScenario
+  09FA  ldarg.0  
+  09FB  call  PlayerAction_Build BuildTool::get_actionBuild()
+  0A00  ldarg.0  
+  0A01  ldfld  UnityEngine.Vector3 BuildTool_BlueprintPaste::castGroundPosSnapped
+  0A06  stfld  UnityEngine.Vector3 PlayerAction_Build::buildTargetPositionWanted
+  0A0B  ldsfld  GameScenarioLogic GameMain::gameScenario
+  0A10  brfalse.s  IL_0a22: call System.Void System.GC::Collect()
+  0A12  ldsfld  GameScenarioLogic GameMain::gameScenario
+  0A17  ldarg.0  
+  0A18  ldfld  BlueprintData BuildTool_BlueprintPaste::blueprint
+  0A1D  callvirt  System.Void GameScenarioLogic::NotifyBlueprintUsed(BlueprintData)
+  0A22  call  System.Void System.GC::Collect()
+  0A27  ret  

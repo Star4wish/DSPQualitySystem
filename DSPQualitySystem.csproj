@@ -1,0 +1,63 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    DSP Quality System.
+    net472 mirrors the game's Mono/Unity runtime; BepInEx 5.4.21 + GameLibs 0.10.35.29088.
+    GameLibs carries Assembly-CSharp.dll and UnityEngine.UI.dll only, so the remaining
+    UnityEngine modules come from the local game installation (default) or from
+    tools\unity-refs (portable copy in the handoff package). Private=false either way:
+    the game already ships these assemblies at runtime, never copy them to the plugin folder.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <AssemblyName>DSPQualitySystem</AssemblyName>
+    <RootNamespace>DSPQualitySystem</RootNamespace>
+    <Version>0.19.2</Version>
+    <AssemblyVersion>0.19.2.0</AssemblyVersion>
+    <FileVersion>0.19.2.0</FileVersion>
+    <Description>DSP Quality System - linear inc tables, product inc pool, build quality</Description>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <DebugType>none</DebugType>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS0618</NoWarn>
+    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+
+    <!-- Resolution order: -p:GameDir=... > DSP_GAME_DIR env > last known local path -->
+    <GameDir Condition="'$(GameDir)' == ''">$(DSP_GAME_DIR)</GameDir>
+    <GameDir Condition="'$(GameDir)' == ''">C:\Games\Steam\steamapps\common\Dyson Sphere Program</GameDir>
+    <GameManaged>$(GameDir)\DSPGAME_Data\Managed</GameManaged>
+
+    <!-- UnityEngine reference source: game install first, portable tools\unity-refs second. -->
+    <UnityRefDir Condition="Exists('$(GameManaged)\UnityEngine.CoreModule.dll')">$(GameManaged)</UnityRefDir>
+    <UnityRefDir Condition="'$(UnityRefDir)' == '' And Exists('$(MSBuildProjectDirectory)\tools\unity-refs\UnityEngine.CoreModule.dll')">$(MSBuildProjectDirectory)\tools\unity-refs</UnityRefDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BepInEx.Core" Version="5.4.21" PrivateAssets="all" />
+    <PackageReference Include="DysonSphereProgram.GameLibs" Version="0.10.35.29088-r.0" ExcludeAssets="runtime" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- tests\ is a standalone offline harness (tests\OfflineTests) linked to QualityMath.cs; never part of the plugin. -->
+    <Compile Remove="tests\**" />
+    <None Remove="tests\**" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(UnityRefDir)' != ''">
+    <Reference Include="$(UnityRefDir)\UnityEngine*.dll" Exclude="$(UnityRefDir)\UnityEngine.UI.dll">
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <Target Name="CheckUnityRefs" BeforeTargets="ResolveAssemblyReferences">
+    <Error Condition="'$(UnityRefDir)' == ''"
+           Text="UnityEngine reference assemblies not found. Pass -p:GameDir=&lt;game folder&gt;, set DSP_GAME_DIR, or keep tools\unity-refs from the handoff package." />
+  </Target>
+
+</Project>

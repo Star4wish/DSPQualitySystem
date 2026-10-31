@@ -1,0 +1,43 @@
+﻿METHOD System.Void BuildPreview::SetParameters(System.Int32,System.Int32[])
+  0000  ldarg.2  
+  0001  brtrue.s  IL_000d: ldarg.0
+  0003  ldarg.0  
+  0004  ldnull  
+  0005  stfld  System.Int32[] BuildPreview::parameters
+  000A  ldc.i4.0  
+  000B  starg.s  count
+  000D  ldarg.0  
+  000E  ldarg.1  
+  000F  stfld  System.Int32 BuildPreview::paramCount
+  0014  ldarg.1  
+  0015  ldc.i4.0  
+  0016  ble.s  IL_005f: ret
+  0018  ldarg.0  
+  0019  ldfld  System.Int32[] BuildPreview::parameters
+  001E  brfalse.s  IL_002b: ldarg.0
+  0020  ldarg.0  
+  0021  ldfld  System.Int32[] BuildPreview::parameters
+  0026  ldlen  
+  0027  conv.i4  
+  0028  ldarg.1  
+  0029  bge.s  IL_003e: ldarg.0
+  002B  ldarg.0  
+  002C  ldarg.0  
+  002D  ldfld  System.Int32 BuildPreview::paramCount
+  0032  newarr  System.Int32
+  0037  stfld  System.Int32[] BuildPreview::parameters
+  003C  br.s  IL_0052: ldarg.2
+  003E  ldarg.0  
+  003F  ldfld  System.Int32[] BuildPreview::parameters
+  0044  ldc.i4.0  
+  0045  ldarg.0  
+  0046  ldfld  System.Int32[] BuildPreview::parameters
+  004B  ldlen  
+  004C  conv.i4  
+  004D  call  System.Void System.Array::Clear(System.Array,System.Int32,System.Int32)
+  0052  ldarg.2  
+  0053  ldarg.0  
+  0054  ldfld  System.Int32[] BuildPreview::parameters
+  0059  ldarg.1  
+  005A  call  System.Void System.Array::Copy(System.Array,System.Array,System.Int32)
+  005F  ret  

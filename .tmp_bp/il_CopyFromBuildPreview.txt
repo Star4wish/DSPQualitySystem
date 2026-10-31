@@ -1,0 +1,226 @@
+﻿METHOD System.Void BuildingParameters::CopyFromBuildPreview(BuildPreview)
+  0000  ldarg.0  
+  0001  call  System.Void BuildingParameters::SetEmpty()
+  0006  ldarg.0  
+  0007  ldc.i4.0  
+  0008  stfld  BuildingType BuildingParameters::type
+  000D  ldarg.0  
+  000E  ldarg.1  
+  000F  ldfld  ItemProto BuildPreview::item
+  0014  ldfld  System.Int32 Proto::ID
+  0019  stfld  System.Int32 BuildingParameters::itemId
+  001E  ldarg.0  
+  001F  ldarg.1  
+  0020  ldfld  PrefabDesc BuildPreview::desc
+  0025  ldfld  System.Int32 PrefabDesc::modelIndex
+  002A  stfld  System.Int32 BuildingParameters::modelIndex
+  002F  ldarg.0  
+  0030  ldc.r4  0
+  0035  stfld  System.Single BuildingParameters::yaw
+  003A  ldarg.0  
+  003B  ldarg.1  
+  003C  ldfld  System.Int32 BuildPreview::recipeId
+  0041  stfld  System.Int32 BuildingParameters::recipeId
+  0046  ldarg.0  
+  0047  ldarg.1  
+  0048  ldfld  System.Int32 BuildPreview::filterId
+  004D  stfld  System.Int32 BuildingParameters::filterId
+  0052  ldarg.0  
+  0053  ldarg.1  
+  0054  ldfld  System.String BuildPreview::content
+  0059  stfld  System.String BuildingParameters::content
+  005E  call  RecipeProtoSet LDB::get_recipes()
+  0063  ldarg.0  
+  0064  ldfld  System.Int32 BuildingParameters::recipeId
+  0069  callvirt  T ProtoSet`1<RecipeProto>::Select(System.Int32)
+  006E  stloc.0  
+  006F  ldloc.0  
+  0070  brfalse.s  IL_007e: ldarg.1
+  0072  ldarg.0  
+  0073  ldloc.0  
+  0074  ldfld  ERecipeType RecipeProto::Type
+  0079  stfld  ERecipeType BuildingParameters::recipeType
+  007E  ldarg.1  
+  007F  ldfld  PrefabDesc BuildPreview::desc
+  0084  stloc.1  
+  0085  ldarg.0  
+  0086  ldc.i4.s  99
+  0088  stfld  BuildingType BuildingParameters::type
+  008D  ldloc.1  
+  008E  ldfld  EMinerType PrefabDesc::minerType
+  0093  brfalse.s  IL_00a9: ldloc.1
+  0095  ldloc.1  
+  0096  ldfld  System.Boolean PrefabDesc::isVeinCollector
+  009B  brtrue.s  IL_00a9: ldloc.1
+  009D  ldarg.0  
+  009E  ldc.i4.1  
+  009F  stfld  BuildingType BuildingParameters::type
+  00A4  br  IL_0274: ldarg.0
+  00A9  ldloc.1  
+  00AA  ldfld  System.Boolean PrefabDesc::isSplitter
+  00AF  brfalse.s  IL_00bd: ldloc.1
+  00B1  ldarg.0  
+  00B2  ldc.i4.2  
+  00B3  stfld  BuildingType BuildingParameters::type
+  00B8  br  IL_0274: ldarg.0
+  00BD  ldloc.1  
+  00BE  ldfld  System.Boolean PrefabDesc::isMonitor
+  00C3  brfalse.s  IL_00d2: ldloc.1
+  00C5  ldarg.0  
+  00C6  ldc.i4.s  15
+  00C8  stfld  BuildingType BuildingParameters::type
+  00CD  br  IL_0274: ldarg.0
+  00D2  ldloc.1  
+  00D3  ldfld  System.Boolean PrefabDesc::isStorage
+  00D8  brfalse.s  IL_00ee: ldloc.1
+  00DA  ldloc.1  
+  00DB  ldfld  System.Boolean PrefabDesc::isBattleBase
+  00E0  brtrue.s  IL_00ee: ldloc.1
+  00E2  ldarg.0  
+  00E3  ldc.i4.3  
+  00E4  stfld  BuildingType BuildingParameters::type
+  00E9  br  IL_0274: ldarg.0
+  00EE  ldloc.1  
+  00EF  ldfld  System.Boolean PrefabDesc::isBattleBase
+  00F4  brfalse.s  IL_0103: ldloc.1
+  00F6  ldarg.0  
+  00F7  ldc.i4.s  18
+  00F9  stfld  BuildingType BuildingParameters::type
+  00FE  br  IL_0274: ldarg.0
+  0103  ldloc.1  
+  0104  ldfld  System.Boolean PrefabDesc::isTank
+  0109  brfalse.s  IL_0117: ldloc.1
+  010B  ldarg.0  
+  010C  ldc.i4.4  
+  010D  stfld  BuildingType BuildingParameters::type
+  0112  br  IL_0274: ldarg.0
+  0117  ldloc.1  
+  0118  ldfld  System.Boolean PrefabDesc::isAssembler
+  011D  brfalse.s  IL_0155: ldloc.1
+  011F  ldarg.0  
+  0120  ldc.i4.5  
+  0121  stfld  BuildingType BuildingParameters::type
+  0126  ldarg.0  
+  0127  ldfld  ERecipeType BuildingParameters::recipeType
+  012C  brfalse  IL_0274: ldarg.0
+  0131  ldarg.0  
+  0132  ldfld  ERecipeType BuildingParameters::recipeType
+  0137  ldloc.1  
+  0138  ldfld  ERecipeType PrefabDesc::assemblerRecipeType
+  013D  beq  IL_0274: ldarg.0
+  0142  ldarg.0  
+  0143  ldc.i4.0  
+  0144  stfld  ERecipeType BuildingParameters::recipeType
+  0149  ldarg.0  
+  014A  ldc.i4.0  
+  014B  stfld  System.Int32 BuildingParameters::recipeId
+  0150  br  IL_0274: ldarg.0
+  0155  ldloc.1  
+  0156  ldfld  System.Boolean PrefabDesc::isInserter
+  015B  brfalse.s  IL_0174: ldloc.1
+  015D  ldarg.0  
+  015E  ldc.i4.6  
+  015F  stfld  BuildingType BuildingParameters::type
+  0164  ldarg.0  
+  0165  ldc.r4  0
+  016A  stfld  System.Single BuildingParameters::yaw
+  016F  br  IL_0274: ldarg.0
+  0174  ldloc.1  
+  0175  ldfld  System.Boolean PrefabDesc::isBelt
+  017A  brfalse.s  IL_0194: ldloc.1
+  017C  ldarg.0  
+  017D  ldc.i4.s  14
+  017F  stfld  BuildingType BuildingParameters::type
+  0184  ldarg.0  
+  0185  ldc.r4  0
+  018A  stfld  System.Single BuildingParameters::yaw
+  018F  br  IL_0274: ldarg.0
+  0194  ldloc.1  
+  0195  ldfld  System.Boolean PrefabDesc::isEjector
+  019A  brfalse.s  IL_01a8: ldloc.1
+  019C  ldarg.0  
+  019D  ldc.i4.7  
+  019E  stfld  BuildingType BuildingParameters::type
+  01A3  br  IL_0274: ldarg.0
+  01A8  ldloc.1  
+  01A9  ldfld  System.Boolean PrefabDesc::isLab
+  01AE  brfalse.s  IL_01d0: ldloc.1
+  01B0  ldarg.0  
+  01B1  ldc.i4.8  
+  01B2  stfld  BuildingType BuildingParameters::type
+  01B7  ldarg.0  
+  01B8  ldfld  System.Int32 BuildingParameters::recipeId
+  01BD  ldc.i4.0  
+  01BE  ble  IL_0274: ldarg.0
+  01C3  ldarg.0  
+  01C4  ldc.i4.s  15
+  01C6  stfld  ERecipeType BuildingParameters::recipeType
+  01CB  br  IL_0274: ldarg.0
+  01D0  ldloc.1  
+  01D1  ldfld  System.Boolean PrefabDesc::isStation
+  01D6  brfalse.s  IL_01e5: ldloc.1
+  01D8  ldarg.0  
+  01D9  ldc.i4.s  9
+  01DB  stfld  BuildingType BuildingParameters::type
+  01E0  br  IL_0274: ldarg.0
+  01E5  ldloc.1  
+  01E6  ldfld  System.Boolean PrefabDesc::isDispenser
+  01EB  brfalse.s  IL_01f7: ldloc.1
+  01ED  ldarg.0  
+  01EE  ldc.i4.s  10
+  01F0  stfld  BuildingType BuildingParameters::type
+  01F5  br.s  IL_0274: ldarg.0
+  01F7  ldloc.1  
+  01F8  ldfld  System.Boolean PrefabDesc::isBattleBase
+  01FD  brfalse.s  IL_0209: ldloc.1
+  01FF  ldarg.0  
+  0200  ldc.i4.s  18
+  0202  stfld  BuildingType BuildingParameters::type
+  0207  br.s  IL_0274: ldarg.0
+  0209  ldloc.1  
+  020A  ldfld  System.Boolean PrefabDesc::isTurret
+  020F  brfalse.s  IL_021b: ldloc.1
+  0211  ldarg.0  
+  0212  ldc.i4.s  11
+  0214  stfld  BuildingType BuildingParameters::type
+  0219  br.s  IL_0274: ldarg.0
+  021B  ldloc.1  
+  021C  ldfld  System.Boolean PrefabDesc::gammaRayReceiver
+  0221  brfalse.s  IL_022d: ldloc.1
+  0223  ldarg.0  
+  0224  ldc.i4.s  12
+  0226  stfld  BuildingType BuildingParameters::type
+  022B  br.s  IL_0274: ldarg.0
+  022D  ldloc.1  
+  022E  ldfld  System.Int32 PrefabDesc::fuelMask
+  0233  ldc.i4.4  
+  0234  bne.un.s  IL_0240: ldloc.1
+  0236  ldarg.0  
+  0237  ldc.i4.s  17
+  0239  stfld  BuildingType BuildingParameters::type
+  023E  br.s  IL_0274: ldarg.0
+  0240  ldloc.1  
+  0241  ldfld  System.Boolean PrefabDesc::isPowerExchanger
+  0246  brfalse.s  IL_0252: ldloc.1
+  0248  ldarg.0  
+  0249  ldc.i4.s  13
+  024B  stfld  BuildingType BuildingParameters::type
+  0250  br.s  IL_0274: ldarg.0
+  0252  ldloc.1  
+  0253  ldfld  System.Boolean PrefabDesc::isSilo
+  0258  brfalse.s  IL_0264: ldloc.1
+  025A  ldarg.0  
+  025B  ldc.i4.s  16
+  025D  stfld  BuildingType BuildingParameters::type
+  0262  br.s  IL_0274: ldarg.0
+  0264  ldloc.1  
+  0265  ldfld  System.Boolean PrefabDesc::isMarker
+  026A  brfalse.s  IL_0274: ldarg.0
+  026C  ldarg.0  
+  026D  ldc.i4.s  20
+  026F  stfld  BuildingType BuildingParameters::type
+  0274  ldarg.0  
+  0275  ldarg.1  
+  0276  ldfld  System.Int32[] BuildPreview::parameters
+  027B  call  System.Void BuildingParameters::FromParamsArray(System.Int32[])
+  0280  ret  

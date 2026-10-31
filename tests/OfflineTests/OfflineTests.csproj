@@ -1,0 +1,60 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Offline test harness for DSP Quality System. No game/Unity/BepInEx references: it links the
+    pure source files that also ship in the plugin, so the tests exercise the exact same math.
+    Run: powershell -File tests\run-tests.ps1   (prints PASS/FAIL, ends with ALL PASS)
+  -->
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <AssemblyName>DSPQualitySystem.OfflineTests</AssemblyName>
+    <RootNamespace>DSPQualitySystem.OfflineTests</RootNamespace>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="Checks.P3.cs" />
+    <Compile Include="Checks.P4.cs" />
+    <Compile Include="Checks.P4Sort.cs" />
+    <Compile Include="Checks.P4ConsumePriority.cs" />
+    <Compile Include="Checks.P5Halo.cs" />
+    <Compile Include="Checks.P5HaloCfg.cs" />
+    <Compile Include="Checks.P5Bonus.cs" />
+    <Compile Include="Checks.SaveBlob.cs" />
+    <Compile Include="Checks.P4Storage.cs" />
+    <Compile Include="Checks.SplitterFilter.cs" />
+    <Compile Include="Checks.P5SorterFilter.cs" />
+    <Compile Include="Checks.P5QualityFilter.cs" />
+    <Compile Include="Checks.P5Badges.cs" />
+    <Compile Include="Checks.CfgText.cs" />
+    <Compile Include="Checks.P5Miner.cs" />
+    <Compile Include="Checks.P5Fix.cs" />
+    <Compile Include="Checks.P5InstantBuild.cs" />
+    <Compile Include="Checks.V0180.cs" />
+    <Compile Include="Checks.P7Recycler.cs" />
+    <Compile Include="Checks.V0191.cs" />
+    <Compile Include="..\..\QualityMath.cs" Link="QualityMath.cs" />
+    <Compile Include="..\..\QualityMath.Curves.cs" Link="QualityMath.Curves.cs" />
+    <Compile Include="..\..\QualityMath.Blueprint.cs" Link="QualityMath.Blueprint.cs" />
+    <Compile Include="..\..\QualityMath.Halo.cs" Link="QualityMath.Halo.cs" />
+    <Compile Include="..\..\QualityMath.ExtraBonuses.cs" Link="QualityMath.ExtraBonuses.cs" />
+    <Compile Include="..\..\QualityMath.Storage.cs" Link="QualityMath.Storage.cs" />
+    <Compile Include="..\..\QualityMath.SplitterFilter.cs" Link="QualityMath.SplitterFilter.cs" />
+    <Compile Include="..\..\QualityMath.Badges.cs" Link="QualityMath.Badges.cs" />
+    <Compile Include="..\..\QualityData.Recycler.cs" Link="QualityData.Recycler.cs" />
+    <Compile Include="..\..\QualityConfigText.cs" Link="QualityConfigText.cs" />
+    <Compile Include="..\..\QualityBlueprintPlan.cs" Link="QualityBlueprintPlan.cs" />
+    <Compile Include="..\..\Save\JsonLite.cs" Link="JsonLite.cs" />
+    <Compile Include="..\..\Save\SaveGuard.cs" Link="SaveGuard.cs" />
+    <Compile Include="..\..\Save\QualityBlobCodec.cs" Link="QualityBlobCodec.cs" />
+  </ItemGroup>
+
+</Project>
+

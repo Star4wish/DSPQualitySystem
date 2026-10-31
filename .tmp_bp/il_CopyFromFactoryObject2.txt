@@ -1,0 +1,2137 @@
+﻿METHOD System.Boolean BuildingParameters::CopyFromFactoryObject(System.Int32,PlanetFactory,System.Boolean,System.Boolean)
+  0000  ldarg.0  
+  0001  call  System.Void BuildingParameters::SetEmpty()
+  0006  ldarg.1  
+  0007  stloc.0  
+  0008  ldarg.1  
+  0009  neg  
+  000A  stloc.1  
+  000B  ldarg.2  
+  000C  ldfld  EntityData[] PlanetFactory::entityPool
+  0011  stloc.2  
+  0012  ldarg.2  
+  0013  ldfld  PrebuildData[] PlanetFactory::prebuildPool
+  0018  stloc.3  
+  0019  ldarg.2  
+  001A  ldfld  FactorySystem PlanetFactory::factorySystem
+  001F  stloc.s  V_4
+  0021  ldarg.2  
+  0022  ldfld  FactoryStorage PlanetFactory::factoryStorage
+  0027  stloc.s  V_5
+  0029  ldarg.2  
+  002A  ldfld  DefenseSystem PlanetFactory::defenseSystem
+  002F  stloc.s  V_6
+  0031  ldarg.2  
+  0032  ldfld  ConstructionSystem PlanetFactory::constructionSystem
+  0037  pop  
+  0038  ldarg.2  
+  0039  ldfld  PowerSystem PlanetFactory::powerSystem
+  003E  stloc.s  V_7
+  0040  ldarg.2  
+  0041  ldfld  CargoTraffic PlanetFactory::cargoTraffic
+  0046  ldfld  SplitterComponent[] CargoTraffic::splitterPool
+  004B  stloc.s  V_8
+  004D  ldarg.2  
+  004E  ldfld  CargoTraffic PlanetFactory::cargoTraffic
+  0053  ldfld  MonitorComponent[] CargoTraffic::monitorPool
+  0058  stloc.s  V_9
+  005A  ldarg.2  
+  005B  ldfld  DigitalSystem PlanetFactory::digitalSystem
+  0060  ldfld  SpeakerComponent[] DigitalSystem::speakerPool
+  0065  stloc.s  V_10
+  0067  ldloc.0  
+  0068  ldc.i4.0  
+  0069  ble  IL_11e9: ldloc.1
+  006E  ldloc.2  
+  006F  ldloc.0  
+  0070  ldelema  EntityData
+  0075  ldfld  System.Int32 EntityData::id
+  007A  ldloc.0  
+  007B  bne.un  IL_11e9: ldloc.1
+  0080  ldarg.0  
+  0081  ldc.i4.s  99
+  0083  stfld  BuildingType BuildingParameters::type
+  0088  ldarg.0  
+  0089  ldloc.2  
+  008A  ldloc.0  
+  008B  ldelema  EntityData
+  0090  ldfld  System.Int16 EntityData::protoId
+  0095  stfld  System.Int32 BuildingParameters::itemId
+  009A  ldarg.0  
+  009B  ldloc.2  
+  009C  ldloc.0  
+  009D  ldelema  EntityData
+  00A2  ldfld  System.Int16 EntityData::modelIndex
+  00A7  stfld  System.Int32 BuildingParameters::modelIndex
+  00AC  ldarg.0  
+  00AD  ldloc.2  
+  00AE  ldloc.0  
+  00AF  ldelema  EntityData
+  00B4  ldfld  UnityEngine.Vector3 EntityData::pos
+  00B9  ldc.r4  0
+  00BE  call  UnityEngine.Quaternion Maths::SphericalRotation(UnityEngine.Vector3,System.Single)
+  00C3  call  UnityEngine.Quaternion UnityEngine.Quaternion::Inverse(UnityEngine.Quaternion)
+  00C8  ldloc.2  
+  00C9  ldloc.0  
+  00CA  ldelema  EntityData
+  00CF  ldfld  UnityEngine.Quaternion EntityData::rot
+  00D4  call  UnityEngine.Quaternion UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Quaternion)
+  00D9  stloc.s  V_30
+  00DB  ldloca.s  V_30
+  00DD  call  UnityEngine.Vector3 UnityEngine.Quaternion::get_eulerAngles()
+  00E2  ldfld  System.Single UnityEngine.Vector3::y
+  00E7  stfld  System.Single BuildingParameters::yaw
+  00EC  ldarg.0  
+  00ED  ldarg.0  
+  00EE  ldfld  System.Single BuildingParameters::yaw
+  00F3  ldc.r4  3
+  00F8  div  
+  00F9  call  System.Single UnityEngine.Mathf::Round(System.Single)
+  00FE  ldc.r4  3
+  0103  mul  
+  0104  stfld  System.Single BuildingParameters::yaw
+  0109  call  ModelProtoSet LDB::get_models()
+  010E  ldarg.0  
+  010F  ldfld  System.Int32 BuildingParameters::modelIndex
+  0114  callvirt  T ProtoSet`1<ModelProto>::Select(System.Int32)
+  0119  stloc.s  V_11
+  011B  ldloc.s  V_11
+  011D  brtrue.s  IL_0127: ldloc.s V_11
+  011F  ldarg.0  
+  0120  call  System.Void BuildingParameters::SetEmpty()
+  0125  ldc.i4.0  
+  0126  ret  
+  0127  ldloc.s  V_11
+  0129  ldfld  PrefabDesc ModelProto::prefabDesc
+  012E  stloc.s  V_12
+  0130  ldloc.2  
+  0131  ldloc.0  
+  0132  ldelema  EntityData
+  0137  ldfld  System.Int32 EntityData::minerId
+  013C  brfalse.s  IL_014e: ldloc.2
+  013E  ldloc.s  V_12
+  0140  ldfld  System.Boolean PrefabDesc::isVeinCollector
+  0145  brtrue.s  IL_014e: ldloc.2
+  0147  ldarg.0  
+  0148  ldc.i4.1  
+  0149  stfld  BuildingType BuildingParameters::type
+  014E  ldloc.2  
+  014F  ldloc.0  
+  0150  ldelema  EntityData
+  0155  ldfld  System.Int32 EntityData::splitterId
+  015A  stloc.s  V_13
+  015C  ldloc.s  V_13
+  015E  brfalse  IL_02cb: ldloc.2
+  0163  ldarg.0  
+  0164  ldc.i4.2  
+  0165  stfld  BuildingType BuildingParameters::type
+  016A  ldarg.0  
+  016B  ldloc.s  V_8
+  016D  ldloc.s  V_13
+  016F  ldelema  SplitterComponent
+  0174  ldfld  System.Int32 SplitterComponent::outFilter
+  0179  stfld  System.Int32 BuildingParameters::filterId
+  017E  ldloc.s  V_8
+  0180  ldloc.s  V_13
+  0182  ldelema  SplitterComponent
+  0187  ldfld  System.Boolean SplitterComponent::inPriority
+  018C  brfalse.s  IL_0208: ldloc.s V_8
+  018E  ldloc.s  V_8
+  0190  ldloc.s  V_13
+  0192  ldelema  SplitterComponent
+  0197  ldfld  System.Int32 SplitterComponent::input0
+  019C  stloc.s  V_31
+  019E  ldloc.s  V_31
+  01A0  ldloc.s  V_8
+  01A2  ldloc.s  V_13
+  01A4  ldelema  SplitterComponent
+  01A9  ldfld  System.Int32 SplitterComponent::beltA
+  01AE  bne.un.s  IL_01b9: ldloc.s V_31
+  01B0  ldarg.0  
+  01B1  ldc.i4.1  
+  01B2  stfld  System.Int32 BuildingParameters::mode0
+  01B7  br.s  IL_0208: ldloc.s V_8
+  01B9  ldloc.s  V_31
+  01BB  ldloc.s  V_8
+  01BD  ldloc.s  V_13
+  01BF  ldelema  SplitterComponent
+  01C4  ldfld  System.Int32 SplitterComponent::beltB
+  01C9  bne.un.s  IL_01d4: ldloc.s V_31
+  01CB  ldarg.0  
+  01CC  ldc.i4.1  
+  01CD  stfld  System.Int32 BuildingParameters::mode1
+  01D2  br.s  IL_0208: ldloc.s V_8
+  01D4  ldloc.s  V_31
+  01D6  ldloc.s  V_8
+  01D8  ldloc.s  V_13
+  01DA  ldelema  SplitterComponent
+  01DF  ldfld  System.Int32 SplitterComponent::beltC
+  01E4  bne.un.s  IL_01ef: ldloc.s V_31
+  01E6  ldarg.0  
+  01E7  ldc.i4.1  
+  01E8  stfld  System.Int32 BuildingParameters::mode2
+  01ED  br.s  IL_0208: ldloc.s V_8
+  01EF  ldloc.s  V_31
+  01F1  ldloc.s  V_8
+  01F3  ldloc.s  V_13
+  01F5  ldelema  SplitterComponent
+  01FA  ldfld  System.Int32 SplitterComponent::beltD
+  01FF  bne.un.s  IL_0208: ldloc.s V_8
+  0201  ldarg.0  
+  0202  ldc.i4.1  
+  0203  stfld  System.Int32 BuildingParameters::mode3
+  0208  ldloc.s  V_8
+  020A  ldloc.s  V_13
+  020C  ldelema  SplitterComponent
+  0211  ldfld  System.Boolean SplitterComponent::outPriority
+  0216  brfalse.s  IL_0292: ldarg.0
+  0218  ldloc.s  V_8
+  021A  ldloc.s  V_13
+  021C  ldelema  SplitterComponent
+  0221  ldfld  System.Int32 SplitterComponent::output0
+  0226  stloc.s  V_32
+  0228  ldloc.s  V_32
+  022A  ldloc.s  V_8
+  022C  ldloc.s  V_13
+  022E  ldelema  SplitterComponent
+  0233  ldfld  System.Int32 SplitterComponent::beltA
+  0238  bne.un.s  IL_0243: ldloc.s V_32
+  023A  ldarg.0  
+  023B  ldc.i4.1  
+  023C  stfld  System.Int32 BuildingParameters::mode0
+  0241  br.s  IL_0292: ldarg.0
+  0243  ldloc.s  V_32
+  0245  ldloc.s  V_8
+  0247  ldloc.s  V_13
+  0249  ldelema  SplitterComponent
+  024E  ldfld  System.Int32 SplitterComponent::beltB
+  0253  bne.un.s  IL_025e: ldloc.s V_32
+  0255  ldarg.0  
+  0256  ldc.i4.1  
+  0257  stfld  System.Int32 BuildingParameters::mode1
+  025C  br.s  IL_0292: ldarg.0
+  025E  ldloc.s  V_32
+  0260  ldloc.s  V_8
+  0262  ldloc.s  V_13
+  0264  ldelema  SplitterComponent
+  0269  ldfld  System.Int32 SplitterComponent::beltC
+  026E  bne.un.s  IL_0279: ldloc.s V_32
+  0270  ldarg.0  
+  0271  ldc.i4.1  
+  0272  stfld  System.Int32 BuildingParameters::mode2
+  0277  br.s  IL_0292: ldarg.0
+  0279  ldloc.s  V_32
+  027B  ldloc.s  V_8
+  027D  ldloc.s  V_13
+  027F  ldelema  SplitterComponent
+  0284  ldfld  System.Int32 SplitterComponent::beltD
+  0289  bne.un.s  IL_0292: ldarg.0
+  028B  ldarg.0  
+  028C  ldc.i4.1  
+  028D  stfld  System.Int32 BuildingParameters::mode3
+  0292  ldarg.0  
+  0293  ldc.i4.s  12
+  0295  newarr  System.Int32
+  029A  stfld  System.Int32[] BuildingParameters::parameters
+  029F  ldarg.0  
+  02A0  ldfld  System.Int32[] BuildingParameters::parameters
+  02A5  ldc.i4.4  
+  02A6  ldloc.s  V_8
+  02A8  ldloc.s  V_13
+  02AA  ldelema  SplitterComponent
+  02AF  ldfld  System.Byte SplitterComponent::prioritySlotPresets
+  02B4  stelem.i4  
+  02B5  ldarg.0  
+  02B6  ldfld  System.Int32[] BuildingParameters::parameters
+  02BB  ldc.i4.5  
+  02BC  ldloc.s  V_8
+  02BE  ldloc.s  V_13
+  02C0  ldelema  SplitterComponent
+  02C5  ldfld  System.Int32 SplitterComponent::outFilterPreset
+  02CA  stelem.i4  
+  02CB  ldloc.2  
+  02CC  ldloc.0  
+  02CD  ldelema  EntityData
+  02D2  ldfld  System.Int32 EntityData::monitorId
+  02D7  stloc.s  V_14
+  02D9  ldloc.s  V_14
+  02DB  brfalse  IL_04f4: ldloc.2
+  02E0  ldarg.0  
+  02E1  ldc.i4.s  15
+  02E3  stfld  BuildingType BuildingParameters::type
+  02E8  ldarg.0  
+  02E9  ldloc.s  V_9
+  02EB  ldloc.s  V_14
+  02ED  ldelema  MonitorComponent
+  02F2  ldfld  System.Byte MonitorComponent::spawnItemOperator
+  02F7  stfld  System.Int32 BuildingParameters::mode0
+  02FC  ldarg.0  
+  02FD  ldc.i4  128
+  0302  newarr  System.Int32
+  0307  stfld  System.Int32[] BuildingParameters::parameters
+  030C  ldarg.0  
+  030D  ldfld  System.Int32[] BuildingParameters::parameters
+  0312  ldc.i4.0  
+  0313  ldloc.s  V_9
+  0315  ldloc.s  V_14
+  0317  ldelema  MonitorComponent
+  031C  ldfld  System.Int32 MonitorComponent::targetBeltId
+  0321  stelem.i4  
+  0322  ldarg.0  
+  0323  ldfld  System.Int32[] BuildingParameters::parameters
+  0328  ldc.i4.1  
+  0329  ldloc.s  V_9
+  032B  ldloc.s  V_14
+  032D  ldelema  MonitorComponent
+  0332  ldfld  System.SByte MonitorComponent::offset
+  0337  stelem.i4  
+  0338  ldarg.0  
+  0339  ldfld  System.Int32[] BuildingParameters::parameters
+  033E  ldc.i4.2  
+  033F  ldloc.s  V_9
+  0341  ldloc.s  V_14
+  0343  ldelema  MonitorComponent
+  0348  ldfld  System.Int32 MonitorComponent::targetCargoBytes
+  034D  stelem.i4  
+  034E  ldarg.0  
+  034F  ldfld  System.Int32[] BuildingParameters::parameters
+  0354  ldc.i4.3  
+  0355  ldloc.s  V_9
+  0357  ldloc.s  V_14
+  0359  ldelema  MonitorComponent
+  035E  call  System.Int32 MonitorComponent::get_curPeriodTickCount()
+  0363  stelem.i4  
+  0364  ldarg.0  
+  0365  ldfld  System.Int32[] BuildingParameters::parameters
+  036A  ldc.i4.5  
+  036B  ldloc.s  V_9
+  036D  ldloc.s  V_14
+  036F  ldelema  MonitorComponent
+  0374  ldfld  System.Byte MonitorComponent::passColorId
+  0379  stelem.i4  
+  037A  ldarg.0  
+  037B  ldfld  System.Int32[] BuildingParameters::parameters
+  0380  ldc.i4.6  
+  0381  ldloc.s  V_9
+  0383  ldloc.s  V_14
+  0385  ldelema  MonitorComponent
+  038A  ldfld  System.Byte MonitorComponent::failColorId
+  038F  stelem.i4  
+  0390  ldarg.0  
+  0391  ldfld  System.Int32[] BuildingParameters::parameters
+  0396  ldc.i4.4  
+  0397  ldloc.s  V_9
+  0399  ldloc.s  V_14
+  039B  ldelema  MonitorComponent
+  03A0  ldfld  System.Byte MonitorComponent::passOperator
+  03A5  stelem.i4  
+  03A6  ldarg.0  
+  03A7  ldfld  System.Int32[] BuildingParameters::parameters
+  03AC  ldc.i4.s  12
+  03AE  ldloc.s  V_9
+  03B0  ldloc.s  V_14
+  03B2  ldelema  MonitorComponent
+  03B7  ldfld  System.Byte MonitorComponent::alarmMode
+  03BC  stelem.i4  
+  03BD  ldarg.0  
+  03BE  ldfld  System.Int32[] BuildingParameters::parameters
+  03C3  ldc.i4.s  14
+  03C5  ldloc.s  V_9
+  03C7  ldloc.s  V_14
+  03C9  ldelema  MonitorComponent
+  03CE  ldfld  System.Int32 MonitorComponent::cargoFilter
+  03D3  stelem.i4  
+  03D4  ldarg.0  
+  03D5  ldfld  System.Int32[] BuildingParameters::parameters
+  03DA  ldc.i4.s  10
+  03DC  ldloc.s  V_9
+  03DE  ldloc.s  V_14
+  03E0  ldelema  MonitorComponent
+  03E5  ldfld  System.Int32 MonitorComponent::systemWarningMode
+  03EA  stelem.i4  
+  03EB  ldarg.0  
+  03EC  ldfld  System.Int32[] BuildingParameters::parameters
+  03F1  ldc.i4.s  17
+  03F3  ldloc.s  V_9
+  03F5  ldloc.s  V_14
+  03F7  ldelema  MonitorComponent
+  03FC  ldfld  System.Int32 MonitorComponent::systemWarningSignalId
+  0401  stelem.i4  
+  0402  ldloc.2  
+  0403  ldloc.0  
+  0404  ldelema  EntityData
+  0409  ldfld  System.Int32 EntityData::speakerId
+  040E  stloc.s  V_33
+  0410  ldloc.s  V_33
+  0412  brfalse  IL_04dd: ldarg.0
+  0417  ldarg.0  
+  0418  ldfld  System.Int32[] BuildingParameters::parameters
+  041D  ldc.i4.7  
+  041E  ldloc.s  V_10
+  0420  ldloc.s  V_33
+  0422  ldelema  SpeakerComponent
+  0427  ldfld  System.Byte SpeakerComponent::tone
+  042C  stelem.i4  
+  042D  ldarg.0  
+  042E  ldfld  System.Int32[] BuildingParameters::parameters
+  0433  ldc.i4.8  
+  0434  ldloc.s  V_10
+  0436  ldloc.s  V_33
+  0438  ldelema  SpeakerComponent
+  043D  ldfld  System.Byte SpeakerComponent::volume
+  0442  stelem.i4  
+  0443  ldarg.0  
+  0444  ldfld  System.Int32[] BuildingParameters::parameters
+  0449  ldc.i4.s  9
+  044B  ldloc.s  V_10
+  044D  ldloc.s  V_33
+  044F  ldelema  SpeakerComponent
+  0454  ldfld  System.Byte SpeakerComponent::pitch
+  0459  stelem.i4  
+  045A  ldarg.0  
+  045B  ldfld  System.Int32[] BuildingParameters::parameters
+  0460  ldc.i4.s  11
+  0462  ldloc.s  V_10
+  0464  ldloc.s  V_33
+  0466  ldelema  SpeakerComponent
+  046B  ldfld  System.Boolean SpeakerComponent::repeat
+  0470  brtrue.s  IL_0475: ldc.i4.1
+  0472  ldc.i4.0  
+  0473  br.s  IL_0476: stelem.i4
+  0475  ldc.i4.1  
+  0476  stelem.i4  
+  0477  ldarg.0  
+  0478  ldfld  System.Int32[] BuildingParameters::parameters
+  047D  ldc.i4.s  13
+  047F  ldloc.s  V_10
+  0481  ldloc.s  V_33
+  0483  ldelema  SpeakerComponent
+  0488  ldfld  System.Single SpeakerComponent::length
+  048D  ldc.r4  10000
+  0492  mul  
+  0493  call  System.Int32 UnityEngine.Mathf::RoundToInt(System.Single)
+  0498  stelem.i4  
+  0499  ldarg.0  
+  049A  ldfld  System.Int32[] BuildingParameters::parameters
+  049F  ldc.i4.s  18
+  04A1  ldloc.s  V_10
+  04A3  ldloc.s  V_33
+  04A5  ldelema  SpeakerComponent
+  04AA  ldfld  System.Single SpeakerComponent::falloffRadius0
+  04AF  ldc.r4  10
+  04B4  mul  
+  04B5  call  System.Int32 UnityEngine.Mathf::RoundToInt(System.Single)
+  04BA  stelem.i4  
+  04BB  ldarg.0  
+  04BC  ldfld  System.Int32[] BuildingParameters::parameters
+  04C1  ldc.i4.s  19
+  04C3  ldloc.s  V_10
+  04C5  ldloc.s  V_33
+  04C7  ldelema  SpeakerComponent
+  04CC  ldfld  System.Single SpeakerComponent::falloffRadius1
+  04D1  ldc.r4  10
+  04D6  mul  
+  04D7  call  System.Int32 UnityEngine.Mathf::RoundToInt(System.Single)
+  04DC  stelem.i4  
+  04DD  ldarg.0  
+  04DE  ldfld  System.Int32[] BuildingParameters::parameters
+  04E3  ldc.i4.s  21
+  04E5  ldloc.s  V_9
+  04E7  ldloc.s  V_14
+  04E9  ldelema  MonitorComponent
+  04EE  ldfld  System.Int32 MonitorComponent::digitalSignalId
+  04F3  stelem.i4  
+  04F4  ldloc.2  
+  04F5  ldloc.0  
+  04F6  ldelema  EntityData
+  04FB  ldfld  System.Int32 EntityData::storageId
+  0500  stloc.s  V_15
+  0502  ldloc.2  
+  0503  ldloc.0  
+  0504  ldelema  EntityData
+  0509  ldfld  System.Int32 EntityData::battleBaseId
+  050E  stloc.s  V_16
+  0510  ldloc.s  V_15
+  0512  brfalse  IL_05b4: ldloc.s V_16
+  0517  ldloc.s  V_16
+  0519  brtrue  IL_05b4: ldloc.s V_16
+  051E  ldarg.0  
+  051F  ldc.i4.3  
+  0520  stfld  BuildingType BuildingParameters::type
+  0525  ldloc.s  V_5
+  0527  ldfld  StorageComponent[] FactoryStorage::storagePool
+  052C  ldloc.s  V_15
+  052E  ldelem.ref  
+  052F  stloc.s  V_34
+  0531  ldarg.0  
+  0532  ldloc.s  V_34
+  0534  ldfld  System.Int32 StorageComponent::bans
+  0539  stfld  System.Int32 BuildingParameters::mode0
+  053E  ldarg.0  
+  053F  ldloc.s  V_34
+  0541  ldfld  EStorageType StorageComponent::type
+  0546  stfld  System.Int32 BuildingParameters::mode1
+  054B  ldarg.0  
+  054C  ldfld  System.Int32 BuildingParameters::mode1
+  0551  ldc.i4.0  
+  0552  ble.s  IL_05b4: ldloc.s V_16
+  0554  ldarg.0  
+  0555  ldc.i4.s  9
+  0557  stfld  System.Int32 BuildingParameters::mode1
+  055C  ldc.i4.s  10
+  055E  ldloc.s  V_34
+  0560  ldfld  System.Int32 StorageComponent::size
+  0565  add  
+  0566  stloc.s  V_35
+  0568  ldloc.s  V_35
+  056A  ldc.i4.s  110
+  056C  bge.s  IL_0572: ldarg.0
+  056E  ldc.i4.s  110
+  0570  stloc.s  V_35
+  0572  ldarg.0  
+  0573  ldloc.s  V_35
+  0575  newarr  System.Int32
+  057A  stfld  System.Int32[] BuildingParameters::parameters
+  057F  ldc.i4.0  
+  0580  stloc.s  V_36
+  0582  br.s  IL_05a9: ldloc.s V_36
+  0584  ldarg.0  
+  0585  ldfld  System.Int32[] BuildingParameters::parameters
+  058A  ldc.i4.s  10
+  058C  ldloc.s  V_36
+  058E  add  
+  058F  ldloc.s  V_34
+  0591  ldfld  StorageComponent/GRID[] StorageComponent::grids
+  0596  ldloc.s  V_36
+  0598  ldelema  StorageComponent/GRID
+  059D  ldfld  System.Int32 StorageComponent/GRID::filter
+  05A2  stelem.i4  
+  05A3  ldloc.s  V_36
+  05A5  ldc.i4.1  
+  05A6  add  
+  05A7  stloc.s  V_36
+  05A9  ldloc.s  V_36
+  05AB  ldloc.s  V_34
+  05AD  ldfld  System.Int32 StorageComponent::size
+  05B2  blt.s  IL_0584: ldarg.0
+  05B4  ldloc.s  V_16
+  05B6  brfalse  IL_0762: ldloc.2
+  05BB  ldarg.0  
+  05BC  ldc.i4.s  18
+  05BE  stfld  BuildingType BuildingParameters::type
+  05C3  ldloc.s  V_5
+  05C5  ldfld  StorageComponent[] FactoryStorage::storagePool
+  05CA  ldloc.s  V_15
+  05CC  ldelem.ref  
+  05CD  stloc.s  V_37
+  05CF  ldloc.s  V_6
+  05D1  ldfld  ObjectPool`1<BattleBaseComponent> DefenseSystem::battleBases
+  05D6  ldfld  T[] ObjectPool`1<BattleBaseComponent>::buffer
+  05DB  ldloc.s  V_16
+  05DD  ldelem.ref  
+  05DE  stloc.s  V_38
+  05E0  ldloc.s  V_38
+  05E2  ldfld  ConstructionModuleComponent BattleBaseComponent::constructionModule
+  05E7  stloc.s  V_39
+  05E9  ldloc.s  V_38
+  05EB  ldfld  CombatModuleComponent BattleBaseComponent::combatModule
+  05F0  stloc.s  V_40
+  05F2  ldloc.s  V_7
+  05F4  ldfld  PowerConsumerComponent[] PowerSystem::consumerPool
+  05F9  ldloc.s  V_38
+  05FB  ldfld  System.Int32 BattleBaseComponent::pcId
+  0600  ldelema  PowerConsumerComponent
+  0605  ldfld  System.Int64 PowerConsumerComponent::workEnergyPerTick
+  060A  conv.i4  
+  060B  stloc.s  V_41
+  060D  ldarg.0  
+  060E  ldc.i4.s  110
+  0610  newarr  System.Int32
+  0615  stfld  System.Int32[] BuildingParameters::parameters
+  061A  ldarg.0  
+  061B  ldloc.s  V_37
+  061D  ldfld  System.Int32 StorageComponent::bans
+  0622  stfld  System.Int32 BuildingParameters::mode0
+  0627  ldarg.0  
+  0628  ldloc.s  V_37
+  062A  ldfld  EStorageType StorageComponent::type
+  062F  stfld  System.Int32 BuildingParameters::mode1
+  0634  ldarg.0  
+  0635  ldfld  System.Int32 BuildingParameters::mode1
+  063A  ldc.i4.0  
+  063B  ble.s  IL_0686: ldc.i4.s 10
+  063D  ldarg.0  
+  063E  ldc.i4.s  9
+  0640  stfld  System.Int32 BuildingParameters::mode1
+  0645  ldc.i4.0  
+  0646  stloc.s  V_44
+  0648  br.s  IL_066f: ldloc.s V_44
+  064A  ldarg.0  
+  064B  ldfld  System.Int32[] BuildingParameters::parameters
+  0650  ldc.i4.s  10
+  0652  ldloc.s  V_44
+  0654  add  
+  0655  ldloc.s  V_37
+  0657  ldfld  StorageComponent/GRID[] StorageComponent::grids
+  065C  ldloc.s  V_44
+  065E  ldelema  StorageComponent/GRID
+  0663  ldfld  System.Int32 StorageComponent/GRID::filter
+  0668  stelem.i4  
+  0669  ldloc.s  V_44
+  066B  ldc.i4.1  
+  066C  add  
+  066D  stloc.s  V_44
+  066F  ldloc.s  V_44
+  0671  ldloc.s  V_37
+  0673  ldfld  System.Int32 StorageComponent::size
+  0678  bge.s  IL_0680: ldc.i4.s 70
+  067A  ldloc.s  V_44
+  067C  ldc.i4.s  60
+  067E  blt.s  IL_064a: ldarg.0
+  0680  ldc.i4.s  70
+  0682  stloc.s  V_42
+  0684  br.s  IL_068a: ldarg.0
+  0686  ldc.i4.s  10
+  0688  stloc.s  V_42
+  068A  ldarg.0  
+  068B  ldfld  System.Int32[] BuildingParameters::parameters
+  0690  ldloc.s  V_42
+  0692  ldloc.s  V_41
+  0694  stelem.i4  
+  0695  ldarg.0  
+  0696  ldfld  System.Int32[] BuildingParameters::parameters
+  069B  ldloc.s  V_42
+  069D  ldc.i4.1  
+  069E  add  
+  069F  ldloc.s  V_38
+  06A1  ldfld  System.Boolean BattleBaseComponent::autoPickEnabled
+  06A6  brtrue.s  IL_06ab: ldc.i4.1
+  06A8  ldc.i4.0  
+  06A9  br.s  IL_06ac: stelem.i4
+  06AB  ldc.i4.1  
+  06AC  stelem.i4  
+  06AD  ldarg.0  
+  06AE  ldfld  System.Int32[] BuildingParameters::parameters
+  06B3  ldloc.s  V_42
+  06B5  ldc.i4.2  
+  06B6  add  
+  06B7  ldloc.s  V_40
+  06B9  ldfld  System.Boolean CombatModuleComponent::autoReplenishFleet
+  06BE  brtrue.s  IL_06c3: ldc.i4.1
+  06C0  ldc.i4.0  
+  06C1  br.s  IL_06c4: stelem.i4
+  06C3  ldc.i4.1  
+  06C4  stelem.i4  
+  06C5  ldarg.0  
+  06C6  ldfld  System.Int32[] BuildingParameters::parameters
+  06CB  ldloc.s  V_42
+  06CD  ldc.i4.3  
+  06CE  add  
+  06CF  ldloc.s  V_40
+  06D1  ldfld  System.Boolean CombatModuleComponent::moduleEnabled
+  06D6  brtrue.s  IL_06db: ldc.i4.1
+  06D8  ldc.i4.0  
+  06D9  br.s  IL_06dc: stelem.i4
+  06DB  ldc.i4.1  
+  06DC  stelem.i4  
+  06DD  ldarg.0  
+  06DE  ldfld  System.Int32[] BuildingParameters::parameters
+  06E3  ldloc.s  V_42
+  06E5  ldc.i4.4  
+  06E6  add  
+  06E7  ldloc.s  V_39
+  06E9  ldfld  System.Boolean ConstructionModuleComponent::autoReconstruct
+  06EE  brtrue.s  IL_06f3: ldc.i4.1
+  06F0  ldc.i4.0  
+  06F1  br.s  IL_06f4: stelem.i4
+  06F3  ldc.i4.1  
+  06F4  stelem.i4  
+  06F5  ldarg.0  
+  06F6  ldfld  System.Int32[] BuildingParameters::parameters
+  06FB  ldloc.s  V_42
+  06FD  ldc.i4.5  
+  06FE  add  
+  06FF  ldloc.s  V_39
+  0701  ldfld  System.Boolean ConstructionModuleComponent::droneEnabled
+  0706  brtrue.s  IL_070b: ldc.i4.1
+  0708  ldc.i4.0  
+  0709  br.s  IL_070c: stelem.i4
+  070B  ldc.i4.1  
+  070C  stelem.i4  
+  070D  ldarg.0  
+  070E  ldfld  System.Int32[] BuildingParameters::parameters
+  0713  ldloc.s  V_42
+  0715  ldc.i4.6  
+  0716  add  
+  0717  ldloc.s  V_39
+  0719  callvirt  System.Int32 ConstructionModuleComponent::get_dronePriority()
+  071E  stelem.i4  
+  071F  ldloc.s  V_40
+  0721  ldfld  ModuleFleet[] CombatModuleComponent::moduleFleets
+  0726  ldc.i4.0  
+  0727  ldelema  ModuleFleet
+  072C  ldfld  ModuleFighter[] ModuleFleet::fighters
+  0731  stloc.s  V_43
+  0733  ldc.i4.0  
+  0734  stloc.s  V_45
+  0736  br.s  IL_075a: ldloc.s V_45
+  0738  ldarg.0  
+  0739  ldfld  System.Int32[] BuildingParameters::parameters
+  073E  ldloc.s  V_42
+  0740  ldc.i4.7  
+  0741  add  
+  0742  ldloc.s  V_45
+  0744  add  
+  0745  ldloc.s  V_43
+  0747  ldloc.s  V_45
+  0749  ldelema  ModuleFighter
+  074E  ldfld  System.Int32 ModuleFighter::itemId
+  0753  stelem.i4  
+  0754  ldloc.s  V_45
+  0756  ldc.i4.1  
+  0757  add  
+  0758  stloc.s  V_45
+  075A  ldloc.s  V_45
+  075C  ldloc.s  V_43
+  075E  ldlen  
+  075F  conv.i4  
+  0760  blt.s  IL_0738: ldarg.0
+  0762  ldloc.2  
+  0763  ldloc.0  
+  0764  ldelema  EntityData
+  0769  ldfld  System.Int32 EntityData::tankId
+  076E  stloc.s  V_17
+  0770  ldloc.s  V_17
+  0772  brfalse.s  IL_07b9: ldloc.2
+  0774  ldarg.0  
+  0775  ldc.i4.4  
+  0776  stfld  BuildingType BuildingParameters::type
+  077B  ldarg.0  
+  077C  ldloc.s  V_5
+  077E  ldfld  TankComponent[] FactoryStorage::tankPool
+  0783  ldloc.s  V_17
+  0785  ldelema  TankComponent
+  078A  ldfld  System.Boolean TankComponent::outputSwitch
+  078F  brtrue.s  IL_0794: ldc.i4.1
+  0791  ldc.i4.m1  
+  0792  br.s  IL_0795: stfld System.Int32 BuildingParameters::mode0
+  0794  ldc.i4.1  
+  0795  stfld  System.Int32 BuildingParameters::mode0
+  079A  ldarg.0  
+  079B  ldloc.s  V_5
+  079D  ldfld  TankComponent[] FactoryStorage::tankPool
+  07A2  ldloc.s  V_17
+  07A4  ldelema  TankComponent
+  07A9  ldfld  System.Boolean TankComponent::inputSwitch
+  07AE  brtrue.s  IL_07b3: ldc.i4.1
+  07B0  ldc.i4.m1  
+  07B1  br.s  IL_07b4: stfld System.Int32 BuildingParameters::mode1
+  07B3  ldc.i4.1  
+  07B4  stfld  System.Int32 BuildingParameters::mode1
+  07B9  ldloc.2  
+  07BA  ldloc.0  
+  07BB  ldelema  EntityData
+  07C0  ldfld  System.Int32 EntityData::assemblerId
+  07C5  stloc.s  V_18
+  07C7  ldloc.s  V_18
+  07C9  brfalse.s  IL_0831: ldloc.2
+  07CB  ldarg.0  
+  07CC  ldc.i4.5  
+  07CD  stfld  BuildingType BuildingParameters::type
+  07D2  ldarg.0  
+  07D3  ldloc.s  V_4
+  07D5  ldfld  AssemblerComponent[] FactorySystem::assemblerPool
+  07DA  ldloc.s  V_18
+  07DC  ldelema  AssemblerComponent
+  07E1  ldfld  System.Int32 AssemblerComponent::recipeId
+  07E6  stfld  System.Int32 BuildingParameters::recipeId
+  07EB  ldarg.0  
+  07EC  ldloc.s  V_4
+  07EE  ldfld  AssemblerComponent[] FactorySystem::assemblerPool
+  07F3  ldloc.s  V_18
+  07F5  ldelema  AssemblerComponent
+  07FA  ldfld  ERecipeType AssemblerComponent::recipeType
+  07FF  stfld  ERecipeType BuildingParameters::recipeType
+  0804  ldarg.0  
+  0805  ldc.i4.1  
+  0806  newarr  System.Int32
+  080B  stfld  System.Int32[] BuildingParameters::parameters
+  0810  ldarg.0  
+  0811  ldfld  System.Int32[] BuildingParameters::parameters
+  0816  ldc.i4.0  
+  0817  ldloc.s  V_4
+  0819  ldfld  AssemblerComponent[] FactorySystem::assemblerPool
+  081E  ldloc.s  V_18
+  0820  ldelema  AssemblerComponent
+  0825  ldfld  System.Boolean AssemblerComponent::forceAccMode
+  082A  brtrue.s  IL_082f: ldc.i4.1
+  082C  ldc.i4.0  
+  082D  br.s  IL_0830: stelem.i4
+  082F  ldc.i4.1  
+  0830  stelem.i4  
+  0831  ldloc.2  
+  0832  ldloc.0  
+  0833  ldelema  EntityData
+  0838  ldfld  System.Int32 EntityData::inserterId
+  083D  stloc.s  V_19
+  083F  ldloc.s  V_19
+  0841  brfalse  IL_08cf: ldloc.2
+  0846  ldarg.0  
+  0847  ldc.i4.6  
+  0848  stfld  BuildingType BuildingParameters::type
+  084D  ldarg.0  
+  084E  ldc.r4  0
+  0853  stfld  System.Single BuildingParameters::yaw
+  0858  ldarg.0  
+  0859  ldloc.s  V_4
+  085B  ldfld  InserterComponent[] FactorySystem::inserterPool
+  0860  ldloc.s  V_19
+  0862  ldelema  InserterComponent
+  0867  ldfld  System.Int32 InserterComponent::filter
+  086C  stfld  System.Int32 BuildingParameters::filterId
+  0871  ldarg.0  
+  0872  ldc.i4.1  
+  0873  newarr  System.Int32
+  0878  stfld  System.Int32[] BuildingParameters::parameters
+  087D  ldc.i4  200000
+  0882  stloc.s  V_46
+  0884  call  ItemProtoSet LDB::get_items()
+  0889  ldarg.0  
+  088A  ldfld  System.Int32 BuildingParameters::itemId
+  088F  callvirt  T ProtoSet`1<ItemProto>::Select(System.Int32)
+  0894  stloc.s  V_47
+  0896  ldloc.s  V_47
+  0898  brfalse.s  IL_08a8: ldloc.s V_4
+  089A  ldloc.s  V_47
+  089C  ldfld  PrefabDesc ItemProto::prefabDesc
+  08A1  ldfld  System.Int32 PrefabDesc::inserterSTT
+  08A6  stloc.s  V_46
+  08A8  ldloc.s  V_4
+  08AA  ldfld  InserterComponent[] FactorySystem::inserterPool
+  08AF  ldloc.s  V_19
+  08B1  ldelema  InserterComponent
+  08B6  ldfld  System.Int32 InserterComponent::stt
+  08BB  ldloc.s  V_46
+  08BD  ldc.i4.4  
+  08BE  div  
+  08BF  add  
+  08C0  ldloc.s  V_46
+  08C2  div  
+  08C3  stloc.s  V_48
+  08C5  ldarg.0  
+  08C6  ldfld  System.Int32[] BuildingParameters::parameters
+  08CB  ldc.i4.0  
+  08CC  ldloc.s  V_48
+  08CE  stelem.i4  
+  08CF  ldloc.2  
+  08D0  ldloc.0  
+  08D1  ldelema  EntityData
+  08D6  ldfld  System.Int32 EntityData::beltId
+  08DB  stloc.s  V_20
+  08DD  ldloc.s  V_20
+  08DF  brfalse  IL_0978: ldloc.2
+  08E4  ldarg.0  
+  08E5  ldc.i4.s  14
+  08E7  stfld  BuildingType BuildingParameters::type
+  08EC  ldarg.0  
+  08ED  ldc.r4  0
+  08F2  stfld  System.Single BuildingParameters::yaw
+  08F7  ldarg.0  
+  08F8  ldloc.2  
+  08F9  ldloc.0  
+  08FA  ldelema  EntityData
+  08FF  ldfld  System.Single EntityData::tilt
+  0904  stfld  System.Single BuildingParameters::tilt
+  0909  ldarg.0  
+  090A  ldc.i4.0  
+  090B  stfld  System.Int32 BuildingParameters::recipeId
+  0910  ldarg.0  
+  0911  ldc.i4.0  
+  0912  stfld  System.Int32 BuildingParameters::filterId
+  0917  ldarg.2  
+  0918  ldfld  SignData[] PlanetFactory::entitySignPool
+  091D  ldloc.0  
+  091E  ldelema  SignData
+  0923  ldfld  System.UInt32 SignData::iconId0
+  0928  brtrue.s  IL_0933: ldarg.0
+  092A  ldarg.0  
+  092B  ldnull  
+  092C  stfld  System.Int32[] BuildingParameters::parameters
+  0931  br.s  IL_0978: ldloc.2
+  0933  ldarg.0  
+  0934  ldc.i4.2  
+  0935  newarr  System.Int32
+  093A  stfld  System.Int32[] BuildingParameters::parameters
+  093F  ldarg.0  
+  0940  ldfld  System.Int32[] BuildingParameters::parameters
+  0945  ldc.i4.0  
+  0946  ldarg.2  
+  0947  ldfld  SignData[] PlanetFactory::entitySignPool
+  094C  ldloc.0  
+  094D  ldelema  SignData
+  0952  ldfld  System.UInt32 SignData::iconId0
+  0957  stelem.i4  
+  0958  ldarg.0  
+  0959  ldfld  System.Int32[] BuildingParameters::parameters
+  095E  ldc.i4.1  
+  095F  ldarg.2  
+  0960  ldfld  SignData[] PlanetFactory::entitySignPool
+  0965  ldloc.0  
+  0966  ldelema  SignData
+  096B  ldfld  System.Single SignData::count0
+  0970  ldc.r4  0.5
+  0975  add  
+  0976  conv.i4  
+  0977  stelem.i4  
+  0978  ldloc.2  
+  0979  ldloc.0  
+  097A  ldelema  EntityData
+  097F  ldfld  System.Int32 EntityData::ejectorId
+  0984  stloc.s  V_21
+  0986  ldloc.s  V_21
+  0988  brfalse.s  IL_09e8: ldloc.2
+  098A  ldarg.0  
+  098B  ldc.i4.7  
+  098C  stfld  BuildingType BuildingParameters::type
+  0991  ldarg.0  
+  0992  ldloc.s  V_4
+  0994  ldfld  EjectorComponent[] FactorySystem::ejectorPool
+  0999  ldloc.s  V_21
+  099B  ldelema  EjectorComponent
+  09A0  ldfld  System.Int32 EjectorComponent::orbitId
+  09A5  stfld  System.Int32 BuildingParameters::mode0
+  09AA  ldarg.0  
+  09AB  ldloc.s  V_4
+  09AD  ldfld  EjectorComponent[] FactorySystem::ejectorPool
+  09B2  ldloc.s  V_21
+  09B4  ldelema  EjectorComponent
+  09B9  ldfld  System.Boolean EjectorComponent::boost
+  09BE  brtrue.s  IL_09c3: ldc.i4.1
+  09C0  ldc.i4.0  
+  09C1  br.s  IL_09c4: stfld System.Int32 BuildingParameters::mode1
+  09C3  ldc.i4.1  
+  09C4  stfld  System.Int32 BuildingParameters::mode1
+  09C9  ldarg.0  
+  09CA  ldloc.s  V_4
+  09CC  ldfld  EjectorComponent[] FactorySystem::ejectorPool
+  09D1  ldloc.s  V_21
+  09D3  ldelema  EjectorComponent
+  09D8  ldfld  System.Boolean EjectorComponent::autoOrbit
+  09DD  brtrue.s  IL_09e2: ldc.i4.1
+  09DF  ldc.i4.0  
+  09E0  br.s  IL_09e3: stfld System.Int32 BuildingParameters::mode2
+  09E2  ldc.i4.1  
+  09E3  stfld  System.Int32 BuildingParameters::mode2
+  09E8  ldloc.2  
+  09E9  ldloc.0  
+  09EA  ldelema  EntityData
+  09EF  ldfld  System.Int32 EntityData::labId
+  09F4  stloc.s  V_22
+  09F6  ldloc.s  V_22
+  09F8  brfalse  IL_0a7f: ldloc.2
+  09FD  ldarg.0  
+  09FE  ldc.i4.8  
+  09FF  stfld  BuildingType BuildingParameters::type
+  0A04  ldloc.s  V_4
+  0A06  ldfld  LabComponent[] FactorySystem::labPool
+  0A0B  ldloc.s  V_22
+  0A0D  ldelema  LabComponent
+  0A12  ldfld  System.Boolean LabComponent::researchMode
+  0A17  brfalse.s  IL_0a22: ldloc.s V_4
+  0A19  ldarg.0  
+  0A1A  ldc.i4.2  
+  0A1B  stfld  System.Int32 BuildingParameters::mode0
+  0A20  br.s  IL_0a60: ldarg.0
+  0A22  ldloc.s  V_4
+  0A24  ldfld  LabComponent[] FactorySystem::labPool
+  0A29  ldloc.s  V_22
+  0A2B  ldelema  LabComponent
+  0A30  ldfld  System.Int32 LabComponent::recipeId
+  0A35  ldc.i4.0  
+  0A36  ble.s  IL_0a60: ldarg.0
+  0A38  ldarg.0  
+  0A39  ldloc.s  V_4
+  0A3B  ldfld  LabComponent[] FactorySystem::labPool
+  0A40  ldloc.s  V_22
+  0A42  ldelema  LabComponent
+  0A47  ldfld  System.Int32 LabComponent::recipeId
+  0A4C  stfld  System.Int32 BuildingParameters::recipeId
+  0A51  ldarg.0  
+  0A52  ldc.i4.s  15
+  0A54  stfld  ERecipeType BuildingParameters::recipeType
+  0A59  ldarg.0  
+  0A5A  ldc.i4.1  
+  0A5B  stfld  System.Int32 BuildingParameters::mode0
+  0A60  ldarg.0  
+  0A61  ldloc.s  V_4
+  0A63  ldfld  LabComponent[] FactorySystem::labPool
+  0A68  ldloc.s  V_22
+  0A6A  ldelema  LabComponent
+  0A6F  ldfld  System.Boolean LabComponent::forceAccMode
+  0A74  brtrue.s  IL_0a79: ldc.i4.1
+  0A76  ldc.i4.0  
+  0A77  br.s  IL_0a7a: stfld System.Int32 BuildingParameters::mode1
+  0A79  ldc.i4.1  
+  0A7A  stfld  System.Int32 BuildingParameters::mode1
+  0A7F  ldloc.2  
+  0A80  ldloc.0  
+  0A81  ldelema  EntityData
+  0A86  ldfld  System.Int32 EntityData::markerId
+  0A8B  stloc.s  V_23
+  0A8D  ldloc.s  V_23
+  0A8F  brfalse  IL_0c00: ldloc.2
+  0A94  ldarg.2  
+  0A95  ldfld  DigitalSystem PlanetFactory::digitalSystem
+  0A9A  ldfld  ObjectPool`1<MarkerComponent> DigitalSystem::markers
+  0A9F  ldloc.s  V_23
+  0AA1  callvirt  T ObjectPool`1<MarkerComponent>::get_Item(System.Int32)
+  0AA6  stloc.s  V_49
+  0AA8  ldloc.s  V_49
+  0AAA  brfalse  IL_0c00: ldloc.2
+  0AAF  ldarg.0  
+  0AB0  ldc.i4.s  20
+  0AB2  stfld  BuildingType BuildingParameters::type
+  0AB7  ldarg.0  
+  0AB8  ldc.i4  2048
+  0ABD  newarr  System.Int32
+  0AC2  stfld  System.Int32[] BuildingParameters::parameters
+  0AC7  ldarg.0  
+  0AC8  ldfld  System.Int32[] BuildingParameters::parameters
+  0ACD  ldc.i4.0  
+  0ACE  ldloc.s  V_49
+  0AD0  ldfld  System.Byte MarkerComponent::color
+  0AD5  stelem.i4  
+  0AD6  ldarg.0  
+  0AD7  ldfld  System.Int32[] BuildingParameters::parameters
+  0ADC  ldc.i4.1  
+  0ADD  ldloc.s  V_49
+  0ADF  callvirt  System.Single MarkerComponent::get_height()
+  0AE4  ldc.r4  100
+  0AE9  mul  
+  0AEA  call  System.Int32 UnityEngine.Mathf::RoundToInt(System.Single)
+  0AEF  stelem.i4  
+  0AF0  ldarg.0  
+  0AF1  ldfld  System.Int32[] BuildingParameters::parameters
+  0AF6  ldc.i4.2  
+  0AF7  ldloc.s  V_49
+  0AF9  callvirt  System.Single MarkerComponent::get_radius()
+  0AFE  ldc.r4  100
+  0B03  mul  
+  0B04  call  System.Int32 UnityEngine.Mathf::RoundToInt(System.Single)
+  0B09  stelem.i4  
+  0B0A  ldarg.0  
+  0B0B  ldfld  System.Int32[] BuildingParameters::parameters
+  0B10  ldc.i4.3  
+  0B11  ldloc.s  V_49
+  0B13  ldfld  EMarkerVisibility MarkerComponent::visibility
+  0B18  stelem.i4  
+  0B19  ldarg.0  
+  0B1A  ldfld  System.Int32[] BuildingParameters::parameters
+  0B1F  ldc.i4.4  
+  0B20  ldloc.s  V_49
+  0B22  ldfld  EMarkerDetailLevel MarkerComponent::detailLevel
+  0B27  stelem.i4  
+  0B28  ldarg.0  
+  0B29  ldfld  System.Int32[] BuildingParameters::parameters
+  0B2E  ldc.i4.5  
+  0B2F  ldloc.s  V_49
+  0B31  ldfld  System.Int32 MarkerComponent::icon
+  0B36  stelem.i4  
+  0B37  ldarg.0  
+  0B38  ldfld  System.Int32[] BuildingParameters::parameters
+  0B3D  ldc.i4.6  
+  0B3E  ldloc.s  V_49
+  0B40  callvirt  System.Int32 MarkerComponent::get_digitalSignalId()
+  0B45  stelem.i4  
+  0B46  ldarg.0  
+  0B47  ldfld  System.Int32[] BuildingParameters::parameters
+  0B4C  ldc.i4.7  
+  0B4D  ldloc.s  V_49
+  0B4F  callvirt  System.Int32 MarkerComponent::get_dfAttractionFlags()
+  0B54  stelem.i4  
+  0B55  ldarg.2  
+  0B56  ldloc.s  V_23
+  0B58  callvirt  System.String PlanetFactory::ReadMarkerComment(System.Int32)
+  0B5D  stloc.s  V_50
+  0B5F  ldloc.s  V_50
+  0B61  callvirt  System.Int32 System.String::get_Length()
+  0B66  stloc.s  V_51
+  0B68  ldloc.s  V_51
+  0B6A  ldc.i4.0  
+  0B6B  ble.s  IL_0b9d: ldarg.0
+  0B6D  ldc.i4.s  47
+  0B6F  stloc.s  V_52
+  0B71  ldarg.0  
+  0B72  ldfld  System.Int32[] BuildingParameters::parameters
+  0B77  ldloc.s  V_52
+  0B79  dup  
+  0B7A  ldc.i4.1  
+  0B7B  add  
+  0B7C  stloc.s  V_52
+  0B7E  ldloc.s  V_51
+  0B80  stelem.i4  
+  0B81  ldloc.s  V_49
+  0B83  ldfld  TodoModule MarkerComponent::todo
+  0B88  ldfld  System.Int16[] TodoModule::contentColorIndex
+  0B8D  ldc.i4.0  
+  0B8E  ldarg.0  
+  0B8F  ldfld  System.Int32[] BuildingParameters::parameters
+  0B94  ldloc.s  V_52
+  0B96  ldloc.s  V_51
+  0B98  call  System.Void System.Array::Copy(System.Array,System.Int32,System.Array,System.Int32,System.Int32)
+  0B9D  ldarg.0  
+  0B9E  ldc.i4.7  
+  0B9F  newarr  System.String
+  0BA4  dup  
+  0BA5  ldc.i4.0  
+  0BA6  ldarg.2  
+  0BA7  ldloc.s  V_23
+  0BA9  callvirt  System.String PlanetFactory::ReadMarkerWord(System.Int32)
+  0BAE  call  System.String BuildingParameters::ContentEscape(System.String)
+  0BB3  stelem.ref  
+  0BB4  dup  
+  0BB5  ldc.i4.1  
+  0BB6  ldsfld  System.String BuildingParameters::content_splitter_0
+  0BBB  stelem.ref  
+  0BBC  dup  
+  0BBD  ldc.i4.2  
+  0BBE  ldarg.2  
+  0BBF  ldloc.s  V_23
+  0BC1  callvirt  System.String PlanetFactory::ReadMarkerTags(System.Int32)
+  0BC6  call  System.String BuildingParameters::ContentEscape(System.String)
+  0BCB  stelem.ref  
+  0BCC  dup  
+  0BCD  ldc.i4.3  
+  0BCE  ldsfld  System.String BuildingParameters::content_splitter_0
+  0BD3  stelem.ref  
+  0BD4  dup  
+  0BD5  ldc.i4.4  
+  0BD6  ldarg.2  
+  0BD7  ldloc.s  V_23
+  0BD9  callvirt  System.String PlanetFactory::ReadMarkerName(System.Int32)
+  0BDE  call  System.String BuildingParameters::ContentEscape(System.String)
+  0BE3  stelem.ref  
+  0BE4  dup  
+  0BE5  ldc.i4.5  
+  0BE6  ldsfld  System.String BuildingParameters::content_splitter_0
+  0BEB  stelem.ref  
+  0BEC  dup  
+  0BED  ldc.i4.6  
+  0BEE  ldloc.s  V_50
+  0BF0  call  System.String BuildingParameters::ContentEscape(System.String)
+  0BF5  stelem.ref  
+  0BF6  call  System.String System.String::Concat(System.String[])
+  0BFB  stfld  System.String BuildingParameters::content
+  0C00  ldloc.2  
+  0C01  ldloc.0  
+  0C02  ldelema  EntityData
+  0C07  ldfld  System.Int32 EntityData::stationId
+  0C0C  stloc.s  V_24
+  0C0E  ldloc.s  V_24
+  0C10  brfalse  IL_0f7e: ldloc.2
+  0C15  ldarg.2  
+  0C16  ldfld  PlanetTransport PlanetFactory::transport
+  0C1B  ldfld  StationComponent[] PlanetTransport::stationPool
+  0C20  ldloc.s  V_24
+  0C22  ldelem.ref  
+  0C23  stloc.s  V_53
+  0C25  ldloc.s  V_53
+  0C27  brfalse  IL_0f7e: ldloc.2
+  0C2C  ldarg.0  
+  0C2D  ldc.i4.s  9
+  0C2F  stfld  BuildingType BuildingParameters::type
+  0C34  ldarg.0  
+  0C35  ldc.i4  2048
+  0C3A  newarr  System.Int32
+  0C3F  stfld  System.Int32[] BuildingParameters::parameters
+  0C44  ldc.i4.0  
+  0C45  stloc.s  V_54
+  0C47  ldc.i4.0  
+  0C48  stloc.s  V_55
+  0C4A  br  IL_0d42: ldloc.s V_55
+  0C4F  ldloc.s  V_53
+  0C51  ldfld  System.Boolean StationComponent::isCollector
+  0C56  ldc.i4.0  
+  0C57  ceq  
+  0C59  ldarg.s  copyAllSettings
+  0C5B  or  
+  0C5C  brfalse  IL_0d3c: ldloc.s V_55
+  0C61  ldarg.0  
+  0C62  ldfld  System.Int32[] BuildingParameters::parameters
+  0C67  ldloc.s  V_54
+  0C69  ldloc.s  V_55
+  0C6B  ldc.i4.6  
+  0C6C  mul  
+  0C6D  add  
+  0C6E  ldloc.s  V_53
+  0C70  ldfld  StationStore[] StationComponent::storage
+  0C75  ldloc.s  V_55
+  0C77  ldelema  StationStore
+  0C7C  ldfld  System.Int32 StationStore::itemId
+  0C81  stelem.i4  
+  0C82  ldarg.0  
+  0C83  ldfld  System.Int32[] BuildingParameters::parameters
+  0C88  ldloc.s  V_54
+  0C8A  ldloc.s  V_55
+  0C8C  ldc.i4.6  
+  0C8D  mul  
+  0C8E  add  
+  0C8F  ldc.i4.1  
+  0C90  add  
+  0C91  ldloc.s  V_53
+  0C93  ldfld  StationStore[] StationComponent::storage
+  0C98  ldloc.s  V_55
+  0C9A  ldelema  StationStore
+  0C9F  ldfld  ELogisticStorage StationStore::localLogic
+  0CA4  stelem.i4  
+  0CA5  ldarg.0  
+  0CA6  ldfld  System.Int32[] BuildingParameters::parameters
+  0CAB  ldloc.s  V_54
+  0CAD  ldloc.s  V_55
+  0CAF  ldc.i4.6  
+  0CB0  mul  
+  0CB1  add  
+  0CB2  ldc.i4.2  
+  0CB3  add  
+  0CB4  ldloc.s  V_53
+  0CB6  ldfld  StationStore[] StationComponent::storage
+  0CBB  ldloc.s  V_55
+  0CBD  ldelema  StationStore
+  0CC2  ldfld  ELogisticStorage StationStore::remoteLogic
+  0CC7  stelem.i4  
+  0CC8  ldarg.0  
+  0CC9  ldfld  System.Int32[] BuildingParameters::parameters
+  0CCE  ldloc.s  V_54
+  0CD0  ldloc.s  V_55
+  0CD2  ldc.i4.6  
+  0CD3  mul  
+  0CD4  add  
+  0CD5  ldc.i4.3  
+  0CD6  add  
+  0CD7  ldloc.s  V_53
+  0CD9  ldfld  StationStore[] StationComponent::storage
+  0CDE  ldloc.s  V_55
+  0CE0  ldelema  StationStore
+  0CE5  ldfld  System.Int32 StationStore::max
+  0CEA  stelem.i4  
+  0CEB  ldarg.0  
+  0CEC  ldfld  System.Int32[] BuildingParameters::parameters
+  0CF1  ldloc.s  V_54
+  0CF3  ldloc.s  V_55
+  0CF5  ldc.i4.6  
+  0CF6  mul  
+  0CF7  add  
+  0CF8  ldc.i4.4  
+  0CF9  add  
+  0CFA  ldloc.s  V_53
+  0CFC  ldfld  StationStore[] StationComponent::storage
+  0D01  ldloc.s  V_55
+  0D03  ldelema  StationStore
+  0D08  ldfld  System.Int32 StationStore::keepMode
+  0D0D  stelem.i4  
+  0D0E  ldarg.0  
+  0D0F  ldfld  System.Int32[] BuildingParameters::parameters
+  0D14  ldloc.s  V_54
+  0D16  ldloc.s  V_55
+  0D18  ldc.i4.6  
+  0D19  mul  
+  0D1A  add  
+  0D1B  ldc.i4.5  
+  0D1C  add  
+  0D1D  ldloc.s  V_53
+  0D1F  ldfld  StationStore[] StationComponent::storage
+  0D24  ldloc.s  V_55
+  0D26  ldelema  StationStore
+  0D2B  ldfld  System.Single StationStore::keepIncRatio
+  0D30  ldc.r4  100000
+  0D35  mul  
+  0D36  call  System.Int32 UnityEngine.Mathf::RoundToInt(System.Single)
+  0D3B  stelem.i4  
+  0D3C  ldloc.s  V_55
+  0D3E  ldc.i4.1  
+  0D3F  add  
+  0D40  stloc.s  V_55
+  0D42  ldloc.s  V_55
+  0D44  ldloc.s  V_53
+  0D46  ldfld  StationStore[] StationComponent::storage
+  0D4B  ldlen  
+  0D4C  conv.i4  
+  0D4D  blt  IL_0c4f: ldloc.s V_53
+  0D52  ldloc.s  V_54
+  0D54  ldc.i4  192
+  0D59  add  
+  0D5A  stloc.s  V_54
+  0D5C  ldc.i4.0  
+  0D5D  stloc.s  V_56
+  0D5F  br.s  IL_0dba: ldloc.s V_56
+  0D61  ldloc.s  V_53
+  0D63  ldfld  System.Boolean StationComponent::isCollector
+  0D68  ldc.i4.0  
+  0D69  ceq  
+  0D6B  ldarg.s  copyAllSettings
+  0D6D  or  
+  0D6E  brfalse.s  IL_0db4: ldloc.s V_56
+  0D70  ldarg.0  
+  0D71  ldfld  System.Int32[] BuildingParameters::parameters
+  0D76  ldloc.s  V_54
+  0D78  ldloc.s  V_56
+  0D7A  ldc.i4.4  
+  0D7B  mul  
+  0D7C  add  
+  0D7D  ldloc.s  V_53
+  0D7F  ldfld  SlotData[] StationComponent::slots
+  0D84  ldloc.s  V_56
+  0D86  ldelema  SlotData
+  0D8B  ldfld  IODir SlotData::dir
+  0D90  stelem.i4  
+  0D91  ldarg.0  
+  0D92  ldfld  System.Int32[] BuildingParameters::parameters
+  0D97  ldloc.s  V_54
+  0D99  ldloc.s  V_56
+  0D9B  ldc.i4.4  
+  0D9C  mul  
+  0D9D  add  
+  0D9E  ldc.i4.1  
+  0D9F  add  
+  0DA0  ldloc.s  V_53
+  0DA2  ldfld  SlotData[] StationComponent::slots
+  0DA7  ldloc.s  V_56
+  0DA9  ldelema  SlotData
+  0DAE  ldfld  System.Int32 SlotData::storageIdx
+  0DB3  stelem.i4  
+  0DB4  ldloc.s  V_56
+  0DB6  ldc.i4.1  
+  0DB7  add  
+  0DB8  stloc.s  V_56
+  0DBA  ldloc.s  V_56
+  0DBC  ldloc.s  V_53
+  0DBE  ldfld  SlotData[] StationComponent::slots
+  0DC3  ldlen  
+  0DC4  conv.i4  
+  0DC5  blt.s  IL_0d61: ldloc.s V_53
+  0DC7  ldloc.s  V_54
+  0DC9  ldc.i4  128
+  0DCE  add  
+  0DCF  stloc.s  V_54
+  0DD1  ldloc.s  V_53
+  0DD3  ldfld  System.Boolean StationComponent::isCollector
+  0DD8  ldc.i4.0  
+  0DD9  ceq  
+  0DDB  ldarg.s  copyAllSettings
+  0DDD  or  
+  0DDE  brfalse  IL_0f2a: ldloc.s V_53
+  0DE3  ldarg.0  
+  0DE4  ldfld  System.Int32[] BuildingParameters::parameters
+  0DE9  ldloc.s  V_54
+  0DEB  ldloc.s  V_7
+  0DED  ldfld  PowerConsumerComponent[] PowerSystem::consumerPool
+  0DF2  ldloc.s  V_53
+  0DF4  ldfld  System.Int32 StationComponent::pcId
+  0DF9  ldelema  PowerConsumerComponent
+  0DFE  ldfld  System.Int64 PowerConsumerComponent::workEnergyPerTick
+  0E03  conv.i4  
+  0E04  stelem.i4  
+  0E05  ldarg.0  
+  0E06  ldfld  System.Int32[] BuildingParameters::parameters
+  0E0B  ldloc.s  V_54
+  0E0D  ldc.i4.1  
+  0E0E  add  
+  0E0F  ldarg.0  
+  0E10  ldloc.s  V_53
+  0E12  ldfld  System.Double StationComponent::tripRangeDrones
+  0E17  ldc.r8  100000000
+  0E20  mul  
+  0E21  call  System.Int32 BuildingParameters::_round2int(System.Double)
+  0E26  stelem.i4  
+  0E27  ldarg.0  
+  0E28  ldfld  System.Int32[] BuildingParameters::parameters
+  0E2D  ldloc.s  V_54
+  0E2F  ldc.i4.2  
+  0E30  add  
+  0E31  ldarg.0  
+  0E32  ldloc.s  V_53
+  0E34  ldfld  System.Double StationComponent::tripRangeShips
+  0E39  ldc.r8  100
+  0E42  div  
+  0E43  call  System.Int32 BuildingParameters::_round2int(System.Double)
+  0E48  stelem.i4  
+  0E49  ldarg.0  
+  0E4A  ldfld  System.Int32[] BuildingParameters::parameters
+  0E4F  ldloc.s  V_54
+  0E51  ldc.i4.3  
+  0E52  add  
+  0E53  ldloc.s  V_53
+  0E55  ldfld  System.Boolean StationComponent::includeOrbitCollector
+  0E5A  brtrue.s  IL_0e5f: ldc.i4.1
+  0E5C  ldc.i4.m1  
+  0E5D  br.s  IL_0e60: stelem.i4
+  0E5F  ldc.i4.1  
+  0E60  stelem.i4  
+  0E61  ldarg.0  
+  0E62  ldfld  System.Int32[] BuildingParameters::parameters
+  0E67  ldloc.s  V_54
+  0E69  ldc.i4.4  
+  0E6A  add  
+  0E6B  ldarg.0  
+  0E6C  ldloc.s  V_53
+  0E6E  ldfld  System.Double StationComponent::warpEnableDist
+  0E73  call  System.Int32 BuildingParameters::_round2int(System.Double)
+  0E78  stelem.i4  
+  0E79  ldarg.0  
+  0E7A  ldfld  System.Int32[] BuildingParameters::parameters
+  0E7F  ldloc.s  V_54
+  0E81  ldc.i4.5  
+  0E82  add  
+  0E83  ldloc.s  V_53
+  0E85  ldfld  System.Boolean StationComponent::warperNecessary
+  0E8A  brtrue.s  IL_0e8f: ldc.i4.1
+  0E8C  ldc.i4.m1  
+  0E8D  br.s  IL_0e90: stelem.i4
+  0E8F  ldc.i4.1  
+  0E90  stelem.i4  
+  0E91  ldarg.0  
+  0E92  ldfld  System.Int32[] BuildingParameters::parameters
+  0E97  ldloc.s  V_54
+  0E99  ldc.i4.6  
+  0E9A  add  
+  0E9B  ldloc.s  V_53
+  0E9D  ldfld  System.Int32 StationComponent::deliveryDrones
+  0EA2  stelem.i4  
+  0EA3  ldarg.0  
+  0EA4  ldfld  System.Int32[] BuildingParameters::parameters
+  0EA9  ldloc.s  V_54
+  0EAB  ldc.i4.7  
+  0EAC  add  
+  0EAD  ldloc.s  V_53
+  0EAF  ldfld  System.Int32 StationComponent::deliveryShips
+  0EB4  stelem.i4  
+  0EB5  ldarg.0  
+  0EB6  ldfld  System.Int32[] BuildingParameters::parameters
+  0EBB  ldloc.s  V_54
+  0EBD  ldc.i4.8  
+  0EBE  add  
+  0EBF  ldloc.s  V_53
+  0EC1  ldfld  System.Int32 StationComponent::pilerCount
+  0EC6  stelem.i4  
+  0EC7  ldloc.s  V_53
+  0EC9  ldfld  System.Boolean StationComponent::isVeinCollector
+  0ECE  brfalse.s  IL_0ef8: ldarg.0
+  0ED0  ldarg.0  
+  0ED1  ldfld  System.Int32[] BuildingParameters::parameters
+  0ED6  ldloc.s  V_54
+  0ED8  ldc.i4.s  9
+  0EDA  add  
+  0EDB  ldarg.2  
+  0EDC  ldfld  FactorySystem PlanetFactory::factorySystem
+  0EE1  ldfld  MinerComponent[] FactorySystem::minerPool
+  0EE6  ldloc.s  V_53
+  0EE8  ldfld  System.Int32 StationComponent::minerId
+  0EED  ldelema  MinerComponent
+  0EF2  ldfld  System.Int32 MinerComponent::speed
+  0EF7  stelem.i4  
+  0EF8  ldarg.0  
+  0EF9  ldfld  System.Int32[] BuildingParameters::parameters
+  0EFE  ldloc.s  V_54
+  0F00  ldc.i4.s  10
+  0F02  add  
+  0F03  ldloc.s  V_53
+  0F05  ldfld  System.Boolean StationComponent::droneAutoReplenish
+  0F0A  brtrue.s  IL_0f0f: ldc.i4.1
+  0F0C  ldc.i4.0  
+  0F0D  br.s  IL_0f10: stelem.i4
+  0F0F  ldc.i4.1  
+  0F10  stelem.i4  
+  0F11  ldarg.0  
+  0F12  ldfld  System.Int32[] BuildingParameters::parameters
+  0F17  ldloc.s  V_54
+  0F19  ldc.i4.s  11
+  0F1B  add  
+  0F1C  ldloc.s  V_53
+  0F1E  ldfld  System.Boolean StationComponent::shipAutoReplenish
+  0F23  brtrue.s  IL_0f28: ldc.i4.1
+  0F25  ldc.i4.0  
+  0F26  br.s  IL_0f29: stelem.i4
+  0F28  ldc.i4.1  
+  0F29  stelem.i4  
+  0F2A  ldloc.s  V_53
+  0F2C  ldfld  System.Boolean StationComponent::isStellar
+  0F31  ldarg.s  copyAllSettings
+  0F33  and  
+  0F34  brfalse.s  IL_0f77: ldloc.s V_54
+  0F36  ldarg.0  
+  0F37  ldfld  System.Int32[] BuildingParameters::parameters
+  0F3C  ldloc.s  V_54
+  0F3E  ldc.i4.s  12
+  0F40  add  
+  0F41  ldloc.s  V_53
+  0F43  ldfld  System.Int64 StationComponent::remoteGroupMask
+  0F48  ldc.i4.m1  
+  0F49  conv.u8  
+  0F4A  and  
+  0F4B  conv.i4  
+  0F4C  stelem.i4  
+  0F4D  ldarg.0  
+  0F4E  ldfld  System.Int32[] BuildingParameters::parameters
+  0F53  ldloc.s  V_54
+  0F55  ldc.i4.s  13
+  0F57  add  
+  0F58  ldloc.s  V_53
+  0F5A  ldfld  System.Int64 StationComponent::remoteGroupMask
+  0F5F  ldc.i4.s  32
+  0F61  shr  
+  0F62  conv.i4  
+  0F63  stelem.i4  
+  0F64  ldarg.0  
+  0F65  ldfld  System.Int32[] BuildingParameters::parameters
+  0F6A  ldloc.s  V_54
+  0F6C  ldc.i4.s  14
+  0F6E  add  
+  0F6F  ldloc.s  V_53
+  0F71  ldfld  ERemoteRoutePriority StationComponent::routePriority
+  0F76  stelem.i4  
+  0F77  ldloc.s  V_54
+  0F79  ldc.i4.s  64
+  0F7B  add  
+  0F7C  stloc.s  V_54
+  0F7E  ldloc.2  
+  0F7F  ldloc.0  
+  0F80  ldelema  EntityData
+  0F85  ldfld  System.Int32 EntityData::dispenserId
+  0F8A  stloc.s  V_25
+  0F8C  ldloc.s  V_25
+  0F8E  brfalse  IL_102e: ldloc.2
+  0F93  ldarg.0  
+  0F94  ldc.i4.s  10
+  0F96  stfld  BuildingType BuildingParameters::type
+  0F9B  ldarg.2  
+  0F9C  ldfld  PlanetTransport PlanetFactory::transport
+  0FA1  ldfld  DispenserComponent[] PlanetTransport::dispenserPool
+  0FA6  stloc.s  V_57
+  0FA8  ldarg.0  
+  0FA9  ldc.i4  128
+  0FAE  newarr  System.Int32
+  0FB3  stfld  System.Int32[] BuildingParameters::parameters
+  0FB8  ldarg.0  
+  0FB9  ldloc.s  V_57
+  0FBB  ldloc.s  V_25
+  0FBD  ldelem.ref  
+  0FBE  ldfld  EPlayerDeliveryMode DispenserComponent::playerMode
+  0FC3  stfld  System.Int32 BuildingParameters::mode0
+  0FC8  ldarg.0  
+  0FC9  ldloc.s  V_57
+  0FCB  ldloc.s  V_25
+  0FCD  ldelem.ref  
+  0FCE  ldfld  EStorageDeliveryMode DispenserComponent::storageMode
+  0FD3  stfld  System.Int32 BuildingParameters::mode1
+  0FD8  ldarg.0  
+  0FD9  ldloc.s  V_57
+  0FDB  ldloc.s  V_25
+  0FDD  ldelem.ref  
+  0FDE  ldfld  System.Int32 DispenserComponent::filter
+  0FE3  stfld  System.Int32 BuildingParameters::filterId
+  0FE8  ldarg.2  
+  0FE9  ldfld  PlanetTransport PlanetFactory::transport
+  0FEE  ldfld  DispenserComponent[] PlanetTransport::dispenserPool
+  0FF3  ldloc.s  V_25
+  0FF5  ldelem.ref  
+  0FF6  stloc.s  V_58
+  0FF8  ldarg.0  
+  0FF9  ldfld  System.Int32[] BuildingParameters::parameters
+  0FFE  ldc.i4.2  
+  0FFF  ldloc.s  V_7
+  1001  ldfld  PowerConsumerComponent[] PowerSystem::consumerPool
+  1006  ldloc.s  V_58
+  1008  ldfld  System.Int32 DispenserComponent::pcId
+  100D  ldelema  PowerConsumerComponent
+  1012  ldfld  System.Int64 PowerConsumerComponent::workEnergyPerTick
+  1017  conv.i4  
+  1018  stelem.i4  
+  1019  ldarg.0  
+  101A  ldfld  System.Int32[] BuildingParameters::parameters
+  101F  ldc.i4.3  
+  1020  ldloc.s  V_58
+  1022  ldfld  System.Boolean DispenserComponent::courierAutoReplenish
+  1027  brtrue.s  IL_102c: ldc.i4.1
+  1029  ldc.i4.0  
+  102A  br.s  IL_102d: stelem.i4
+  102C  ldc.i4.1  
+  102D  stelem.i4  
+  102E  ldloc.2  
+  102F  ldloc.0  
+  1030  ldelema  EntityData
+  1035  ldfld  System.Int32 EntityData::turretId
+  103A  stloc.s  V_26
+  103C  ldloc.s  V_26
+  103E  brfalse.s  IL_1092: ldloc.2
+  1040  ldarg.0  
+  1041  ldc.i4.s  11
+  1043  stfld  BuildingType BuildingParameters::type
+  1048  ldloc.s  V_6
+  104A  ldfld  DataPool`1<TurretComponent> DefenseSystem::turrets
+  104F  ldfld  T[] DataPool`1<TurretComponent>::buffer
+  1054  stloc.s  V_59
+  1056  ldarg.0  
+  1057  ldloc.s  V_59
+  1059  ldloc.s  V_26
+  105B  ldelema  TurretComponent
+  1060  ldfld  System.Byte TurretComponent::group
+  1065  stfld  System.Int32 BuildingParameters::mode0
+  106A  ldarg.0  
+  106B  ldloc.s  V_59
+  106D  ldloc.s  V_26
+  106F  ldelema  TurretComponent
+  1074  ldfld  VSLayerMask TurretComponent::vsSettings
+  1079  stfld  System.Int32 BuildingParameters::mode1
+  107E  ldarg.0  
+  107F  ldloc.s  V_59
+  1081  ldloc.s  V_26
+  1083  ldelema  TurretComponent
+  1088  ldfld  System.Int32 TurretComponent::phasePos
+  108D  stfld  System.Int32 BuildingParameters::mode2
+  1092  ldloc.2  
+  1093  ldloc.0  
+  1094  ldelema  EntityData
+  1099  ldfld  System.Int32 EntityData::powerGenId
+  109E  stloc.s  V_27
+  10A0  ldloc.s  V_27
+  10A2  brfalse  IL_1150: ldloc.2
+  10A7  ldloc.s  V_7
+  10A9  ldfld  PowerGeneratorComponent[] PowerSystem::genPool
+  10AE  ldloc.s  V_27
+  10B0  ldelema  PowerGeneratorComponent
+  10B5  ldfld  System.Boolean PowerGeneratorComponent::gamma
+  10BA  brfalse.s  IL_10dd: ldloc.s V_7
+  10BC  ldarg.0  
+  10BD  ldc.i4.s  12
+  10BF  stfld  BuildingType BuildingParameters::type
+  10C4  ldarg.0  
+  10C5  ldloc.s  V_7
+  10C7  ldfld  PowerGeneratorComponent[] PowerSystem::genPool
+  10CC  ldloc.s  V_27
+  10CE  ldelema  PowerGeneratorComponent
+  10D3  ldfld  System.Int32 PowerGeneratorComponent::productId
+  10D8  stfld  System.Int32 BuildingParameters::mode0
+  10DD  ldloc.s  V_7
+  10DF  ldfld  PowerGeneratorComponent[] PowerSystem::genPool
+  10E4  ldloc.s  V_27
+  10E6  ldelema  PowerGeneratorComponent
+  10EB  ldfld  System.Int16 PowerGeneratorComponent::fuelMask
+  10F0  ldc.i4.4  
+  10F1  bne.un.s  IL_111a: ldloc.s V_7
+  10F3  ldarg.0  
+  10F4  ldc.i4.s  17
+  10F6  stfld  BuildingType BuildingParameters::type
+  10FB  ldarg.0  
+  10FC  ldloc.s  V_7
+  10FE  ldfld  PowerGeneratorComponent[] PowerSystem::genPool
+  1103  ldloc.s  V_27
+  1105  ldelema  PowerGeneratorComponent
+  110A  ldfld  System.Boolean PowerGeneratorComponent::boost
+  110F  brtrue.s  IL_1114: ldc.i4.1
+  1111  ldc.i4.0  
+  1112  br.s  IL_1115: stfld System.Int32 BuildingParameters::mode0
+  1114  ldc.i4.1  
+  1115  stfld  System.Int32 BuildingParameters::mode0
+  111A  ldloc.s  V_7
+  111C  ldfld  PowerGeneratorComponent[] PowerSystem::genPool
+  1121  ldloc.s  V_27
+  1123  ldelema  PowerGeneratorComponent
+  1128  ldfld  System.Boolean PowerGeneratorComponent::geothermal
+  112D  brfalse.s  IL_1150: ldloc.2
+  112F  ldarg.0  
+  1130  ldc.i4.s  19
+  1132  stfld  BuildingType BuildingParameters::type
+  1137  ldarg.0  
+  1138  ldloc.s  V_7
+  113A  ldfld  PowerGeneratorComponent[] PowerSystem::genPool
+  113F  ldloc.s  V_27
+  1141  ldelema  PowerGeneratorComponent
+  1146  ldfld  System.Int32 PowerGeneratorComponent::baseRuinId
+  114B  stfld  System.Int32 BuildingParameters::mode0
+  1150  ldloc.2  
+  1151  ldloc.0  
+  1152  ldelema  EntityData
+  1157  ldfld  System.Int32 EntityData::powerExcId
+  115C  stloc.s  V_28
+  115E  ldloc.s  V_28
+  1160  brfalse.s  IL_1188: ldloc.2
+  1162  ldarg.0  
+  1163  ldc.i4.s  13
+  1165  stfld  BuildingType BuildingParameters::type
+  116A  ldarg.0  
+  116B  ldloc.s  V_7
+  116D  ldfld  PowerExchangerComponent[] PowerSystem::excPool
+  1172  ldloc.s  V_28
+  1174  ldelema  PowerExchangerComponent
+  1179  ldfld  System.Single PowerExchangerComponent::targetState
+  117E  call  System.Int32 UnityEngine.Mathf::RoundToInt(System.Single)
+  1183  stfld  System.Int32 BuildingParameters::mode0
+  1188  ldloc.2  
+  1189  ldloc.0  
+  118A  ldelema  EntityData
+  118F  ldfld  System.Int32 EntityData::siloId
+  1194  stloc.s  V_29
+  1196  ldloc.s  V_29
+  1198  brfalse.s  IL_11c1: ldarg.3
+  119A  ldarg.0  
+  119B  ldc.i4.s  16
+  119D  stfld  BuildingType BuildingParameters::type
+  11A2  ldarg.0  
+  11A3  ldloc.s  V_4
+  11A5  ldfld  SiloComponent[] FactorySystem::siloPool
+  11AA  ldloc.s  V_29
+  11AC  ldelema  SiloComponent
+  11B1  ldfld  System.Boolean SiloComponent::boost
+  11B6  brtrue.s  IL_11bb: ldc.i4.1
+  11B8  ldc.i4.0  
+  11B9  br.s  IL_11bc: stfld System.Int32 BuildingParameters::mode0
+  11BB  ldc.i4.1  
+  11BC  stfld  System.Int32 BuildingParameters::mode0
+  11C1  ldarg.3  
+  11C2  brfalse.s  IL_11e7: ldc.i4.1
+  11C4  ldloc.s  V_20
+  11C6  brtrue.s  IL_11e7: ldc.i4.1
+  11C8  ldloc.s  V_19
+  11CA  brtrue.s  IL_11e7: ldc.i4.1
+  11CC  ldloc.s  V_12
+  11CE  ldfld  UnityEngine.Pose[] PrefabDesc::slotPoses
+  11D3  brfalse.s  IL_11e7: ldc.i4.1
+  11D5  ldloc.s  V_12
+  11D7  ldfld  UnityEngine.Pose[] PrefabDesc::slotPoses
+  11DC  ldlen  
+  11DD  brfalse.s  IL_11e7: ldc.i4.1
+  11DF  ldarg.0  
+  11E0  ldarg.1  
+  11E1  ldarg.2  
+  11E2  call  System.Void BuildingParameters::CopyInserters(System.Int32,PlanetFactory)
+  11E7  ldc.i4.1  
+  11E8  ret  
+  11E9  ldloc.1  
+  11EA  ldc.i4.0  
+  11EB  ble  IL_1685: ldarg.0
+  11F0  ldloc.3  
+  11F1  ldloc.1  
+  11F2  ldelema  PrebuildData
+  11F7  ldfld  System.Int32 PrebuildData::id
+  11FC  ldloc.1  
+  11FD  bne.un  IL_1685: ldarg.0
+  1202  ldarg.0  
+  1203  ldc.i4.0  
+  1204  stfld  BuildingType BuildingParameters::type
+  1209  ldarg.0  
+  120A  ldloc.3  
+  120B  ldloc.1  
+  120C  ldelema  PrebuildData
+  1211  ldfld  System.Int16 PrebuildData::protoId
+  1216  stfld  System.Int32 BuildingParameters::itemId
+  121B  ldarg.0  
+  121C  ldloc.3  
+  121D  ldloc.1  
+  121E  ldelema  PrebuildData
+  1223  ldfld  System.Int16 PrebuildData::modelIndex
+  1228  stfld  System.Int32 BuildingParameters::modelIndex
+  122D  ldarg.0  
+  122E  ldloc.3  
+  122F  ldloc.1  
+  1230  ldelema  PrebuildData
+  1235  ldfld  UnityEngine.Vector3 PrebuildData::pos
+  123A  ldc.r4  0
+  123F  call  UnityEngine.Quaternion Maths::SphericalRotation(UnityEngine.Vector3,System.Single)
+  1244  call  UnityEngine.Quaternion UnityEngine.Quaternion::Inverse(UnityEngine.Quaternion)
+  1249  ldloc.3  
+  124A  ldloc.1  
+  124B  ldelema  PrebuildData
+  1250  ldfld  UnityEngine.Quaternion PrebuildData::rot
+  1255  call  UnityEngine.Quaternion UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Quaternion)
+  125A  stloc.s  V_30
+  125C  ldloca.s  V_30
+  125E  call  UnityEngine.Vector3 UnityEngine.Quaternion::get_eulerAngles()
+  1263  ldfld  System.Single UnityEngine.Vector3::y
+  1268  stfld  System.Single BuildingParameters::yaw
+  126D  ldarg.0  
+  126E  ldarg.0  
+  126F  ldfld  System.Single BuildingParameters::yaw
+  1274  ldc.r4  3
+  1279  div  
+  127A  call  System.Single UnityEngine.Mathf::Round(System.Single)
+  127F  ldc.r4  3
+  1284  mul  
+  1285  stfld  System.Single BuildingParameters::yaw
+  128A  ldarg.0  
+  128B  ldloc.3  
+  128C  ldloc.1  
+  128D  ldelema  PrebuildData
+  1292  ldfld  System.Int32 PrebuildData::recipeId
+  1297  stfld  System.Int32 BuildingParameters::recipeId
+  129C  ldarg.0  
+  129D  ldloc.3  
+  129E  ldloc.1  
+  129F  ldelema  PrebuildData
+  12A4  ldfld  System.Int32 PrebuildData::filterId
+  12A9  stfld  System.Int32 BuildingParameters::filterId
+  12AE  ldarg.0  
+  12AF  ldloc.3  
+  12B0  ldloc.1  
+  12B1  ldelema  PrebuildData
+  12B6  ldfld  System.String PrebuildData::content
+  12BB  stfld  System.String BuildingParameters::content
+  12C0  call  RecipeProtoSet LDB::get_recipes()
+  12C5  ldarg.0  
+  12C6  ldfld  System.Int32 BuildingParameters::recipeId
+  12CB  callvirt  T ProtoSet`1<RecipeProto>::Select(System.Int32)
+  12D0  stloc.s  V_60
+  12D2  ldloc.s  V_60
+  12D4  brfalse.s  IL_12e3: call ItemProtoSet LDB::get_items()
+  12D6  ldarg.0  
+  12D7  ldloc.s  V_60
+  12D9  ldfld  ERecipeType RecipeProto::Type
+  12DE  stfld  ERecipeType BuildingParameters::recipeType
+  12E3  call  ItemProtoSet LDB::get_items()
+  12E8  ldarg.0  
+  12E9  ldfld  System.Int32 BuildingParameters::itemId
+  12EE  callvirt  T ProtoSet`1<ItemProto>::Select(System.Int32)
+  12F3  call  ModelProtoSet LDB::get_models()
+  12F8  ldarg.0  
+  12F9  ldfld  System.Int32 BuildingParameters::modelIndex
+  12FE  callvirt  T ProtoSet`1<ModelProto>::Select(System.Int32)
+  1303  stloc.s  V_61
+  1305  brfalse  IL_1685: ldarg.0
+  130A  ldloc.s  V_61
+  130C  brfalse  IL_1685: ldarg.0
+  1311  ldloc.s  V_61
+  1313  ldfld  PrefabDesc ModelProto::prefabDesc
+  1318  stloc.s  V_62
+  131A  ldarg.0  
+  131B  ldc.i4.s  99
+  131D  stfld  BuildingType BuildingParameters::type
+  1322  ldloc.s  V_62
+  1324  ldfld  EMinerType PrefabDesc::minerType
+  1329  brfalse.s  IL_1347: ldloc.s V_62
+  132B  ldloc.s  V_62
+  132D  ldfld  System.Boolean PrefabDesc::isVeinCollector
+  1332  brtrue.s  IL_1347: ldloc.s V_62
+  1334  ldarg.0  
+  1335  ldc.i4.1  
+  1336  stfld  BuildingType BuildingParameters::type
+  133B  ldarg.0  
+  133C  ldc.i4.0  
+  133D  stfld  System.Int32 BuildingParameters::filterId
+  1342  br  IL_1554: ldarg.0
+  1347  ldloc.s  V_62
+  1349  ldfld  System.Boolean PrefabDesc::isSplitter
+  134E  brfalse.s  IL_135c: ldloc.s V_62
+  1350  ldarg.0  
+  1351  ldc.i4.2  
+  1352  stfld  BuildingType BuildingParameters::type
+  1357  br  IL_1554: ldarg.0
+  135C  ldloc.s  V_62
+  135E  ldfld  System.Boolean PrefabDesc::isMonitor
+  1363  brfalse.s  IL_1372: ldloc.s V_62
+  1365  ldarg.0  
+  1366  ldc.i4.s  15
+  1368  stfld  BuildingType BuildingParameters::type
+  136D  br  IL_1554: ldarg.0
+  1372  ldloc.s  V_62
+  1374  ldfld  System.Boolean PrefabDesc::isStorage
+  1379  brfalse.s  IL_1390: ldloc.s V_62
+  137B  ldloc.s  V_62
+  137D  ldfld  System.Boolean PrefabDesc::isBattleBase
+  1382  brtrue.s  IL_1390: ldloc.s V_62
+  1384  ldarg.0  
+  1385  ldc.i4.3  
+  1386  stfld  BuildingType BuildingParameters::type
+  138B  br  IL_1554: ldarg.0
+  1390  ldloc.s  V_62
+  1392  ldfld  System.Boolean PrefabDesc::isBattleBase
+  1397  brfalse.s  IL_13a6: ldloc.s V_62
+  1399  ldarg.0  
+  139A  ldc.i4.s  18
+  139C  stfld  BuildingType BuildingParameters::type
+  13A1  br  IL_1554: ldarg.0
+  13A6  ldloc.s  V_62
+  13A8  ldfld  System.Boolean PrefabDesc::isTank
+  13AD  brfalse.s  IL_13bb: ldloc.s V_62
+  13AF  ldarg.0  
+  13B0  ldc.i4.4  
+  13B1  stfld  BuildingType BuildingParameters::type
+  13B6  br  IL_1554: ldarg.0
+  13BB  ldloc.s  V_62
+  13BD  ldfld  System.Boolean PrefabDesc::isAssembler
+  13C2  brfalse.s  IL_13fb: ldloc.s V_62
+  13C4  ldarg.0  
+  13C5  ldc.i4.5  
+  13C6  stfld  BuildingType BuildingParameters::type
+  13CB  ldarg.0  
+  13CC  ldfld  ERecipeType BuildingParameters::recipeType
+  13D1  brfalse  IL_1554: ldarg.0
+  13D6  ldarg.0  
+  13D7  ldfld  ERecipeType BuildingParameters::recipeType
+  13DC  ldloc.s  V_62
+  13DE  ldfld  ERecipeType PrefabDesc::assemblerRecipeType
+  13E3  beq  IL_1554: ldarg.0
+  13E8  ldarg.0  
+  13E9  ldc.i4.0  
+  13EA  stfld  ERecipeType BuildingParameters::recipeType
+  13EF  ldarg.0  
+  13F0  ldc.i4.0  
+  13F1  stfld  System.Int32 BuildingParameters::recipeId
+  13F6  br  IL_1554: ldarg.0
+  13FB  ldloc.s  V_62
+  13FD  ldfld  System.Boolean PrefabDesc::isInserter
+  1402  brfalse.s  IL_141b: ldloc.s V_62
+  1404  ldarg.0  
+  1405  ldc.i4.6  
+  1406  stfld  BuildingType BuildingParameters::type
+  140B  ldarg.0  
+  140C  ldc.r4  0
+  1411  stfld  System.Single BuildingParameters::yaw
+  1416  br  IL_1554: ldarg.0
+  141B  ldloc.s  V_62
+  141D  ldfld  System.Boolean PrefabDesc::isBelt
+  1422  brfalse.s  IL_1455: ldloc.s V_62
+  1424  ldarg.0  
+  1425  ldc.i4.s  14
+  1427  stfld  BuildingType BuildingParameters::type
+  142C  ldarg.0  
+  142D  ldc.r4  0
+  1432  stfld  System.Single BuildingParameters::yaw
+  1437  ldarg.0  
+  1438  ldloc.3  
+  1439  ldloc.1  
+  143A  ldelema  PrebuildData
+  143F  ldfld  System.Single PrebuildData::tilt
+  1444  stfld  System.Single BuildingParameters::tilt
+  1449  ldarg.0  
+  144A  ldnull  
+  144B  stfld  System.Int32[] BuildingParameters::parameters
+  1450  br  IL_1554: ldarg.0
+  1455  ldloc.s  V_62
+  1457  ldfld  System.Boolean PrefabDesc::isEjector
+  145C  brfalse.s  IL_146a: ldloc.s V_62
+  145E  ldarg.0  
+  145F  ldc.i4.7  
+  1460  stfld  BuildingType BuildingParameters::type
+  1465  br  IL_1554: ldarg.0
+  146A  ldloc.s  V_62
+  146C  ldfld  System.Boolean PrefabDesc::isLab
+  1471  brfalse.s  IL_1493: ldloc.s V_62
+  1473  ldarg.0  
+  1474  ldc.i4.8  
+  1475  stfld  BuildingType BuildingParameters::type
+  147A  ldarg.0  
+  147B  ldfld  System.Int32 BuildingParameters::recipeId
+  1480  ldc.i4.0  
+  1481  ble  IL_1554: ldarg.0
+  1486  ldarg.0  
+  1487  ldc.i4.s  15
+  1489  stfld  ERecipeType BuildingParameters::recipeType
+  148E  br  IL_1554: ldarg.0
+  1493  ldloc.s  V_62
+  1495  ldfld  System.Boolean PrefabDesc::isMarker
+  149A  brfalse.s  IL_14a9: ldloc.s V_62
+  149C  ldarg.0  
+  149D  ldc.i4.s  20
+  149F  stfld  BuildingType BuildingParameters::type
+  14A4  br  IL_1554: ldarg.0
+  14A9  ldloc.s  V_62
+  14AB  ldfld  System.Boolean PrefabDesc::isStation
+  14B0  brfalse.s  IL_14e3: ldloc.s V_62
+  14B2  ldarg.0  
+  14B3  ldc.i4.s  9
+  14B5  stfld  BuildingType BuildingParameters::type
+  14BA  ldloc.s  V_62
+  14BC  ldfld  System.Boolean PrefabDesc::isCollectStation
+  14C1  brfalse.s  IL_14cc: ldloc.3
+  14C3  ldarg.0  
+  14C4  ldnull  
+  14C5  stfld  System.Int32[] BuildingParameters::parameters
+  14CA  ldc.i4.1  
+  14CB  ret  
+  14CC  ldloc.3  
+  14CD  ldloc.1  
+  14CE  ldelema  PrebuildData
+  14D3  ldfld  System.Boolean PrebuildData::isDestroyed
+  14D8  brfalse.s  IL_1554: ldarg.0
+  14DA  ldarg.0  
+  14DB  ldc.i4.0  
+  14DC  stfld  System.Int32 BuildingParameters::filterId
+  14E1  br.s  IL_1554: ldarg.0
+  14E3  ldloc.s  V_62
+  14E5  ldfld  System.Boolean PrefabDesc::isDispenser
+  14EA  brfalse.s  IL_14f6: ldloc.s V_62
+  14EC  ldarg.0  
+  14ED  ldc.i4.s  10
+  14EF  stfld  BuildingType BuildingParameters::type
+  14F4  br.s  IL_1554: ldarg.0
+  14F6  ldloc.s  V_62
+  14F8  ldfld  System.Boolean PrefabDesc::isTurret
+  14FD  brfalse.s  IL_1509: ldloc.s V_62
+  14FF  ldarg.0  
+  1500  ldc.i4.s  11
+  1502  stfld  BuildingType BuildingParameters::type
+  1507  br.s  IL_1554: ldarg.0
+  1509  ldloc.s  V_62
+  150B  ldfld  System.Boolean PrefabDesc::gammaRayReceiver
+  1510  brfalse.s  IL_151c: ldloc.s V_62
+  1512  ldarg.0  
+  1513  ldc.i4.s  12
+  1515  stfld  BuildingType BuildingParameters::type
+  151A  br.s  IL_1554: ldarg.0
+  151C  ldloc.s  V_62
+  151E  ldfld  System.Int32 PrefabDesc::fuelMask
+  1523  ldc.i4.4  
+  1524  bne.un.s  IL_1530: ldloc.s V_62
+  1526  ldarg.0  
+  1527  ldc.i4.s  17
+  1529  stfld  BuildingType BuildingParameters::type
+  152E  br.s  IL_1554: ldarg.0
+  1530  ldloc.s  V_62
+  1532  ldfld  System.Boolean PrefabDesc::isPowerExchanger
+  1537  brfalse.s  IL_1543: ldloc.s V_62
+  1539  ldarg.0  
+  153A  ldc.i4.s  13
+  153C  stfld  BuildingType BuildingParameters::type
+  1541  br.s  IL_1554: ldarg.0
+  1543  ldloc.s  V_62
+  1545  ldfld  System.Boolean PrefabDesc::isSilo
+  154A  brfalse.s  IL_1554: ldarg.0
+  154C  ldarg.0  
+  154D  ldc.i4.s  16
+  154F  stfld  BuildingType BuildingParameters::type
+  1554  ldarg.0  
+  1555  ldloc.3  
+  1556  ldloc.1  
+  1557  ldelema  PrebuildData
+  155C  ldfld  System.Int32[] PrebuildData::parameters
+  1561  call  System.Void BuildingParameters::FromParamsArray(System.Int32[])
+  1566  ldarg.3  
+  1567  brfalse.s  IL_1596: ldarg.0
+  1569  ldloc.s  V_62
+  156B  ldfld  System.Boolean PrefabDesc::isBelt
+  1570  brtrue.s  IL_1596: ldarg.0
+  1572  ldloc.s  V_62
+  1574  ldfld  System.Boolean PrefabDesc::isInserter
+  1579  brtrue.s  IL_1596: ldarg.0
+  157B  ldloc.s  V_62
+  157D  ldfld  UnityEngine.Pose[] PrefabDesc::slotPoses
+  1582  brfalse.s  IL_1596: ldarg.0
+  1584  ldloc.s  V_62
+  1586  ldfld  UnityEngine.Pose[] PrefabDesc::slotPoses
+  158B  ldlen  
+  158C  brfalse.s  IL_1596: ldarg.0
+  158E  ldarg.0  
+  158F  ldarg.1  
+  1590  ldarg.2  
+  1591  call  System.Void BuildingParameters::CopyInserters(System.Int32,PlanetFactory)
+  1596  ldarg.0  
+  1597  ldfld  BuildingType BuildingParameters::type
+  159C  ldc.i4.s  18
+  159E  bne.un  IL_1683: ldc.i4.1
+  15A3  ldarg.0  
+  15A4  ldfld  System.Int32 BuildingParameters::mode1
+  15A9  brfalse.s  IL_15af: ldc.i4.s 10
+  15AB  ldc.i4.s  70
+  15AD  br.s  IL_15b1: stloc.s V_63
+  15AF  ldc.i4.s  10
+  15B1  stloc.s  V_63
+  15B3  ldarg.0  
+  15B4  ldfld  System.Int32[] BuildingParameters::parameters
+  15B9  ldloc.s  V_63
+  15BB  ldelem.i4  
+  15BC  brtrue  IL_1683: ldc.i4.1
+  15C1  ldarg.0  
+  15C2  ldc.i4.s  10
+  15C4  stfld  System.Int32 BuildingParameters::mode0
+  15C9  ldarg.0  
+  15CA  ldfld  System.Int32[] BuildingParameters::parameters
+  15CF  ldloc.s  V_63
+  15D1  ldloc.s  V_62
+  15D3  ldfld  System.Int64 PrefabDesc::workEnergyPerTick
+  15D8  conv.i4  
+  15D9  stelem.i4  
+  15DA  ldarg.0  
+  15DB  ldfld  System.Int32[] BuildingParameters::parameters
+  15E0  ldloc.s  V_63
+  15E2  ldc.i4.1  
+  15E3  add  
+  15E4  ldc.i4.1  
+  15E5  stelem.i4  
+  15E6  ldarg.0  
+  15E7  ldfld  System.Int32[] BuildingParameters::parameters
+  15EC  ldloc.s  V_63
+  15EE  ldc.i4.2  
+  15EF  add  
+  15F0  ldc.i4.1  
+  15F1  stelem.i4  
+  15F2  ldarg.0  
+  15F3  ldfld  System.Int32[] BuildingParameters::parameters
+  15F8  ldloc.s  V_63
+  15FA  ldc.i4.3  
+  15FB  add  
+  15FC  ldc.i4.1  
+  15FD  stelem.i4  
+  15FE  ldarg.0  
+  15FF  ldfld  System.Int32[] BuildingParameters::parameters
+  1604  ldloc.s  V_63
+  1606  ldc.i4.4  
+  1607  add  
+  1608  ldc.i4.1  
+  1609  stelem.i4  
+  160A  ldarg.0  
+  160B  ldfld  System.Int32[] BuildingParameters::parameters
+  1610  ldloc.s  V_63
+  1612  ldc.i4.5  
+  1613  add  
+  1614  ldc.i4.1  
+  1615  stelem.i4  
+  1616  call  FleetProtoSet LDB::get_fleets()
+  161B  ldloc.s  V_62
+  161D  ldfld  System.Int32 PrefabDesc::combatModuleFleetProtoId
+  1622  callvirt  T ProtoSet`1<FleetProto>::Select(System.Int32)
+  1627  ldfld  PrefabDesc FleetProto::prefabDesc
+  162C  ldfld  FleetPortDesc[] PrefabDesc::fleetPorts
+  1631  dup  
+  1632  brtrue.s  IL_1641: ldlen
+  1634  pop  
+  1635  ldloca.s  V_65
+  1637  initobj  System.Nullable`1<System.Int32>
+  163D  ldloc.s  V_65
+  163F  br.s  IL_1648: stloc.s V_64
+  1641  ldlen  
+  1642  conv.i4  
+  1643  newobj  System.Void System.Nullable`1<System.Int32>::.ctor(!0)
+  1648  stloc.s  V_64
+  164A  ldc.i4.0  
+  164B  stloc.s  V_66
+  164D  br.s  IL_166a: ldloc.s V_66
+  164F  ldarg.0  
+  1650  ldfld  System.Int32[] BuildingParameters::parameters
+  1655  ldloc.s  V_63
+  1657  ldc.i4.7  
+  1658  add  
+  1659  ldloc.s  V_66
+  165B  add  
+  165C  ldsfld  System.Int32[] ItemProto::kFighterGroundIds
+  1661  ldc.i4.0  
+  1662  ldelem.i4  
+  1663  stelem.i4  
+  1664  ldloc.s  V_66
+  1666  ldc.i4.1  
+  1667  add  
+  1668  stloc.s  V_66
+  166A  ldloc.s  V_66
+  166C  ldloc.s  V_64
+  166E  stloc.s  V_65
+  1670  ldloca.s  V_65
+  1672  call  !0 System.Nullable`1<System.Int32>::GetValueOrDefault()
+  1677  clt  
+  1679  ldloca.s  V_65
+  167B  call  System.Boolean System.Nullable`1<System.Int32>::get_HasValue()
+  1680  and  
+  1681  brtrue.s  IL_164f: ldarg.0
+  1683  ldc.i4.1  
+  1684  ret  
+  1685  ldarg.0  
+  1686  call  System.Void BuildingParameters::SetEmpty()
+  168B  ldc.i4.0  
+  168C  ret  

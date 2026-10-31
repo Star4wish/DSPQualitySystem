@@ -113,6 +113,14 @@ namespace DSPQualitySystem.Patches
             {
                 return true;
             }
+            // v0.18.0 (issue 4): while ConstructionModuleComponent.PlaceItems pays a white ghost
+            // pre-build, vanilla asserts that one call covers the full remaining itemRequired stack.
+            // Swapping in another grid or taking a partial stack here would break that assert, so the
+            // consume layer steps aside for the short window and only observes the payment.
+            if (P1_DeferredPay.PayWindowActive)
+            {
+                return true;
+            }
             try
             {
                 if (itemId <= 0 || count <= 0)

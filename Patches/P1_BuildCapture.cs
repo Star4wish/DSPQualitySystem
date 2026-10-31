@@ -206,6 +206,9 @@ namespace DSPQualitySystem.Patches
                 int inc = perItem > Cargo.kIncLevelMax ? Cargo.kIncLevelMax : perItem;
                 QualityData.SetBuildingInc(__instance.planetId, __result, (byte)inc);
                 Diag.Probes.RecordBuildBinding(__result, inc);
+                // v0.18.0 (issue 1b): a power node (tesla tower / wireless tower / substation) only
+                // knows its quality points now, so scale its connect distance / cover radius here.
+                P5_PowerRange.ApplyForEntity(__instance, __instance.planetId, __result);
             }
             catch (Exception e)
             {

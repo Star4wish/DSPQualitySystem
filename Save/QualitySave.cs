@@ -464,6 +464,31 @@ namespace DSPQualitySystem.Save
                     }
                 }
 
+                // v0.19.1 (issue: quality dropped by one level after a save/load cycle): the batch
+                // that an assembler read its ingredients at ("inputLevel") is what the next cycle
+                // derives its product quality from. It used to live in memory only, so the first
+                // batch produced after a load inherited 0 points instead of the real ingredient
+                // level. It is a per-entity integer, so it rides in the MOD trailer as "inputs".
+                sb.Append("],\"inputs\":[");
+                first = true;
+                if (quality.inputLevel != null)
+                {
+                    for (int entityId = 0; entityId < quality.inputLevel.Length; entityId++)
+                    {
+                        int level = quality.inputLevel[entityId];
+                        if (level < 0)
+                        {
+                            continue;
+                        }
+                        if (!first)
+                        {
+                            sb.Append(',');
+                        }
+                        first = false;
+                        sb.Append("{\"e\":").Append(entityId).Append(",\"l\":").Append(level).Append('}');
+                    }
+                }
+
                 // v0.13.0 (task-17 / C-1): containers whose extra grids could not be emptied back
                 // into the vanilla grids for this save. "b" is the vanilla grid count, "cells" the
                 // items that live in the extra grids (grid index + full vanilla grid fields). A
@@ -584,7 +609,12 @@ namespace DSPQualitySystem.Save
                         sorterCount++;
                     }
                 }
-                sb.Append("]}");
+                sb.Append(']');
+                // v0.19.0 (quality recycler): point remainder + pending bottles of every coater that
+                // works as a recycler. Writes nothing when the planet has no recycler state, so the
+                // document shape stays identical for saves that never used the feature.
+                QualityData.AppendRecyclersJson(sb, pair.Key);
+                sb.Append('}');
             }
 
             // The container snapshot belongs to this one save; the postfix restores the live
@@ -672,6 +702,29 @@ namespace DSPQualitySystem.Save
                         }
                         QualityData.SetPool(planetId, entityId, GetInt(entry, "pi"), GetInt(entry, "pc"));
                         poolCount++;
+                        applied++;
+                    }
+                }
+
+                // v0.19.1: restore the ingredient batch level each assembler read its inputs at,
+                // so products made right after a load keep the correct inherited quality.
+                var inputs = GetList(planet, "inputs");
+                if (inputs != null)
+                {
+                    foreach (object item in inputs)
+                    {
+                        var entry = item as Dictionary<string, object>;
+                        if (entry == null)
+                        {
+                            continue;
+                        }
+                        int entityId = GetInt(entry, "e");
+                        int level = GetInt(entry, "l");
+                        if (entityId <= 0 || level < 0)
+                        {
+                            continue;
+                        }
+                        QualityData.SetInputLevel(planetId, entityId, (short)Math.Min(level, 10));
                         applied++;
                     }
                 }
@@ -789,6 +842,11 @@ namespace DSPQualitySystem.Save
                         applied++;
                     }
                 }
+
+                // v0.19.0 (quality recycler): restore the per-planet point remainder and the bottles
+                // still waiting for a free belt slot. Unknown/absent node = nothing to do, and any
+                // value above the threshold is folded into bottles by the reader itself.
+                applied += QualityData.ApplyRecyclersJson(planetId, planet);
 
                 // v0.13.0 / v0.15.x trailers carried a boolean "quality first" splitter flag. That
                 // semantics was replaced in v0.16.1 by per-port rules, so the node is intentionally

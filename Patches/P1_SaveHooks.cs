@@ -46,6 +46,10 @@ namespace DSPQualitySystem.Patches
                 StorageGrids.ResetRuntime();
                 Patches.P5_SplitterFilter.ResetState();
                 Patches.P5_SorterFilter.ResetState();
+                // v0.18.0: a re-loaded save must re-run the one-shot per-planet power-node sweep
+                // (the nodePool fields are persistent, but the quality data only now came back).
+                Patches.P5_PowerRange.ResetState();
+                Patches.P1_DeferredPay.ResetState();
                 Save.QualitySave.ReadEmbedded(__instance, __0);
             }
             catch (Exception e)
@@ -127,6 +131,8 @@ namespace DSPQualitySystem.Patches
                 StorageGrids.ResetRuntime();
                 Patches.P5_SplitterFilter.ResetState();
                 Patches.P5_SorterFilter.ResetState();
+                Patches.P5_PowerRange.ResetState();
+                Patches.P1_DeferredPay.ResetState();
                 if (Plugin.Log != null)
                 {
                     Plugin.Log.LogInfo("[QSystem][save] new game: quality data cleared");

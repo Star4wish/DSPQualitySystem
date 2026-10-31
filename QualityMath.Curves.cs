@@ -35,6 +35,21 @@ namespace DSPQualitySystem
         }
 
         /// <summary>
+        /// v0.18.0 (issue 2): the building upgrade chance now rides the very same per-point curve as
+        /// the speed / charge / power / lab / turret bonuses instead of the old flat 1.5% per point
+        /// line. So the chance fed into each upgrade roll becomes
+        ///   points 1..10 -> 2.5 / 5 / 7.5 / 10 / 15 / 20 / 30 / 40 / 60 / 100  (percent)
+        /// Only the chance changes: the roll count structure (a second roll above 6 points, the
+        /// deterministic +2 at 10 points, the single roll for the fractionator) is untouched, so the
+        /// random stream shape stays the one the v0.11.1 spec describes.
+        /// </summary>
+        public static float UpgradeCurveChance(int buildingInc)
+        {
+            double bonus = SpeedBonusFrom(buildingInc);
+            return bonus <= 0.0 ? 0f : ClampPercent((float)bonus);
+        }
+
+        /// <summary>
         /// v0.11.2: factor used by speed stage 1 and charge stage 2a. curve=true uses the shared
         /// per-point table above; curve=false keeps the legacy linear formula for A/B comparison.
         /// Returns exactly 1f when no bonus applies.

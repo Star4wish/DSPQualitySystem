@@ -1,0 +1,867 @@
+﻿METHOD System.Void BuildingParameters::FromParamsArray(System.Int32[])
+  0000  ldarg.0  
+  0001  ldc.i4.0  
+  0002  stfld  System.Int32 BuildingParameters::mode0
+  0007  ldarg.0  
+  0008  ldc.i4.0  
+  0009  stfld  System.Int32 BuildingParameters::mode1
+  000E  ldarg.0  
+  000F  ldc.i4.0  
+  0010  stfld  System.Int32 BuildingParameters::mode2
+  0015  ldarg.0  
+  0016  ldc.i4.0  
+  0017  stfld  System.Int32 BuildingParameters::mode3
+  001C  ldarg.0  
+  001D  ldnull  
+  001E  stfld  System.Int32[] BuildingParameters::parameters
+  0023  ldarg.1  
+  0024  brtrue  IL_0165: ldarg.0
+  0029  ldarg.0  
+  002A  ldfld  BuildingType BuildingParameters::type
+  002F  ldc.i4.6  
+  0030  bne.un.s  IL_003f: ldarg.0
+  0032  ldarg.0  
+  0033  ldc.i4.1  
+  0034  newarr  System.Int32
+  0039  stfld  System.Int32[] BuildingParameters::parameters
+  003E  ret  
+  003F  ldarg.0  
+  0040  ldfld  BuildingType BuildingParameters::type
+  0045  ldc.i4.s  14
+  0047  bne.un.s  IL_0056: ldarg.0
+  0049  ldarg.0  
+  004A  ldc.i4.2  
+  004B  newarr  System.Int32
+  0050  stfld  System.Int32[] BuildingParameters::parameters
+  0055  ret  
+  0056  ldarg.0  
+  0057  ldfld  BuildingType BuildingParameters::type
+  005C  ldc.i4.s  15
+  005E  beq.s  IL_0074: ldarg.0
+  0060  ldarg.0  
+  0061  ldfld  BuildingType BuildingParameters::type
+  0066  ldc.i4.s  10
+  0068  beq.s  IL_0074: ldarg.0
+  006A  ldarg.0  
+  006B  ldfld  BuildingType BuildingParameters::type
+  0070  ldc.i4.s  11
+  0072  bne.un.s  IL_0085: ldarg.0
+  0074  ldarg.0  
+  0075  ldc.i4  128
+  007A  newarr  System.Int32
+  007F  stfld  System.Int32[] BuildingParameters::parameters
+  0084  ret  
+  0085  ldarg.0  
+  0086  ldfld  BuildingType BuildingParameters::type
+  008B  ldc.i4.s  9
+  008D  bne.un.s  IL_00a0: ldarg.0
+  008F  ldarg.0  
+  0090  ldc.i4  2048
+  0095  newarr  System.Int32
+  009A  stfld  System.Int32[] BuildingParameters::parameters
+  009F  ret  
+  00A0  ldarg.0  
+  00A1  ldfld  BuildingType BuildingParameters::type
+  00A6  ldc.i4.5  
+  00A7  bne.un.s  IL_00b6: ldarg.0
+  00A9  ldarg.0  
+  00AA  ldc.i4.1  
+  00AB  newarr  System.Int32
+  00B0  stfld  System.Int32[] BuildingParameters::parameters
+  00B5  ret  
+  00B6  ldarg.0  
+  00B7  ldfld  BuildingType BuildingParameters::type
+  00BC  ldc.i4.s  18
+  00BE  bne.un.s  IL_00ce: ldarg.0
+  00C0  ldarg.0  
+  00C1  ldc.i4.s  110
+  00C3  newarr  System.Int32
+  00C8  stfld  System.Int32[] BuildingParameters::parameters
+  00CD  ret  
+  00CE  ldarg.0  
+  00CF  ldfld  BuildingType BuildingParameters::type
+  00D4  ldc.i4.s  20
+  00D6  bne.un  IL_0164: ret
+  00DB  ldarg.0  
+  00DC  ldc.i4  2048
+  00E1  newarr  System.Int32
+  00E6  stfld  System.Int32[] BuildingParameters::parameters
+  00EB  call  ItemProtoSet LDB::get_items()
+  00F0  ldc.i4  2401
+  00F5  callvirt  T ProtoSet`1<ItemProto>::Select(System.Int32)
+  00FA  ldfld  PrefabDesc ItemProto::prefabDesc
+  00FF  stloc.0  
+  0100  ldarg.0  
+  0101  ldfld  System.Int32[] BuildingParameters::parameters
+  0106  ldc.i4.0  
+  0107  ldc.i4.s  83
+  0109  stelem.i4  
+  010A  ldarg.0  
+  010B  ldfld  System.Int32[] BuildingParameters::parameters
+  0110  ldc.i4.1  
+  0111  ldloc.0  
+  0112  ldfld  System.Single PrefabDesc::markerPointDefaultHeight
+  0117  ldc.r4  100
+  011C  mul  
+  011D  ldc.r4  0.5
+  0122  add  
+  0123  conv.i4  
+  0124  stelem.i4  
+  0125  ldarg.0  
+  0126  ldfld  System.Int32[] BuildingParameters::parameters
+  012B  ldc.i4.2  
+  012C  ldloc.0  
+  012D  ldfld  System.Single PrefabDesc::markerPointDefaultRadius
+  0132  ldc.r4  100
+  0137  mul  
+  0138  ldc.r4  0.5
+  013D  add  
+  013E  conv.i4  
+  013F  stelem.i4  
+  0140  ldarg.0  
+  0141  ldfld  System.Int32[] BuildingParameters::parameters
+  0146  ldc.i4.3  
+  0147  ldc.i4.2  
+  0148  stelem.i4  
+  0149  ldarg.0  
+  014A  ldfld  System.Int32[] BuildingParameters::parameters
+  014F  ldc.i4.4  
+  0150  ldc.i4.2  
+  0151  stelem.i4  
+  0152  ldarg.0  
+  0153  ldfld  System.Int32[] BuildingParameters::parameters
+  0158  ldc.i4.5  
+  0159  ldc.i4.0  
+  015A  stelem.i4  
+  015B  ldarg.0  
+  015C  ldfld  System.Int32[] BuildingParameters::parameters
+  0161  ldc.i4.6  
+  0162  ldc.i4.0  
+  0163  stelem.i4  
+  0164  ret  
+  0165  ldarg.0  
+  0166  ldfld  BuildingType BuildingParameters::type
+  016B  ldc.i4.1  
+  016C  pop  
+  016D  pop  
+  016E  ldarg.0  
+  016F  ldfld  BuildingType BuildingParameters::type
+  0174  ldc.i4.2  
+  0175  bne.un.s  IL_01e1: ldarg.0
+  0177  ldarg.0  
+  0178  ldc.i4.s  12
+  017A  newarr  System.Int32
+  017F  stfld  System.Int32[] BuildingParameters::parameters
+  0184  ldarg.1  
+  0185  ldlen  
+  0186  conv.i4  
+  0187  ldc.i4.4  
+  0188  blt.s  IL_01ae: ldarg.0
+  018A  ldarg.0  
+  018B  ldarg.1  
+  018C  ldc.i4.0  
+  018D  ldelem.i4  
+  018E  stfld  System.Int32 BuildingParameters::mode0
+  0193  ldarg.0  
+  0194  ldarg.1  
+  0195  ldc.i4.1  
+  0196  ldelem.i4  
+  0197  stfld  System.Int32 BuildingParameters::mode1
+  019C  ldarg.0  
+  019D  ldarg.1  
+  019E  ldc.i4.2  
+  019F  ldelem.i4  
+  01A0  stfld  System.Int32 BuildingParameters::mode2
+  01A5  ldarg.0  
+  01A6  ldarg.1  
+  01A7  ldc.i4.3  
+  01A8  ldelem.i4  
+  01A9  stfld  System.Int32 BuildingParameters::mode3
+  01AE  ldarg.0  
+  01AF  ldfld  System.Int32[] BuildingParameters::parameters
+  01B4  ldc.i4.4  
+  01B5  ldarg.1  
+  01B6  brfalse.s  IL_01be: ldc.i4.0
+  01B8  ldarg.1  
+  01B9  ldlen  
+  01BA  conv.i4  
+  01BB  ldc.i4.4  
+  01BC  bgt.s  IL_01c1: ldarg.1
+  01BE  ldc.i4.0  
+  01BF  br.s  IL_01c4: stelem.i4
+  01C1  ldarg.1  
+  01C2  ldc.i4.4  
+  01C3  ldelem.i4  
+  01C4  stelem.i4  
+  01C5  ldarg.0  
+  01C6  ldfld  System.Int32[] BuildingParameters::parameters
+  01CB  ldc.i4.5  
+  01CC  ldarg.1  
+  01CD  brfalse.s  IL_01d5: ldc.i4.0
+  01CF  ldarg.1  
+  01D0  ldlen  
+  01D1  conv.i4  
+  01D2  ldc.i4.5  
+  01D3  bgt.s  IL_01d8: ldarg.1
+  01D5  ldc.i4.0  
+  01D6  br.s  IL_01db: stelem.i4
+  01D8  ldarg.1  
+  01D9  ldc.i4.5  
+  01DA  ldelem.i4  
+  01DB  stelem.i4  
+  01DC  br  IL_03d8: ldarg.0
+  01E1  ldarg.0  
+  01E2  ldfld  BuildingType BuildingParameters::type
+  01E7  ldc.i4.s  15
+  01E9  bne.un  IL_0307: ldarg.0
+  01EE  ldarg.0  
+  01EF  ldfld  System.Int32[] BuildingParameters::parameters
+  01F4  brtrue.s  IL_0206: ldarg.1
+  01F6  ldarg.0  
+  01F7  ldc.i4  128
+  01FC  newarr  System.Int32
+  0201  stfld  System.Int32[] BuildingParameters::parameters
+  0206  ldarg.1  
+  0207  ldlen  
+  0208  conv.i4  
+  0209  ldc.i4  128
+  020E  blt  IL_03d8: ldarg.0
+  0213  ldarg.0  
+  0214  ldfld  System.Int32[] BuildingParameters::parameters
+  0219  ldc.i4.0  
+  021A  ldarg.1  
+  021B  ldc.i4.0  
+  021C  ldelem.i4  
+  021D  stelem.i4  
+  021E  ldarg.0  
+  021F  ldfld  System.Int32[] BuildingParameters::parameters
+  0224  ldc.i4.1  
+  0225  ldarg.1  
+  0226  ldc.i4.1  
+  0227  ldelem.i4  
+  0228  stelem.i4  
+  0229  ldarg.0  
+  022A  ldfld  System.Int32[] BuildingParameters::parameters
+  022F  ldc.i4.2  
+  0230  ldarg.1  
+  0231  ldc.i4.2  
+  0232  ldelem.i4  
+  0233  stelem.i4  
+  0234  ldarg.0  
+  0235  ldfld  System.Int32[] BuildingParameters::parameters
+  023A  ldc.i4.3  
+  023B  ldarg.1  
+  023C  ldc.i4.3  
+  023D  ldelem.i4  
+  023E  stelem.i4  
+  023F  ldarg.0  
+  0240  ldfld  System.Int32[] BuildingParameters::parameters
+  0245  ldc.i4.4  
+  0246  ldarg.1  
+  0247  ldc.i4.4  
+  0248  ldelem.i4  
+  0249  stelem.i4  
+  024A  ldarg.0  
+  024B  ldfld  System.Int32[] BuildingParameters::parameters
+  0250  ldc.i4.5  
+  0251  ldarg.1  
+  0252  ldc.i4.5  
+  0253  ldelem.i4  
+  0254  stelem.i4  
+  0255  ldarg.0  
+  0256  ldfld  System.Int32[] BuildingParameters::parameters
+  025B  ldc.i4.6  
+  025C  ldarg.1  
+  025D  ldc.i4.6  
+  025E  ldelem.i4  
+  025F  stelem.i4  
+  0260  ldarg.0  
+  0261  ldfld  System.Int32[] BuildingParameters::parameters
+  0266  ldc.i4.s  12
+  0268  ldarg.1  
+  0269  ldc.i4.s  12
+  026B  ldelem.i4  
+  026C  stelem.i4  
+  026D  ldarg.0  
+  026E  ldfld  System.Int32[] BuildingParameters::parameters
+  0273  ldc.i4.s  14
+  0275  ldarg.1  
+  0276  ldc.i4.s  14
+  0278  ldelem.i4  
+  0279  stelem.i4  
+  027A  ldarg.0  
+  027B  ldfld  System.Int32[] BuildingParameters::parameters
+  0280  ldc.i4.s  10
+  0282  ldarg.1  
+  0283  ldc.i4.s  10
+  0285  ldelem.i4  
+  0286  stelem.i4  
+  0287  ldarg.0  
+  0288  ldfld  System.Int32[] BuildingParameters::parameters
+  028D  ldc.i4.s  17
+  028F  ldarg.1  
+  0290  ldc.i4.s  17
+  0292  ldelem.i4  
+  0293  stelem.i4  
+  0294  ldarg.0  
+  0295  ldarg.1  
+  0296  ldc.i4.s  20
+  0298  ldelem.i4  
+  0299  stfld  System.Int32 BuildingParameters::mode0
+  029E  ldarg.0  
+  029F  ldfld  System.Int32[] BuildingParameters::parameters
+  02A4  ldc.i4.s  21
+  02A6  ldarg.1  
+  02A7  ldc.i4.s  21
+  02A9  ldelem.i4  
+  02AA  stelem.i4  
+  02AB  ldarg.0  
+  02AC  ldfld  System.Int32[] BuildingParameters::parameters
+  02B1  ldc.i4.7  
+  02B2  ldarg.1  
+  02B3  ldc.i4.7  
+  02B4  ldelem.i4  
+  02B5  stelem.i4  
+  02B6  ldarg.0  
+  02B7  ldfld  System.Int32[] BuildingParameters::parameters
+  02BC  ldc.i4.8  
+  02BD  ldarg.1  
+  02BE  ldc.i4.8  
+  02BF  ldelem.i4  
+  02C0  stelem.i4  
+  02C1  ldarg.0  
+  02C2  ldfld  System.Int32[] BuildingParameters::parameters
+  02C7  ldc.i4.s  9
+  02C9  ldarg.1  
+  02CA  ldc.i4.s  9
+  02CC  ldelem.i4  
+  02CD  stelem.i4  
+  02CE  ldarg.0  
+  02CF  ldfld  System.Int32[] BuildingParameters::parameters
+  02D4  ldc.i4.s  11
+  02D6  ldarg.1  
+  02D7  ldc.i4.s  11
+  02D9  ldelem.i4  
+  02DA  stelem.i4  
+  02DB  ldarg.0  
+  02DC  ldfld  System.Int32[] BuildingParameters::parameters
+  02E1  ldc.i4.s  13
+  02E3  ldarg.1  
+  02E4  ldc.i4.s  13
+  02E6  ldelem.i4  
+  02E7  stelem.i4  
+  02E8  ldarg.0  
+  02E9  ldfld  System.Int32[] BuildingParameters::parameters
+  02EE  ldc.i4.s  18
+  02F0  ldarg.1  
+  02F1  ldc.i4.s  18
+  02F3  ldelem.i4  
+  02F4  stelem.i4  
+  02F5  ldarg.0  
+  02F6  ldfld  System.Int32[] BuildingParameters::parameters
+  02FB  ldc.i4.s  19
+  02FD  ldarg.1  
+  02FE  ldc.i4.s  19
+  0300  ldelem.i4  
+  0301  stelem.i4  
+  0302  br  IL_03d8: ldarg.0
+  0307  ldarg.0  
+  0308  ldfld  BuildingType BuildingParameters::type
+  030D  ldc.i4.3  
+  030E  bne.un.s  IL_0360: ldarg.0
+  0310  ldarg.1  
+  0311  ldlen  
+  0312  brfalse.s  IL_031d: ldarg.1
+  0314  ldarg.0  
+  0315  ldarg.1  
+  0316  ldc.i4.0  
+  0317  ldelem.i4  
+  0318  stfld  System.Int32 BuildingParameters::mode0
+  031D  ldarg.1  
+  031E  ldlen  
+  031F  conv.i4  
+  0320  ldc.i4.1  
+  0321  ble.s  IL_032c: ldarg.1
+  0323  ldarg.0  
+  0324  ldarg.1  
+  0325  ldc.i4.1  
+  0326  ldelem.i4  
+  0327  stfld  System.Int32 BuildingParameters::mode1
+  032C  ldarg.1  
+  032D  ldlen  
+  032E  conv.i4  
+  032F  ldc.i4.s  10
+  0331  ble  IL_03d8: ldarg.0
+  0336  ldarg.0  
+  0337  ldarg.1  
+  0338  ldlen  
+  0339  conv.i4  
+  033A  newarr  System.Int32
+  033F  stfld  System.Int32[] BuildingParameters::parameters
+  0344  ldc.i4.s  10
+  0346  stloc.1  
+  0347  br.s  IL_0358: ldloc.1
+  0349  ldarg.0  
+  034A  ldfld  System.Int32[] BuildingParameters::parameters
+  034F  ldloc.1  
+  0350  ldarg.1  
+  0351  ldloc.1  
+  0352  ldelem.i4  
+  0353  stelem.i4  
+  0354  ldloc.1  
+  0355  ldc.i4.1  
+  0356  add  
+  0357  stloc.1  
+  0358  ldloc.1  
+  0359  ldarg.1  
+  035A  ldlen  
+  035B  conv.i4  
+  035C  blt.s  IL_0349: ldarg.0
+  035E  br.s  IL_03d8: ldarg.0
+  0360  ldarg.0  
+  0361  ldfld  BuildingType BuildingParameters::type
+  0366  ldc.i4.s  18
+  0368  bne.un.s  IL_03b7: ldarg.0
+  036A  ldarg.1  
+  036B  ldlen  
+  036C  brfalse.s  IL_0377: ldarg.1
+  036E  ldarg.0  
+  036F  ldarg.1  
+  0370  ldc.i4.0  
+  0371  ldelem.i4  
+  0372  stfld  System.Int32 BuildingParameters::mode0
+  0377  ldarg.1  
+  0378  ldlen  
+  0379  conv.i4  
+  037A  ldc.i4.1  
+  037B  ble.s  IL_0386: ldarg.1
+  037D  ldarg.0  
+  037E  ldarg.1  
+  037F  ldc.i4.1  
+  0380  ldelem.i4  
+  0381  stfld  System.Int32 BuildingParameters::mode1
+  0386  ldarg.1  
+  0387  ldlen  
+  0388  conv.i4  
+  0389  ldc.i4.s  10
+  038B  ble.s  IL_03d8: ldarg.0
+  038D  ldarg.0  
+  038E  ldarg.1  
+  038F  ldlen  
+  0390  conv.i4  
+  0391  newarr  System.Int32
+  0396  stfld  System.Int32[] BuildingParameters::parameters
+  039B  ldc.i4.s  10
+  039D  stloc.2  
+  039E  br.s  IL_03af: ldloc.2
+  03A0  ldarg.0  
+  03A1  ldfld  System.Int32[] BuildingParameters::parameters
+  03A6  ldloc.2  
+  03A7  ldarg.1  
+  03A8  ldloc.2  
+  03A9  ldelem.i4  
+  03AA  stelem.i4  
+  03AB  ldloc.2  
+  03AC  ldc.i4.1  
+  03AD  add  
+  03AE  stloc.2  
+  03AF  ldloc.2  
+  03B0  ldarg.1  
+  03B1  ldlen  
+  03B2  conv.i4  
+  03B3  blt.s  IL_03a0: ldarg.0
+  03B5  br.s  IL_03d8: ldarg.0
+  03B7  ldarg.0  
+  03B8  ldfld  BuildingType BuildingParameters::type
+  03BD  ldc.i4.4  
+  03BE  bne.un.s  IL_03d8: ldarg.0
+  03C0  ldarg.1  
+  03C1  ldlen  
+  03C2  conv.i4  
+  03C3  ldc.i4.2  
+  03C4  blt.s  IL_03d8: ldarg.0
+  03C6  ldarg.0  
+  03C7  ldarg.1  
+  03C8  ldc.i4.0  
+  03C9  ldelem.i4  
+  03CA  stfld  System.Int32 BuildingParameters::mode0
+  03CF  ldarg.0  
+  03D0  ldarg.1  
+  03D1  ldc.i4.1  
+  03D2  ldelem.i4  
+  03D3  stfld  System.Int32 BuildingParameters::mode1
+  03D8  ldarg.0  
+  03D9  ldfld  BuildingType BuildingParameters::type
+  03DE  ldc.i4.5  
+  03DF  bne.un.s  IL_0406: ldarg.0
+  03E1  ldarg.0  
+  03E2  ldfld  System.Int32[] BuildingParameters::parameters
+  03E7  brtrue.s  IL_03f5: ldarg.1
+  03E9  ldarg.0  
+  03EA  ldc.i4.1  
+  03EB  newarr  System.Int32
+  03F0  stfld  System.Int32[] BuildingParameters::parameters
+  03F5  ldarg.1  
+  03F6  ldlen  
+  03F7  conv.i4  
+  03F8  ldc.i4.1  
+  03F9  blt.s  IL_0406: ldarg.0
+  03FB  ldarg.0  
+  03FC  ldfld  System.Int32[] BuildingParameters::parameters
+  0401  ldc.i4.0  
+  0402  ldarg.1  
+  0403  ldc.i4.0  
+  0404  ldelem.i4  
+  0405  stelem.i4  
+  0406  ldarg.0  
+  0407  ldfld  BuildingType BuildingParameters::type
+  040C  ldc.i4.6  
+  040D  bne.un.s  IL_042c: ldarg.0
+  040F  ldarg.0  
+  0410  ldc.i4.1  
+  0411  newarr  System.Int32
+  0416  stfld  System.Int32[] BuildingParameters::parameters
+  041B  ldarg.1  
+  041C  ldlen  
+  041D  conv.i4  
+  041E  ldc.i4.1  
+  041F  blt.s  IL_042c: ldarg.0
+  0421  ldarg.0  
+  0422  ldfld  System.Int32[] BuildingParameters::parameters
+  0427  ldc.i4.0  
+  0428  ldarg.1  
+  0429  ldc.i4.0  
+  042A  ldelem.i4  
+  042B  stelem.i4  
+  042C  ldarg.0  
+  042D  ldfld  BuildingType BuildingParameters::type
+  0432  ldc.i4.s  14
+  0434  bne.un.s  IL_0468: ldarg.0
+  0436  ldarg.0  
+  0437  ldc.i4.2  
+  0438  newarr  System.Int32
+  043D  stfld  System.Int32[] BuildingParameters::parameters
+  0442  ldarg.1  
+  0443  ldlen  
+  0444  conv.i4  
+  0445  ldc.i4.1  
+  0446  blt.s  IL_0453: ldarg.1
+  0448  ldarg.0  
+  0449  ldfld  System.Int32[] BuildingParameters::parameters
+  044E  ldc.i4.0  
+  044F  ldarg.1  
+  0450  ldc.i4.0  
+  0451  ldelem.i4  
+  0452  stelem.i4  
+  0453  ldarg.1  
+  0454  ldlen  
+  0455  conv.i4  
+  0456  ldc.i4.2  
+  0457  blt  IL_06b0: ret
+  045C  ldarg.0  
+  045D  ldfld  System.Int32[] BuildingParameters::parameters
+  0462  ldc.i4.1  
+  0463  ldarg.1  
+  0464  ldc.i4.1  
+  0465  ldelem.i4  
+  0466  stelem.i4  
+  0467  ret  
+  0468  ldarg.0  
+  0469  ldfld  BuildingType BuildingParameters::type
+  046E  ldc.i4.7  
+  046F  bne.un.s  IL_04a2: ldarg.0
+  0471  ldarg.1  
+  0472  ldlen  
+  0473  conv.i4  
+  0474  ldc.i4.1  
+  0475  blt.s  IL_0480: ldarg.1
+  0477  ldarg.0  
+  0478  ldarg.1  
+  0479  ldc.i4.0  
+  047A  ldelem.i4  
+  047B  stfld  System.Int32 BuildingParameters::mode0
+  0480  ldarg.1  
+  0481  ldlen  
+  0482  conv.i4  
+  0483  ldc.i4.2  
+  0484  blt.s  IL_048f: ldarg.1
+  0486  ldarg.0  
+  0487  ldarg.1  
+  0488  ldc.i4.1  
+  0489  ldelem.i4  
+  048A  stfld  System.Int32 BuildingParameters::mode1
+  048F  ldarg.1  
+  0490  ldlen  
+  0491  conv.i4  
+  0492  ldc.i4.3  
+  0493  blt  IL_06b0: ret
+  0498  ldarg.0  
+  0499  ldarg.1  
+  049A  ldc.i4.2  
+  049B  ldelem.i4  
+  049C  stfld  System.Int32 BuildingParameters::mode2
+  04A1  ret  
+  04A2  ldarg.0  
+  04A3  ldfld  BuildingType BuildingParameters::type
+  04A8  ldc.i4.8  
+  04A9  bne.un.s  IL_04c7: ldarg.0
+  04AB  ldarg.1  
+  04AC  ldlen  
+  04AD  conv.i4  
+  04AE  ldc.i4.2  
+  04AF  blt  IL_06b0: ret
+  04B4  ldarg.0  
+  04B5  ldarg.1  
+  04B6  ldc.i4.0  
+  04B7  ldelem.i4  
+  04B8  stfld  System.Int32 BuildingParameters::mode0
+  04BD  ldarg.0  
+  04BE  ldarg.1  
+  04BF  ldc.i4.1  
+  04C0  ldelem.i4  
+  04C1  stfld  System.Int32 BuildingParameters::mode1
+  04C6  ret  
+  04C7  ldarg.0  
+  04C8  ldfld  BuildingType BuildingParameters::type
+  04CD  ldc.i4.s  20
+  04CF  bne.un.s  IL_0503: ldarg.0
+  04D1  ldarg.0  
+  04D2  ldc.i4  2048
+  04D7  newarr  System.Int32
+  04DC  stfld  System.Int32[] BuildingParameters::parameters
+  04E1  ldarg.1  
+  04E2  ldlen  
+  04E3  conv.i4  
+  04E4  ldc.i4  2048
+  04E9  blt  IL_06b0: ret
+  04EE  ldarg.1  
+  04EF  ldarg.0  
+  04F0  ldfld  System.Int32[] BuildingParameters::parameters
+  04F5  ldarg.0  
+  04F6  ldfld  System.Int32[] BuildingParameters::parameters
+  04FB  ldlen  
+  04FC  conv.i4  
+  04FD  call  System.Void System.Array::Copy(System.Array,System.Array,System.Int32)
+  0502  ret  
+  0503  ldarg.0  
+  0504  ldfld  BuildingType BuildingParameters::type
+  0509  ldc.i4.s  9
+  050B  bne.un.s  IL_053f: ldarg.0
+  050D  ldarg.0  
+  050E  ldc.i4  2048
+  0513  newarr  System.Int32
+  0518  stfld  System.Int32[] BuildingParameters::parameters
+  051D  ldarg.1  
+  051E  ldlen  
+  051F  conv.i4  
+  0520  ldc.i4  2048
+  0525  blt  IL_06b0: ret
+  052A  ldarg.1  
+  052B  ldarg.0  
+  052C  ldfld  System.Int32[] BuildingParameters::parameters
+  0531  ldarg.0  
+  0532  ldfld  System.Int32[] BuildingParameters::parameters
+  0537  ldlen  
+  0538  conv.i4  
+  0539  call  System.Void System.Array::Copy(System.Array,System.Array,System.Int32)
+  053E  ret  
+  053F  ldarg.0  
+  0540  ldfld  BuildingType BuildingParameters::type
+  0545  ldc.i4.s  10
+  0547  bne.un.s  IL_0598: ldarg.0
+  0549  ldarg.0  
+  054A  ldc.i4  128
+  054F  newarr  System.Int32
+  0554  stfld  System.Int32[] BuildingParameters::parameters
+  0559  ldarg.1  
+  055A  ldlen  
+  055B  conv.i4  
+  055C  ldc.i4.2  
+  055D  blt.s  IL_0571: ldarg.1
+  055F  ldarg.0  
+  0560  ldarg.1  
+  0561  ldc.i4.0  
+  0562  ldelem.i4  
+  0563  stfld  System.Int32 BuildingParameters::mode0
+  0568  ldarg.0  
+  0569  ldarg.1  
+  056A  ldc.i4.1  
+  056B  ldelem.i4  
+  056C  stfld  System.Int32 BuildingParameters::mode1
+  0571  ldarg.1  
+  0572  ldarg.0  
+  0573  ldfld  System.Int32[] BuildingParameters::parameters
+  0578  ldarg.0  
+  0579  ldfld  System.Int32[] BuildingParameters::parameters
+  057E  ldlen  
+  057F  conv.i4  
+  0580  ldarg.1  
+  0581  ldlen  
+  0582  conv.i4  
+  0583  blt.s  IL_058a: ldarg.0
+  0585  ldarg.1  
+  0586  ldlen  
+  0587  conv.i4  
+  0588  br.s  IL_0592: call System.Void System.Array::Copy(System.Array,System.Array,System.Int32)
+  058A  ldarg.0  
+  058B  ldfld  System.Int32[] BuildingParameters::parameters
+  0590  ldlen  
+  0591  conv.i4  
+  0592  call  System.Void System.Array::Copy(System.Array,System.Array,System.Int32)
+  0597  ret  
+  0598  ldarg.0  
+  0599  ldfld  BuildingType BuildingParameters::type
+  059E  ldc.i4.s  11
+  05A0  bne.un.s  IL_05e0: ldarg.0
+  05A2  ldarg.0  
+  05A3  ldc.i4  128
+  05A8  newarr  System.Int32
+  05AD  stfld  System.Int32[] BuildingParameters::parameters
+  05B2  ldarg.1  
+  05B3  ldlen  
+  05B4  conv.i4  
+  05B5  ldc.i4.2  
+  05B6  blt  IL_06b0: ret
+  05BB  ldarg.0  
+  05BC  ldarg.1  
+  05BD  ldc.i4.1  
+  05BE  ldelem.i4  
+  05BF  stfld  System.Int32 BuildingParameters::mode0
+  05C4  ldarg.0  
+  05C5  ldarg.1  
+  05C6  ldc.i4.2  
+  05C7  ldelem.i4  
+  05C8  stfld  System.Int32 BuildingParameters::mode1
+  05CD  ldarg.0  
+  05CE  ldarg.1  
+  05CF  ldc.i4.3  
+  05D0  ldelem.i4  
+  05D1  stfld  System.Int32 BuildingParameters::mode2
+  05D6  ldarg.0  
+  05D7  ldarg.1  
+  05D8  ldc.i4.4  
+  05D9  ldelem.i4  
+  05DA  stfld  System.Int32 BuildingParameters::mode3
+  05DF  ret  
+  05E0  ldarg.0  
+  05E1  ldfld  BuildingType BuildingParameters::type
+  05E6  ldc.i4.2  
+  05E7  bne.un.s  IL_0649: ldarg.0
+  05E9  ldarg.0  
+  05EA  ldc.i4.s  12
+  05EC  newarr  System.Int32
+  05F1  stfld  System.Int32[] BuildingParameters::parameters
+  05F6  ldarg.1  
+  05F7  ldlen  
+  05F8  conv.i4  
+  05F9  ldc.i4.4  
+  05FA  blt.s  IL_0620: ldarg.0
+  05FC  ldarg.0  
+  05FD  ldarg.1  
+  05FE  ldc.i4.0  
+  05FF  ldelem.i4  
+  0600  stfld  System.Int32 BuildingParameters::mode0
+  0605  ldarg.0  
+  0606  ldarg.1  
+  0607  ldc.i4.1  
+  0608  ldelem.i4  
+  0609  stfld  System.Int32 BuildingParameters::mode1
+  060E  ldarg.0  
+  060F  ldarg.1  
+  0610  ldc.i4.2  
+  0611  ldelem.i4  
+  0612  stfld  System.Int32 BuildingParameters::mode2
+  0617  ldarg.0  
+  0618  ldarg.1  
+  0619  ldc.i4.3  
+  061A  ldelem.i4  
+  061B  stfld  System.Int32 BuildingParameters::mode3
+  0620  ldarg.0  
+  0621  ldfld  System.Int32[] BuildingParameters::parameters
+  0626  ldc.i4.4  
+  0627  ldarg.1  
+  0628  ldlen  
+  0629  conv.i4  
+  062A  ldc.i4.4  
+  062B  bgt.s  IL_0630: ldarg.1
+  062D  ldc.i4.0  
+  062E  br.s  IL_0633: stelem.i4
+  0630  ldarg.1  
+  0631  ldc.i4.4  
+  0632  ldelem.i4  
+  0633  stelem.i4  
+  0634  ldarg.0  
+  0635  ldfld  System.Int32[] BuildingParameters::parameters
+  063A  ldc.i4.5  
+  063B  ldarg.1  
+  063C  ldlen  
+  063D  conv.i4  
+  063E  ldc.i4.5  
+  063F  bgt.s  IL_0644: ldarg.1
+  0641  ldc.i4.0  
+  0642  br.s  IL_0647: stelem.i4
+  0644  ldarg.1  
+  0645  ldc.i4.5  
+  0646  ldelem.i4  
+  0647  stelem.i4  
+  0648  ret  
+  0649  ldarg.0  
+  064A  ldfld  BuildingType BuildingParameters::type
+  064F  ldc.i4.s  12
+  0651  bne.un.s  IL_0663: ldarg.0
+  0653  ldarg.1  
+  0654  ldlen  
+  0655  conv.i4  
+  0656  ldc.i4.1  
+  0657  blt.s  IL_06b0: ret
+  0659  ldarg.0  
+  065A  ldarg.1  
+  065B  ldc.i4.0  
+  065C  ldelem.i4  
+  065D  stfld  System.Int32 BuildingParameters::mode0
+  0662  ret  
+  0663  ldarg.0  
+  0664  ldfld  BuildingType BuildingParameters::type
+  0669  ldc.i4.s  17
+  066B  bne.un.s  IL_067d: ldarg.0
+  066D  ldarg.1  
+  066E  ldlen  
+  066F  conv.i4  
+  0670  ldc.i4.1  
+  0671  blt.s  IL_06b0: ret
+  0673  ldarg.0  
+  0674  ldarg.1  
+  0675  ldc.i4.0  
+  0676  ldelem.i4  
+  0677  stfld  System.Int32 BuildingParameters::mode0
+  067C  ret  
+  067D  ldarg.0  
+  067E  ldfld  BuildingType BuildingParameters::type
+  0683  ldc.i4.s  13
+  0685  bne.un.s  IL_0697: ldarg.0
+  0687  ldarg.1  
+  0688  ldlen  
+  0689  conv.i4  
+  068A  ldc.i4.1  
+  068B  blt.s  IL_06b0: ret
+  068D  ldarg.0  
+  068E  ldarg.1  
+  068F  ldc.i4.0  
+  0690  ldelem.i4  
+  0691  stfld  System.Int32 BuildingParameters::mode0
+  0696  ret  
+  0697  ldarg.0  
+  0698  ldfld  BuildingType BuildingParameters::type
+  069D  ldc.i4.s  16
+  069F  bne.un.s  IL_06b0: ret
+  06A1  ldarg.1  
+  06A2  ldlen  
+  06A3  conv.i4  
+  06A4  ldc.i4.1  
+  06A5  blt.s  IL_06b0: ret
+  06A7  ldarg.0  
+  06A8  ldarg.1  
+  06A9  ldc.i4.0  
+  06AA  ldelem.i4  
+  06AB  stfld  System.Int32 BuildingParameters::mode0
+  06B0  ret  

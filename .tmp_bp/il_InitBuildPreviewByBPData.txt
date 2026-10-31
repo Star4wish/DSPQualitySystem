@@ -1,0 +1,253 @@
+﻿METHOD System.Int32 BlueprintUtils::InitBuildPreviewByBPData(BlueprintData,BuildPreview[]&,System.Int32)
+  0000  ldarg.0  
+  0001  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  0006  ldlen  
+  0007  conv.i4  
+  0008  stloc.0  
+  0009  ldarg.0  
+  000A  ldfld  BlueprintArea[] BlueprintData::areas
+  000F  ldlen  
+  0010  conv.i4  
+  0011  ldc.i4.1  
+  0012  bgt.s  IL_0019: ldloc.0
+  0014  ldloc.0  
+  0015  ldarg.2  
+  0016  mul  
+  0017  br.s  IL_001a: stloc.1
+  0019  ldloc.0  
+  001A  stloc.1  
+  001B  ldarg.1  
+  001C  ldind.ref  
+  001D  brfalse.s  IL_0026: ldarg.1
+  001F  ldarg.1  
+  0020  ldind.ref  
+  0021  ldlen  
+  0022  conv.i4  
+  0023  ldloc.1  
+  0024  bge.s  IL_0031: ldc.i4.0
+  0026  ldarg.1  
+  0027  ldind.ref  
+  0028  ldarg.1  
+  0029  ldloc.1  
+  002A  newarr  BuildPreview
+  002F  stind.ref  
+  0030  pop  
+  0031  ldc.i4.0  
+  0032  stloc.2  
+  0033  br  IL_0251: ldloc.2
+  0038  ldarg.1  
+  0039  ldind.ref  
+  003A  ldloc.2  
+  003B  ldelem.ref  
+  003C  brtrue.s  IL_0047: ldarg.1
+  003E  ldarg.1  
+  003F  ldind.ref  
+  0040  ldloc.2  
+  0041  newobj  System.Void BuildPreview::.ctor()
+  0046  stelem.ref  
+  0047  ldarg.1  
+  0048  ldind.ref  
+  0049  ldloc.2  
+  004A  ldelem.ref  
+  004B  stloc.3  
+  004C  ldloc.3  
+  004D  callvirt  System.Void BuildPreview::ResetAll()
+  0052  ldloc.3  
+  0053  ldc.i4.m1  
+  0054  stfld  System.Int32 BuildPreview::previewIndex
+  0059  ldloc.3  
+  005A  ldloc.2  
+  005B  ldc.i4.1  
+  005C  add  
+  005D  stfld  System.Int32 BuildPreview::bpgpuiModelId
+  0062  ldloc.3  
+  0063  ldc.i4.m1  
+  0064  stfld  System.Int32 BuildPreview::bpgpuiModelInstIndex
+  0069  ldloc.2  
+  006A  ldloc.0  
+  006B  div  
+  006C  ldloc.0  
+  006D  mul  
+  006E  stloc.s  V_4
+  0070  ldloc.2  
+  0071  ldloc.0  
+  0072  rem  
+  0073  stloc.s  V_5
+  0075  ldarg.0  
+  0076  ldfld  BlueprintBuilding[] BlueprintData::buildings
+  007B  ldloc.s  V_5
+  007D  ldelem.ref  
+  007E  stloc.s  V_6
+  0080  ldloc.3  
+  0081  call  ItemProtoSet LDB::get_items()
+  0086  ldloc.s  V_6
+  0088  ldfld  System.Int16 BlueprintBuilding::itemId
+  008D  callvirt  T ProtoSet`1<ItemProto>::Select(System.Int32)
+  0092  stfld  ItemProto BuildPreview::item
+  0097  ldloc.3  
+  0098  call  ModelProtoSet LDB::get_models()
+  009D  ldloc.s  V_6
+  009F  ldfld  System.Int16 BlueprintBuilding::modelIndex
+  00A4  callvirt  T ProtoSet`1<ModelProto>::Select(System.Int32)
+  00A9  ldfld  PrefabDesc ModelProto::prefabDesc
+  00AE  stfld  PrefabDesc BuildPreview::desc
+  00B3  ldloc.3  
+  00B4  ldloc.3  
+  00B5  ldfld  PrefabDesc BuildPreview::desc
+  00BA  ldfld  System.Boolean PrefabDesc::isBelt
+  00BF  stfld  System.Boolean BuildPreview::isConnNode
+  00C4  ldloc.s  V_6
+  00C6  ldfld  BlueprintBuilding BlueprintBuilding::outputObj
+  00CB  brfalse.s  IL_00f8: ldloc.s V_6
+  00CD  ldarg.1  
+  00CE  ldind.ref  
+  00CF  ldloc.s  V_6
+  00D1  ldfld  BlueprintBuilding BlueprintBuilding::outputObj
+  00D6  ldfld  System.Int32 BlueprintBuilding::index
+  00DB  ldloc.s  V_4
+  00DD  add  
+  00DE  ldelem.ref  
+  00DF  brtrue.s  IL_00f8: ldloc.s V_6
+  00E1  ldarg.1  
+  00E2  ldind.ref  
+  00E3  ldloc.s  V_6
+  00E5  ldfld  BlueprintBuilding BlueprintBuilding::outputObj
+  00EA  ldfld  System.Int32 BlueprintBuilding::index
+  00EF  ldloc.s  V_4
+  00F1  add  
+  00F2  newobj  System.Void BuildPreview::.ctor()
+  00F7  stelem.ref  
+  00F8  ldloc.s  V_6
+  00FA  ldfld  BlueprintBuilding BlueprintBuilding::inputObj
+  00FF  brfalse.s  IL_012c: ldloc.3
+  0101  ldarg.1  
+  0102  ldind.ref  
+  0103  ldloc.s  V_6
+  0105  ldfld  BlueprintBuilding BlueprintBuilding::inputObj
+  010A  ldfld  System.Int32 BlueprintBuilding::index
+  010F  ldloc.s  V_4
+  0111  add  
+  0112  ldelem.ref  
+  0113  brtrue.s  IL_012c: ldloc.3
+  0115  ldarg.1  
+  0116  ldind.ref  
+  0117  ldloc.s  V_6
+  0119  ldfld  BlueprintBuilding BlueprintBuilding::inputObj
+  011E  ldfld  System.Int32 BlueprintBuilding::index
+  0123  ldloc.s  V_4
+  0125  add  
+  0126  newobj  System.Void BuildPreview::.ctor()
+  012B  stelem.ref  
+  012C  ldloc.3  
+  012D  ldloc.s  V_6
+  012F  ldfld  BlueprintBuilding BlueprintBuilding::outputObj
+  0134  brfalse.s  IL_014a: ldnull
+  0136  ldarg.1  
+  0137  ldind.ref  
+  0138  ldloc.s  V_6
+  013A  ldfld  BlueprintBuilding BlueprintBuilding::outputObj
+  013F  ldfld  System.Int32 BlueprintBuilding::index
+  0144  ldloc.s  V_4
+  0146  add  
+  0147  ldelem.ref  
+  0148  br.s  IL_014b: stfld BuildPreview BuildPreview::output
+  014A  ldnull  
+  014B  stfld  BuildPreview BuildPreview::output
+  0150  ldloc.3  
+  0151  ldloc.s  V_6
+  0153  ldfld  BlueprintBuilding BlueprintBuilding::inputObj
+  0158  brfalse.s  IL_016e: ldnull
+  015A  ldarg.1  
+  015B  ldind.ref  
+  015C  ldloc.s  V_6
+  015E  ldfld  BlueprintBuilding BlueprintBuilding::inputObj
+  0163  ldfld  System.Int32 BlueprintBuilding::index
+  0168  ldloc.s  V_4
+  016A  add  
+  016B  ldelem.ref  
+  016C  br.s  IL_016f: stfld BuildPreview BuildPreview::input
+  016E  ldnull  
+  016F  stfld  BuildPreview BuildPreview::input
+  0174  ldloc.3  
+  0175  ldloc.s  V_6
+  0177  ldfld  System.Int32 BlueprintBuilding::outputFromSlot
+  017C  stfld  System.Int32 BuildPreview::outputFromSlot
+  0181  ldloc.3  
+  0182  ldloc.s  V_6
+  0184  ldfld  System.Int32 BlueprintBuilding::inputToSlot
+  0189  stfld  System.Int32 BuildPreview::inputToSlot
+  018E  ldloc.3  
+  018F  ldloc.s  V_6
+  0191  ldfld  System.Int32 BlueprintBuilding::outputToSlot
+  0196  stfld  System.Int32 BuildPreview::outputToSlot
+  019B  ldloc.3  
+  019C  ldloc.s  V_6
+  019E  ldfld  System.Int32 BlueprintBuilding::inputFromSlot
+  01A3  stfld  System.Int32 BuildPreview::inputFromSlot
+  01A8  ldloc.3  
+  01A9  ldloc.s  V_6
+  01AB  ldfld  System.Int32 BlueprintBuilding::inputOffset
+  01B0  stfld  System.Int32 BuildPreview::inputOffset
+  01B5  ldloc.3  
+  01B6  ldloc.s  V_6
+  01B8  ldfld  System.Int32 BlueprintBuilding::outputOffset
+  01BD  stfld  System.Int32 BuildPreview::outputOffset
+  01C2  ldloc.3  
+  01C3  ldloc.s  V_6
+  01C5  ldfld  System.Int32 BlueprintBuilding::recipeId
+  01CA  stfld  System.Int32 BuildPreview::recipeId
+  01CF  ldloc.3  
+  01D0  ldloc.s  V_6
+  01D2  ldfld  System.Int32 BlueprintBuilding::filterId
+  01D7  stfld  System.Int32 BuildPreview::filterId
+  01DC  ldloc.3  
+  01DD  ldfld  PrefabDesc BuildPreview::desc
+  01E2  ldfld  System.Int32 PrefabDesc::lodCount
+  01E7  ldc.i4.0  
+  01E8  ble.s  IL_0215: ldloc.3
+  01EA  ldloc.3  
+  01EB  ldfld  PrefabDesc BuildPreview::desc
+  01F0  ldfld  UnityEngine.Mesh[] PrefabDesc::lodMeshes
+  01F5  brfalse.s  IL_0215: ldloc.3
+  01F7  ldloc.3  
+  01F8  ldfld  PrefabDesc BuildPreview::desc
+  01FD  ldfld  UnityEngine.Mesh[] PrefabDesc::lodMeshes
+  0202  ldc.i4.0  
+  0203  ldelem.ref  
+  0204  ldnull  
+  0205  call  System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+  020A  brfalse.s  IL_0215: ldloc.3
+  020C  ldloc.3  
+  020D  ldc.i4.1  
+  020E  stfld  System.Boolean BuildPreview::needModel
+  0213  br.s  IL_021c: ldloc.3
+  0215  ldloc.3  
+  0216  ldc.i4.0  
+  0217  stfld  System.Boolean BuildPreview::needModel
+  021C  ldloc.3  
+  021D  ldloc.s  V_6
+  021F  ldfld  System.Int32[] BlueprintBuilding::parameters
+  0224  ldlen  
+  0225  conv.i4  
+  0226  ldloc.s  V_6
+  0228  ldfld  System.Int32[] BlueprintBuilding::parameters
+  022D  callvirt  System.Void BuildPreview::SetParameters(System.Int32,System.Int32[])
+  0232  ldloc.3  
+  0233  ldloc.s  V_6
+  0235  ldfld  System.String BlueprintBuilding::content
+  023A  stfld  System.String BuildPreview::content
+  023F  ldloc.3  
+  0240  ldnull  
+  0241  stfld  BuildPreview BuildPreview::coverbp
+  0246  ldloc.3  
+  0247  ldc.i4.0  
+  0248  stfld  EBuildCondition BuildPreview::condition
+  024D  ldloc.2  
+  024E  ldc.i4.1  
+  024F  add  
+  0250  stloc.2  
+  0251  ldloc.2  
+  0252  ldloc.1  
+  0253  blt  IL_0038: ldarg.1
+  0258  ldloc.1  
+  0259  ret  

@@ -26,7 +26,13 @@ namespace DSPQualitySystem.Patches
     internal static class Assembler_InternalUpdate_Quality
     {
         private const int DebugLogLimit = 20;
+
+        // v0.19.1 diagnosis: how many "batch started" probe lines a session may print. The
+        // ingredient batch level is what the next cycle derives quality from, so when a save
+        // round-trip loses it the probe shows which average the machine actually read.
+        private const int BatchProbeLimit = 60;
         private static int _reconcileLogs;
+        private static int _batchProbes;
 
         private static void Prefix(ref AssemblerComponent __instance)
         {
@@ -117,15 +123,26 @@ namespace DSPQualitySystem.Patches
                         inc = 0;
                     }
 
-                    int average = inc / have;
-                    if (average > Cargo.kIncLevelMax)
-                    {
-                        average = Cargo.kIncLevelMax;
-                    }
+                    // v0.19.1: round half up instead of vanilla's truncation, so a batch whose
+                    // ingredients average 5.5+ keeps the higher level (user report: a 10 point
+                    // assembler fed by a belt with a few low level items produced 7 instead of 8).
+                    int average = QualityMath.BatchInputLevel(inc, have, Cargo.kIncLevelMax);
                     if (average < level)
                     {
                         level = average;
                     }
+                }
+
+                if (QualityConfig.DevMode && _batchProbes < BatchProbeLimit)
+                {
+                    _batchProbes++;
+                    string slots = "";
+                    for (int i = 0; i < count; i++)
+                    {
+                        slots += " s" + i + "=" + served[i] + "/" + incServed[i] + "/" + requireCounts[i];
+                    }
+                    Plugin.Log.LogInfo("[QSystem][assembler][batch] eid=" + entityId
+                        + " planet=" + planetId + " lvl=" + level + slots);
                 }
 
                 QualityData.SetPendingLevel(planetId, entityId, (short)level);
@@ -212,13 +229,18 @@ namespace DSPQualitySystem.Patches
                     // R-2 (building quality upgrade) rolls at most once per produced batch per
                     // machine tick; with buildingInc == 0 (M1) this is a no-op.
                     int pooled = QualityRules.RollCycleQuality(planetId, entityId, quality);
+                    int poolBefore = QualityData.GetPoolInc(planetId, entityId);
+                    int countBefore = QualityData.GetPoolCount(planetId, entityId);
                     QualityData.AddPool(planetId, entityId, pooled * producedThisCall, producedThisCall);
-                    if (QualityConfig.DevMode && pickedThisTick > 0 && _reconcileLogs < DebugLogLimit)
+                    if (QualityConfig.DevMode && _reconcileLogs < DebugLogLimit)
                     {
                         _reconcileLogs++;
                         Plugin.Log.LogInfo("[QSystem][assembler] pool credited produced="
                             + producedThisCall + " net=" + netProduced + " picked=" + pickedThisTick
-                            + " pooled=" + pooled);
+                            + " pooled=" + pooled + " in=" + quality
+                            + " pool=" + poolBefore + "/" + countBefore
+                            + "->" + QualityData.GetPoolInc(planetId, entityId)
+                            + "/" + QualityData.GetPoolCount(planetId, entityId));
                     }
                 }
 
@@ -231,7 +253,15 @@ namespace DSPQualitySystem.Patches
                     && (QualityData.GetWasReplicating(planetId, entityId) == 0 || producedThisCall > 0);
                 if (startedBatch)
                 {
+                    int previous = QualityData.GetInputLevel(planetId, entityId);
                     QualityData.SetInputLevel(planetId, entityId, (short)pending);
+                    if (QualityConfig.DevMode && _batchProbes < BatchProbeLimit)
+                    {
+                        _batchProbes++;
+                        Plugin.Log.LogInfo("[QSystem][assembler][batch] eid=" + entityId
+                            + " commit in=" + previous + "->" + pending
+                            + " produced=" + producedThisCall);
+                    }
                 }
             }
             catch (Exception e)

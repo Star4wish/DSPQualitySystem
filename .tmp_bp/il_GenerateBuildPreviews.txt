@@ -1,0 +1,319 @@
+﻿METHOD System.Void BuildingParameters::GenerateBuildPreviews(System.Collections.Generic.List`1<BuildPreview>)
+  0000  ldarg.1  
+  0001  callvirt  System.Void System.Collections.Generic.List`1<BuildPreview>::Clear()
+  0006  ldarg.0  
+  0007  ldfld  BuildingType BuildingParameters::type
+  000C  brtrue.s  IL_000f: call ItemProtoSet LDB::get_items()
+  000E  ret  
+  000F  call  ItemProtoSet LDB::get_items()
+  0014  ldarg.0  
+  0015  ldfld  System.Int32 BuildingParameters::itemId
+  001A  callvirt  T ProtoSet`1<ItemProto>::Select(System.Int32)
+  001F  stloc.0  
+  0020  call  ModelProtoSet LDB::get_models()
+  0025  ldarg.0  
+  0026  ldfld  System.Int32 BuildingParameters::modelIndex
+  002B  callvirt  T ProtoSet`1<ModelProto>::Select(System.Int32)
+  0030  stloc.1  
+  0031  ldloc.0  
+  0032  brfalse.s  IL_0037: ret
+  0034  ldloc.1  
+  0035  brtrue.s  IL_0038: ldloc.1
+  0037  ret  
+  0038  ldloc.1  
+  0039  ldfld  PrefabDesc ModelProto::prefabDesc
+  003E  stloc.2  
+  003F  ldloc.0  
+  0040  ldfld  System.Boolean ItemProto::IsEntity
+  0045  brtrue.s  IL_0048: newobj System.Void BuildPreview::.ctor()
+  0047  ret  
+  0048  newobj  System.Void BuildPreview::.ctor()
+  004D  stloc.3  
+  004E  ldloc.3  
+  004F  ldloc.0  
+  0050  stfld  ItemProto BuildPreview::item
+  0055  ldloc.3  
+  0056  ldloc.2  
+  0057  stfld  PrefabDesc BuildPreview::desc
+  005C  ldloc.3  
+  005D  call  UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+  0062  stfld  UnityEngine.Vector3 BuildPreview::lpos
+  0067  ldloc.3  
+  0068  call  UnityEngine.Quaternion UnityEngine.Quaternion::get_identity()
+  006D  stfld  UnityEngine.Quaternion BuildPreview::lrot
+  0072  ldloc.3  
+  0073  call  UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+  0078  stfld  UnityEngine.Vector3 BuildPreview::lpos2
+  007D  ldloc.3  
+  007E  ldloc.3  
+  007F  ldfld  UnityEngine.Quaternion BuildPreview::lrot
+  0084  stfld  UnityEngine.Quaternion BuildPreview::lrot2
+  0089  ldloc.3  
+  008A  ldc.r4  0
+  008F  stfld  System.Single BuildPreview::tilt
+  0094  ldloc.3  
+  0095  ldloc.2  
+  0096  ldfld  System.Int32 PrefabDesc::lodCount
+  009B  ldc.i4.0  
+  009C  ble.s  IL_00ae: ldc.i4.0
+  009E  ldloc.2  
+  009F  ldfld  UnityEngine.Mesh[] PrefabDesc::lodMeshes
+  00A4  ldc.i4.0  
+  00A5  ldelem.ref  
+  00A6  ldnull  
+  00A7  call  System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+  00AC  br.s  IL_00af: stfld System.Boolean BuildPreview::needModel
+  00AE  ldc.i4.0  
+  00AF  stfld  System.Boolean BuildPreview::needModel
+  00B4  ldloc.3  
+  00B5  ldarg.0  
+  00B6  ldfld  System.Int32 BuildingParameters::recipeId
+  00BB  stfld  System.Int32 BuildPreview::recipeId
+  00C0  ldloc.3  
+  00C1  ldarg.0  
+  00C2  ldfld  System.Int32 BuildingParameters::filterId
+  00C7  stfld  System.Int32 BuildPreview::filterId
+  00CC  ldarg.0  
+  00CD  ldloc.3  
+  00CE  ldflda  System.Int32[] BuildPreview::parameters
+  00D3  ldloc.3  
+  00D4  ldflda  System.Int32 BuildPreview::paramCount
+  00D9  call  System.Void BuildingParameters::ToParamsArray(System.Int32[]&,System.Int32&)
+  00DE  ldloc.3  
+  00DF  ldarg.0  
+  00E0  ldfld  System.String BuildingParameters::content
+  00E5  stfld  System.String BuildPreview::content
+  00EA  ldarg.1  
+  00EB  ldloc.3  
+  00EC  callvirt  System.Void System.Collections.Generic.List`1<BuildPreview>::Add(!0)
+  00F1  ldarg.0  
+  00F2  ldfld  System.Int32[] BuildingParameters::inserterItemIds
+  00F7  brfalse  IL_03c6: ret
+  00FC  ldarg.0  
+  00FD  ldfld  System.Int32[] BuildingParameters::inserterItemIds
+  0102  ldlen  
+  0103  conv.i4  
+  0104  stloc.s  V_4
+  0106  ldc.i4.0  
+  0107  stloc.s  V_5
+  0109  br  IL_03bd: ldloc.s V_5
+  010E  call  ItemProtoSet LDB::get_items()
+  0113  ldarg.0  
+  0114  ldfld  System.Int32[] BuildingParameters::inserterItemIds
+  0119  ldloc.s  V_5
+  011B  ldelem.i4  
+  011C  callvirt  T ProtoSet`1<ItemProto>::Select(System.Int32)
+  0121  stloc.s  V_6
+  0123  ldloc.s  V_6
+  0125  brfalse  IL_03b7: ldloc.s V_5
+  012A  ldarg.0  
+  012B  ldfld  System.Int32[] BuildingParameters::inserterLengths
+  0130  ldloc.s  V_5
+  0132  ldelem.i4  
+  0133  brfalse  IL_03b7: ldloc.s V_5
+  0138  ldarg.0  
+  0139  ldfld  System.Int32[] BuildingParameters::inserterLengths
+  013E  ldloc.s  V_5
+  0140  ldelem.i4  
+  0141  ldc.i4.0  
+  0142  clt  
+  0144  stloc.s  V_7
+  0146  ldarg.0  
+  0147  ldfld  System.Int32[] BuildingParameters::inserterLengths
+  014C  ldloc.s  V_5
+  014E  ldelem.i4  
+  014F  stloc.s  V_8
+  0151  ldloc.s  V_8
+  0153  ldc.i4.0  
+  0154  bge.s  IL_015b: ldc.r4 1
+  0156  ldloc.s  V_8
+  0158  neg  
+  0159  stloc.s  V_8
+  015B  ldc.r4  1
+  0160  ldloc.s  V_8
+  0162  conv.r4  
+  0163  mul  
+  0164  stloc.s  V_9
+  0166  ldloc.2  
+  0167  ldfld  UnityEngine.Pose[] PrefabDesc::slotPoses
+  016C  ldloc.s  V_5
+  016E  ldelem.any  UnityEngine.Pose
+  0173  stloc.s  V_10
+  0175  ldloc.s  V_7
+  0177  brtrue.s  IL_0187: ldloca.s V_10
+  0179  ldloca.s  V_10
+  017B  call  UnityEngine.Vector3 UnityEngine.Pose::get_right()
+  0180  call  UnityEngine.Vector3 UnityEngine.Vector3::op_UnaryNegation(UnityEngine.Vector3)
+  0185  br.s  IL_018e: stloc.s V_11
+  0187  ldloca.s  V_10
+  0189  call  UnityEngine.Vector3 UnityEngine.Pose::get_right()
+  018E  stloc.s  V_11
+  0190  newobj  System.Void BuildPreview::.ctor()
+  0195  stloc.s  V_12
+  0197  ldloc.s  V_12
+  0199  ldloc.s  V_6
+  019B  stfld  ItemProto BuildPreview::item
+  01A0  ldloc.s  V_12
+  01A2  ldloc.s  V_6
+  01A4  ldfld  PrefabDesc ItemProto::prefabDesc
+  01A9  stfld  PrefabDesc BuildPreview::desc
+  01AE  ldloc.s  V_12
+  01B0  ldloc.s  V_10
+  01B2  ldfld  UnityEngine.Vector3 UnityEngine.Pose::position
+  01B7  stfld  UnityEngine.Vector3 BuildPreview::lpos
+  01BC  ldloc.s  V_12
+  01BE  ldloc.s  V_10
+  01C0  ldfld  UnityEngine.Quaternion UnityEngine.Pose::rotation
+  01C5  ldc.r4  0
+  01CA  ldloc.s  V_7
+  01CC  brtrue.s  IL_01d5: ldc.i4.0
+  01CE  ldc.i4  180
+  01D3  br.s  IL_01d6: conv.r4
+  01D5  ldc.i4.0  
+  01D6  conv.r4  
+  01D7  ldc.r4  0
+  01DC  call  UnityEngine.Quaternion UnityEngine.Quaternion::Euler(System.Single,System.Single,System.Single)
+  01E1  call  UnityEngine.Quaternion UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Quaternion)
+  01E6  stfld  UnityEngine.Quaternion BuildPreview::lrot
+  01EB  ldloc.s  V_12
+  01ED  ldloc.s  V_10
+  01EF  ldfld  UnityEngine.Vector3 UnityEngine.Pose::position
+  01F4  ldloca.s  V_10
+  01F6  call  UnityEngine.Vector3 UnityEngine.Pose::get_forward()
+  01FB  ldloc.s  V_9
+  01FD  call  UnityEngine.Vector3 UnityEngine.Vector3::op_Multiply(UnityEngine.Vector3,System.Single)
+  0202  call  UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+  0207  stfld  UnityEngine.Vector3 BuildPreview::lpos2
+  020C  ldloc.s  V_12
+  020E  ldfld  UnityEngine.Vector3 BuildPreview::lpos2
+  0213  call  VectorLF3 VectorLF3::op_Implicit(UnityEngine.Vector3)
+  0218  ldc.r8  0
+  0221  ldc.r8  200.2
+  022A  ldc.r8  0
+  0233  newobj  System.Void VectorLF3::.ctor(System.Double,System.Double,System.Double)
+  0238  call  VectorLF3 VectorLF3::op_Addition(VectorLF3,VectorLF3)
+  023D  stloc.s  V_14
+  023F  ldloca.s  V_14
+  0241  call  VectorLF3 VectorLF3::get_normalized()
+  0246  ldc.r8  200.2
+  024F  call  VectorLF3 VectorLF3::op_Multiply(VectorLF3,System.Double)
+  0254  stloc.s  V_13
+  0256  ldloc.s  V_12
+  0258  ldloc.s  V_13
+  025A  ldc.r8  0
+  0263  ldc.r8  200.2
+  026C  ldc.r8  0
+  0275  newobj  System.Void VectorLF3::.ctor(System.Double,System.Double,System.Double)
+  027A  call  VectorLF3 VectorLF3::op_Subtraction(VectorLF3,VectorLF3)
+  027F  call  UnityEngine.Vector3 VectorLF3::op_Implicit(VectorLF3)
+  0284  stfld  UnityEngine.Vector3 BuildPreview::lpos2
+  0289  ldloc.s  V_12
+  028B  ldloc.s  V_11
+  028D  call  VectorLF3 VectorLF3::op_Implicit(UnityEngine.Vector3)
+  0292  ldloca.s  V_13
+  0294  call  VectorLF3 VectorLF3::get_normalized()
+  0299  call  VectorLF3 VectorLF3::Cross(VectorLF3,VectorLF3)
+  029E  call  UnityEngine.Vector3 VectorLF3::op_Implicit(VectorLF3)
+  02A3  ldloca.s  V_13
+  02A5  call  VectorLF3 VectorLF3::get_normalized()
+  02AA  call  UnityEngine.Vector3 VectorLF3::op_Implicit(VectorLF3)
+  02AF  call  UnityEngine.Quaternion UnityEngine.Quaternion::LookRotation(UnityEngine.Vector3,UnityEngine.Vector3)
+  02B4  stfld  UnityEngine.Quaternion BuildPreview::lrot2
+  02B9  ldloc.s  V_12
+  02BB  ldc.r4  0
+  02C0  stfld  System.Single BuildPreview::tilt
+  02C5  ldloc.s  V_7
+  02C7  brtrue.s  IL_0309: ldloc.s V_12
+  02C9  ldloc.s  V_12
+  02CB  ldfld  UnityEngine.Vector3 BuildPreview::lpos
+  02D0  stloc.s  V_15
+  02D2  ldloc.s  V_12
+  02D4  ldloc.s  V_12
+  02D6  ldfld  UnityEngine.Vector3 BuildPreview::lpos2
+  02DB  stfld  UnityEngine.Vector3 BuildPreview::lpos
+  02E0  ldloc.s  V_12
+  02E2  ldloc.s  V_15
+  02E4  stfld  UnityEngine.Vector3 BuildPreview::lpos2
+  02E9  ldloc.s  V_12
+  02EB  ldfld  UnityEngine.Quaternion BuildPreview::lrot
+  02F0  stloc.s  V_16
+  02F2  ldloc.s  V_12
+  02F4  ldloc.s  V_12
+  02F6  ldfld  UnityEngine.Quaternion BuildPreview::lrot2
+  02FB  stfld  UnityEngine.Quaternion BuildPreview::lrot
+  0300  ldloc.s  V_12
+  0302  ldloc.s  V_16
+  0304  stfld  UnityEngine.Quaternion BuildPreview::lrot2
+  0309  ldloc.s  V_12
+  030B  ldc.r4  0
+  0310  stfld  System.Single BuildPreview::genNearColliderArea2
+  0315  ldloc.s  V_7
+  0317  brfalse.s  IL_0334: ldloc.s V_12
+  0319  ldloc.s  V_12
+  031B  ldloc.3  
+  031C  stfld  BuildPreview BuildPreview::input
+  0321  ldloc.s  V_12
+  0323  ldloc.s  V_5
+  0325  stfld  System.Int32 BuildPreview::inputFromSlot
+  032A  ldloc.s  V_12
+  032C  ldc.i4.1  
+  032D  stfld  System.Int32 BuildPreview::inputToSlot
+  0332  br.s  IL_034d: ldloc.s V_12
+  0334  ldloc.s  V_12
+  0336  ldloc.3  
+  0337  stfld  BuildPreview BuildPreview::output
+  033C  ldloc.s  V_12
+  033E  ldloc.s  V_5
+  0340  stfld  System.Int32 BuildPreview::outputToSlot
+  0345  ldloc.s  V_12
+  0347  ldc.i4.0  
+  0348  stfld  System.Int32 BuildPreview::outputFromSlot
+  034D  ldloc.s  V_12
+  034F  ldloc.2  
+  0350  ldfld  System.Int32 PrefabDesc::lodCount
+  0355  ldc.i4.0  
+  0356  ble.s  IL_0368: ldc.i4.0
+  0358  ldloc.2  
+  0359  ldfld  UnityEngine.Mesh[] PrefabDesc::lodMeshes
+  035E  ldc.i4.0  
+  035F  ldelem.ref  
+  0360  ldnull  
+  0361  call  System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+  0366  br.s  IL_0369: stfld System.Boolean BuildPreview::needModel
+  0368  ldc.i4.0  
+  0369  stfld  System.Boolean BuildPreview::needModel
+  036E  ldloc.s  V_12
+  0370  ldc.i4.0  
+  0371  stfld  System.Int32 BuildPreview::recipeId
+  0376  ldloc.s  V_12
+  0378  ldarg.0  
+  0379  ldfld  System.Int32[] BuildingParameters::inserterFilters
+  037E  ldloc.s  V_5
+  0380  ldelem.i4  
+  0381  stfld  System.Int32 BuildPreview::filterId
+  0386  ldloc.s  V_12
+  0388  ldc.i4.1  
+  0389  stfld  System.Int32 BuildPreview::paramCount
+  038E  ldloc.s  V_12
+  0390  ldc.i4.1  
+  0391  newarr  System.Int32
+  0396  stfld  System.Int32[] BuildPreview::parameters
+  039B  ldloc.s  V_12
+  039D  ldfld  System.Int32[] BuildPreview::parameters
+  03A2  ldc.i4.0  
+  03A3  ldloc.s  V_8
+  03A5  stelem.i4  
+  03A6  ldloc.s  V_12
+  03A8  ldc.i4.s  28
+  03AA  stfld  EBuildCondition BuildPreview::condition
+  03AF  ldarg.1  
+  03B0  ldloc.s  V_12
+  03B2  callvirt  System.Void System.Collections.Generic.List`1<BuildPreview>::Add(!0)
+  03B7  ldloc.s  V_5
+  03B9  ldc.i4.1  
+  03BA  add  
+  03BB  stloc.s  V_5
+  03BD  ldloc.s  V_5
+  03BF  ldloc.s  V_4
+  03C1  blt  IL_010e: call ItemProtoSet LDB::get_items()
+  03C6  ret  

@@ -36,6 +36,10 @@ namespace DSPQualitySystem.Diag
         public static void RecordBuildBatch(int bound)
         {
             _buildBoundTotal += bound;
+            if (QualityConfig.DebugProbes == null || !QualityConfig.DebugProbes.Value)
+            {
+                return;
+            }
             if (_buildBatchLogs >= 10)
             {
                 return;
@@ -52,6 +56,10 @@ namespace DSPQualitySystem.Diag
         /// <summary>M2: a prebuild became an entity and received buildingInc.</summary>
         public static void RecordBuildBinding(int entityId, int perItem)
         {
+            if (QualityConfig.DebugProbes == null || !QualityConfig.DebugProbes.Value)
+            {
+                return;
+            }
             if (_buildBindLogs >= 20)
             {
                 return;
@@ -271,6 +279,33 @@ namespace DSPQualitySystem.Diag
                         + " poolInc=" + QualityData.GetPoolInc(planetId, entityId)
                         + " poolCount=" + QualityData.GetPoolCount(planetId, entityId)
                         + " buildingInc=" + QualityData.GetBuildingInc(planetId, entityId));
+
+                    // v0.19.1: the batch level an assembler commits is min over slots of
+                    // incServed/served, so the raw slot counters are what tells a "lost one
+                    // quality level after load" report apart from a genuinely mixed input batch.
+                    RecipeExecuteData recipe = assembler.recipeExecuteData;
+                    if (recipe != null && recipe.requireCounts != null
+                        && assembler.served != null && assembler.incServed != null)
+                    {
+                        int slotCount = recipe.requireCounts.Length;
+                        if (assembler.served.Length < slotCount)
+                        {
+                            slotCount = assembler.served.Length;
+                        }
+                        if (assembler.incServed.Length < slotCount)
+                        {
+                            slotCount = assembler.incServed.Length;
+                        }
+                        string slots = "";
+                        for (int k = 0; k < slotCount; k++)
+                        {
+                            slots += " s" + k + "=" + assembler.served[k]
+                                + "/" + assembler.incServed[k]
+                                + "/" + recipe.requireCounts[k];
+                        }
+                        log.LogInfo("[Probe][F5] eid=" + entityId + " slots(served/incServed/need)" + slots);
+                    }
+
                     shown++;
                 }
 

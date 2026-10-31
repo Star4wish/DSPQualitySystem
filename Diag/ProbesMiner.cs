@@ -19,6 +19,10 @@ namespace DSPQualitySystem.Diag
         public static void RecordMinerHit(int entityId, int inc)
         {
             _minerHits++;
+            if (QualityConfig.DebugProbes == null || !QualityConfig.DebugProbes.Value)
+            {
+                return;
+            }
             if (_minerHitLogs < 20)
             {
                 _minerHitLogs++;

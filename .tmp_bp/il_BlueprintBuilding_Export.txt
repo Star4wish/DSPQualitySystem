@@ -1,0 +1,198 @@
+﻿METHOD System.Void BlueprintBuilding::Export(System.IO.BinaryWriter)
+  0000  ldarg.1  
+  0001  ldc.i4.s  -102
+  0003  callvirt  System.Void System.IO.BinaryWriter::Write(System.Int32)
+  0008  ldarg.1  
+  0009  ldarg.0  
+  000A  ldfld  System.Int32 BlueprintBuilding::index
+  000F  callvirt  System.Void System.IO.BinaryWriter::Write(System.Int32)
+  0014  ldarg.1  
+  0015  ldarg.0  
+  0016  ldfld  System.Int16 BlueprintBuilding::itemId
+  001B  callvirt  System.Void System.IO.BinaryWriter::Write(System.Int16)
+  0020  ldarg.1  
+  0021  ldarg.0  
+  0022  ldfld  System.Int16 BlueprintBuilding::modelIndex
+  0027  callvirt  System.Void System.IO.BinaryWriter::Write(System.Int16)
+  002C  ldarg.1  
+  002D  ldarg.0  
+  002E  ldfld  System.Int32 BlueprintBuilding::areaIndex
+  0033  conv.i1  
+  0034  callvirt  System.Void System.IO.BinaryWriter::Write(System.SByte)
+  0039  ldarg.1  
+  003A  ldarg.0  
+  003B  ldfld  System.Single BlueprintBuilding::localOffset_x
+  0040  callvirt  System.Void System.IO.BinaryWriter::Write(System.Single)
+  0045  ldarg.1  
+  0046  ldarg.0  
+  0047  ldfld  System.Single BlueprintBuilding::localOffset_y
+  004C  callvirt  System.Void System.IO.BinaryWriter::Write(System.Single)
+  0051  ldarg.1  
+  0052  ldarg.0  
+  0053  ldfld  System.Single BlueprintBuilding::localOffset_z
+  0058  callvirt  System.Void System.IO.BinaryWriter::Write(System.Single)
+  005D  ldarg.1  
+  005E  ldarg.0  
+  005F  ldfld  System.Single BlueprintBuilding::yaw
+  0064  callvirt  System.Void System.IO.BinaryWriter::Write(System.Single)
+  0069  ldarg.0  
+  006A  ldfld  System.Int16 BlueprintBuilding::itemId
+  006F  ldc.i4  2000
+  0074  ble.s  IL_0091: ldarg.0
+  0076  ldarg.0  
+  0077  ldfld  System.Int16 BlueprintBuilding::itemId
+  007C  ldc.i4  2010
+  0081  bge.s  IL_0091: ldarg.0
+  0083  ldarg.1  
+  0084  ldarg.0  
+  0085  ldfld  System.Single BlueprintBuilding::tilt
+  008A  callvirt  System.Void System.IO.BinaryWriter::Write(System.Single)
+  008F  br.s  IL_010b: ldarg.1
+  0091  ldarg.0  
+  0092  ldfld  System.Int16 BlueprintBuilding::itemId
+  0097  ldc.i4  2010
+  009C  ble.s  IL_010b: ldarg.1
+  009E  ldarg.0  
+  009F  ldfld  System.Int16 BlueprintBuilding::itemId
+  00A4  ldc.i4  2020
+  00A9  bge.s  IL_010b: ldarg.1
+  00AB  ldarg.1  
+  00AC  ldarg.0  
+  00AD  ldfld  System.Single BlueprintBuilding::tilt
+  00B2  callvirt  System.Void System.IO.BinaryWriter::Write(System.Single)
+  00B7  ldarg.1  
+  00B8  ldarg.0  
+  00B9  ldfld  System.Single BlueprintBuilding::pitch
+  00BE  callvirt  System.Void System.IO.BinaryWriter::Write(System.Single)
+  00C3  ldarg.1  
+  00C4  ldarg.0  
+  00C5  ldfld  System.Single BlueprintBuilding::localOffset_x2
+  00CA  callvirt  System.Void System.IO.BinaryWriter::Write(System.Single)
+  00CF  ldarg.1  
+  00D0  ldarg.0  
+  00D1  ldfld  System.Single BlueprintBuilding::localOffset_y2
+  00D6  callvirt  System.Void System.IO.BinaryWriter::Write(System.Single)
+  00DB  ldarg.1  
+  00DC  ldarg.0  
+  00DD  ldfld  System.Single BlueprintBuilding::localOffset_z2
+  00E2  callvirt  System.Void System.IO.BinaryWriter::Write(System.Single)
+  00E7  ldarg.1  
+  00E8  ldarg.0  
+  00E9  ldfld  System.Single BlueprintBuilding::yaw2
+  00EE  callvirt  System.Void System.IO.BinaryWriter::Write(System.Single)
+  00F3  ldarg.1  
+  00F4  ldarg.0  
+  00F5  ldfld  System.Single BlueprintBuilding::tilt2
+  00FA  callvirt  System.Void System.IO.BinaryWriter::Write(System.Single)
+  00FF  ldarg.1  
+  0100  ldarg.0  
+  0101  ldfld  System.Single BlueprintBuilding::pitch2
+  0106  callvirt  System.Void System.IO.BinaryWriter::Write(System.Single)
+  010B  ldarg.1  
+  010C  ldarg.0  
+  010D  ldfld  BlueprintBuilding BlueprintBuilding::outputObj
+  0112  brfalse.s  IL_0121: ldc.i4.m1
+  0114  ldarg.0  
+  0115  ldfld  BlueprintBuilding BlueprintBuilding::outputObj
+  011A  ldfld  System.Int32 BlueprintBuilding::index
+  011F  br.s  IL_0122: callvirt System.Void System.IO.BinaryWriter::Write(System.Int32)
+  0121  ldc.i4.m1  
+  0122  callvirt  System.Void System.IO.BinaryWriter::Write(System.Int32)
+  0127  ldarg.1  
+  0128  ldarg.0  
+  0129  ldfld  BlueprintBuilding BlueprintBuilding::inputObj
+  012E  brfalse.s  IL_013d: ldc.i4.m1
+  0130  ldarg.0  
+  0131  ldfld  BlueprintBuilding BlueprintBuilding::inputObj
+  0136  ldfld  System.Int32 BlueprintBuilding::index
+  013B  br.s  IL_013e: callvirt System.Void System.IO.BinaryWriter::Write(System.Int32)
+  013D  ldc.i4.m1  
+  013E  callvirt  System.Void System.IO.BinaryWriter::Write(System.Int32)
+  0143  ldarg.1  
+  0144  ldarg.0  
+  0145  ldfld  System.Int32 BlueprintBuilding::outputToSlot
+  014A  conv.i1  
+  014B  callvirt  System.Void System.IO.BinaryWriter::Write(System.SByte)
+  0150  ldarg.1  
+  0151  ldarg.0  
+  0152  ldfld  System.Int32 BlueprintBuilding::inputFromSlot
+  0157  conv.i1  
+  0158  callvirt  System.Void System.IO.BinaryWriter::Write(System.SByte)
+  015D  ldarg.1  
+  015E  ldarg.0  
+  015F  ldfld  System.Int32 BlueprintBuilding::outputFromSlot
+  0164  conv.i1  
+  0165  callvirt  System.Void System.IO.BinaryWriter::Write(System.SByte)
+  016A  ldarg.1  
+  016B  ldarg.0  
+  016C  ldfld  System.Int32 BlueprintBuilding::inputToSlot
+  0171  conv.i1  
+  0172  callvirt  System.Void System.IO.BinaryWriter::Write(System.SByte)
+  0177  ldarg.1  
+  0178  ldarg.0  
+  0179  ldfld  System.Int32 BlueprintBuilding::outputOffset
+  017E  conv.i1  
+  017F  callvirt  System.Void System.IO.BinaryWriter::Write(System.SByte)
+  0184  ldarg.1  
+  0185  ldarg.0  
+  0186  ldfld  System.Int32 BlueprintBuilding::inputOffset
+  018B  conv.i1  
+  018C  callvirt  System.Void System.IO.BinaryWriter::Write(System.SByte)
+  0191  ldarg.1  
+  0192  ldarg.0  
+  0193  ldfld  System.Int32 BlueprintBuilding::recipeId
+  0198  conv.i2  
+  0199  callvirt  System.Void System.IO.BinaryWriter::Write(System.Int16)
+  019E  ldarg.1  
+  019F  ldarg.0  
+  01A0  ldfld  System.Int32 BlueprintBuilding::filterId
+  01A5  conv.i2  
+  01A6  callvirt  System.Void System.IO.BinaryWriter::Write(System.Int16)
+  01AB  ldarg.0  
+  01AC  ldfld  System.Int32[] BlueprintBuilding::parameters
+  01B1  brtrue.s  IL_01b6: ldarg.0
+  01B3  ldc.i4.0  
+  01B4  br.s  IL_01be: stloc.0
+  01B6  ldarg.0  
+  01B7  ldfld  System.Int32[] BlueprintBuilding::parameters
+  01BC  ldlen  
+  01BD  conv.i4  
+  01BE  stloc.0  
+  01BF  ldarg.1  
+  01C0  ldloc.0  
+  01C1  conv.i2  
+  01C2  callvirt  System.Void System.IO.BinaryWriter::Write(System.Int16)
+  01C7  ldc.i4.0  
+  01C8  stloc.1  
+  01C9  br.s  IL_01dd: ldloc.1
+  01CB  ldarg.1  
+  01CC  ldarg.0  
+  01CD  ldfld  System.Int32[] BlueprintBuilding::parameters
+  01D2  ldloc.1  
+  01D3  ldelem.i4  
+  01D4  callvirt  System.Void System.IO.BinaryWriter::Write(System.Int32)
+  01D9  ldloc.1  
+  01DA  ldc.i4.1  
+  01DB  add  
+  01DC  stloc.1  
+  01DD  ldloc.1  
+  01DE  ldloc.0  
+  01DF  blt.s  IL_01cb: ldarg.1
+  01E1  ldarg.0  
+  01E2  ldfld  System.String BlueprintBuilding::content
+  01E7  call  System.Boolean System.String::IsNullOrEmpty(System.String)
+  01EC  brfalse.s  IL_01f6: ldarg.1
+  01EE  ldarg.1  
+  01EF  ldc.i4.0  
+  01F0  callvirt  System.Void System.IO.BinaryWriter::Write(System.Int32)
+  01F5  ret  
+  01F6  ldarg.1  
+  01F7  ldarg.0  
+  01F8  ldfld  System.String BlueprintBuilding::content
+  01FD  callvirt  System.Int32 System.String::get_Length()
+  0202  callvirt  System.Void System.IO.BinaryWriter::Write(System.Int32)
+  0207  ldarg.1  
+  0208  ldarg.0  
+  0209  ldfld  System.String BlueprintBuilding::content
+  020E  callvirt  System.Void System.IO.BinaryWriter::Write(System.String)
+  0213  ret  
