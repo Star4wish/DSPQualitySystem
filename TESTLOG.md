@@ -922,3 +922,11 @@ powershell ... -Mode key -Key f5        # 看 inputLevel 是否被 inputs 节点
 2. 「储物舱随品质扩容」自 v0.19.2 起**停用**：格数恒为原版值，不再随点数加格；代码保留以兼容旧存档，尾块 `storages` 的溢出数据读档静默忽略（只 `WarnOnce`）。
 3. 品质筛选复制依赖 MOD 追加在 `BlueprintBuilding.parameters` 尾部的 `QFPB` 魔数块：**旧版 DLL 或原版客户端**放同一份蓝图仍能正常落成，但筛选设置不生效/丢失。
 4. 分拣器阈值比较的是**每件**点数（`inc / stack` 向下取整），不是整栈总点数。
+
+## 2026-11-01 非回归排查：拆除储物箱内容物蒸发
+
+- 现象：玩家报「装有材料的储物箱被拆掉后内容物全部消失、地上没有掉落物，箱体本身照常返还」。
+- 结论：**不是 mod 回归**。原版 `PlanetFactory.DismantleFinally` 里 `bool flag = GameMain.preferences.instantDismantle && GameMain.sandboxToolsEnabled;` 为真时走 `ClearItemsInEntity(objId)`，内容物被直接丢弃且不产生垃圾；「沙盒工具 → 自动销毁」是**默认勾选**的。玩家确认即为此项。
+- 取证方式（临时补丁，已删除）：`Patches\P9_StorageDiag.cs` 对 `FactoryStorage.TakeBackItems_Storage(Player,int)` 挂只读 prefix/postfix，打印 `storage/eid/size/nonEmpty/sumCount` 与每件 `TryAddItemToPackage` 结果；实测没走到该路径（`nonEmpty` 未变化），印证是 `ClearItemsInEntity` 分支。
+- 版本状态：代码零改动；已移除临时诊断并把发布产物 `A0BE6EBF…`（298,496 B）重新部署，`tests/run-tests.ps1` 仍为 `ALL PASS (88 checks)`。
+- 备注：本机重新构建同类源码得到 `A784716A…`（同样 298,496 B），说明本地 dotnet 构建非逐字节可复现，交付以 dist 包内 DLL 为准。
