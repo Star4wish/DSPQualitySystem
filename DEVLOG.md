@@ -2758,3 +2758,77 @@ Lead 实机复核（m02553）报告两处仍未修复：
 - v0.19.1（§27.34）：读档丢批次点数修复 + 批次四舍五入 + 喷涂次数分级 + 分拣器过滤重写（293,376 B，94 checks）。
 - **v0.19.2（本节）：品质筛选随复制/粘贴与蓝图迁移 + 分拣器储物仓映射修复 + 储物舱扩容停用 + 88 checks**（DLL `298,496` B，SHA `A0BE6EBF3EEF1BB587C7EB6BA0FD32FEEFFDD8F7C98DC58C2B5308298775A8C7`，`2026-10-31 21:46:49` 构建）。
 - 补丁统计（v0.19.2）：`Patches\` 下 **39 个补丁 .cs / 42 个补丁类**（20 特性 + 22 手工；实测口径），**85 次方法级注册 / 去重 78 个独立方法**；本版新增 `P6_FilterCopy` 一类 11 个锚点。
+
+## 27.36 v0.20.0：基站建造越界守卫 + 星环产物点数 + 轨道采集器点数 + 品质数据线程安全（2026-11-21）
+
+### 27.36.1 动机（用户四项反馈）
+
+1. 通过战场分析基站建造建筑时报 `System.IndexOutOfRangeException at ConstructionModuleComponent.PreLaunchDrone`（ErrorAnalyzer 列表 `[DSPQualitySystem]`）。
+2. 星环（OrbitalRing）的太空船坞 / 轨道水培仓 / 生态温室等新增生产建筑，建筑带点数时产物不带点数。
+3. 加了点数的轨道采集器，产出物不带点数。
+4. 带品质的矿机偶尔不再产出带品质的物品，重新读档才恢复。
+
+### 27.36.2 根因
+
+- **基站越界**：`ConstructionModuleComponent.PreLaunchDrone` 的节流分支里唯一的下标是
+  `factory.prebuildPool[buildTargets[0].objectId]`，原版不做边界检查；而目标表的清理只挂在
+  `ConstructionSystem.ExcuteDeferredTargetChange` / `RemoveBuildTargetFromModules`，预建物已发射、
+  池被 `PlanetFactory.FlushPools` 缩回 256、或 repair 目标的 constructStat/entity/combatStat 失效时
+  都可能留下越界 id。反编译 `Il` 对照确认异常落在该分支（IL_0153 起的分支入口）。
+- **星环产物**：`OrbitalRingStorageCalculate.ShareStorageForOrbitalAssembler` 与
+  `OrbitalAssembler.OrbitalAssemblerInternalUpdate` 自己把 `produced[]` 搬进共享空间 / 电梯仓储，
+  **只有 `recipeType == Smelt` 时**给 `storageItem[item][1]` 或 `StationStore.inc` 加 `4 * n`；
+  其它配方（装配/化工/种田）一律不写 inc。DSPQS 的品质池只在原版 `PlanetFactory.PickFrom` 出口发放，
+  这两条私有搬运路径绕过了它 ⇒ 池只进不出、产物 0 点。
+- **轨道采集器**：`StationComponent.UpdateCollection` 累计采集进度后只做 `storage[i].count += num`，
+  从不写 `storage[i].inc`，与 v0.16.0 修过的大型采矿机 `UpdateVeinCollection` 完全同型。
+- **矿机偶发 0 点**：`QualityData` 用单个静态缓存 `(_cachedPlanetId, _cached)` 做热路径星球解析，却没有
+  任何同步；`GameLogic._assembler_parallel` / `_miner_parallel` 在多个 worker 线程上调用这些访问器，
+  两次 store 交错可把缓存写成**永久不一致**（id=A、对象=B）。此后 A 星球的建筑点数全部读到 B 的数组
+  （0 点），直到读档调用 `ClearAll()/InvalidateCache()` 才恢复——与“读档后才能恢复”的现象一致。
+
+### 27.36.3 修复
+
+- **新增 `Patches\P1_ConstructionGuard.cs`**（`ConstructionModuleComponent.PreLaunchDrone` prefix，优先级 High）：
+  校验 `buildTargets` 的每个 4 槽组（id 必须在池内、槽位 id 与下标一致、未摧毁、`itemRequired == 0`；
+  组头为空视为失效），失效组整组清空并把后续组上移；`repairTargets` 逐条校验
+  `constructStats.buffer[id].id`、`entityPool[entityId].id`、`combatStatId < combatStats.buffer.Length`；
+  重算 `buildTargetTotalCount` / `repairTargetTotalCount`，让原版下一次 `SearchBuildTargets` 自动补表。
+  健康目标表只走 120 次整数比较，行为与原版一致；异常全部 `WarnOnce` 吞掉。
+- **新增 `Patches\P8_OrbitalRingCompat.cs`**（仅检测到 `ProjectOrbitalRing` 程序集时安装，全反射、不硬引用）：
+  在 `ShareStorageForOrbitalAssembler` / `OrbitalAssemblerInternalUpdate` 上加 prefix/postfix；
+  prefix 快照 `produced[]` 与该装配机在 EquatorRing 上对应的共享/电梯仓储槽位计数，
+  postfix 按 `produced[]` 实际减少量确认搬运件数，用 `QualityData.TakeProductIncAbove` 从品质池取点，
+  写回 `storageItem[item][1]` / `StationStore.inc`（封顶 10 点/件）；`recipeType == Smelt` 时只补
+  “池点数高于星环固定 4 点/件”的部分，避免与星环自带 inc 重复。未装星环时整类 NOT ARMED 且零开销。
+- **新增 `Patches\P0_OrbitalCollector.cs`**：`StationComponent.UpdateCollection` prefix 快照每个
+  `StationStore.count`，postfix 对确有增长的槽位用 `QualityRules.RollMinerQuality`（按站建筑 entityId）
+  取每件点数，经 `QualityMath.StationIncAfterTransfer` 写入 `storage[i].inc`（封顶 count×10）。
+  0 点建筑仍产 0 点，矿机概率/曲线沿用同一配置。
+- **`QualityData` 线程安全改造**：单槽静态缓存改为 `[ThreadStatic]` 缓存 + 全局代际号（`InvalidateCache`
+  时所有线程自动失效）；`planets` 改 `ConcurrentDictionary<int, PlanetQuality>`；`PlanetQuality.SyncRoot`
+  锁住 `EnsureCapacity` 扩容与池/计数读写。新增 `TakeProductInc(planetId, entityId, count)` 与
+  `TakeProductIncAbove(..., minPerItem)`，其纯函数核心是 `QualityMath.TakeStackAbove`（逐件取点、余数留池、
+  守恒、可设每件下限）。
+- **补回缺失文件**：仓库里 `Save\QualityBlobCodec.cs` 从未被 git 跟踪、工程因此编不过；
+  从 `dist\DSPQualitySystem-0.19.2-source.zip` 原文恢复（10,376 B），不改变存档格式。
+
+### 27.36.4 构建与测试
+
+- 版本：`Plugin.cs` 的 `VERSION = "0.20.0"`；`DSPQualitySystem.csproj` 为 `0.20.0` / `0.20.0.0` / `0.20.0.0`。
+- 运行 DLL：**316,928 字节**，SHA256 `85CD92923601C578BABF523734736E520136B63B2BCCB547CF8CBD132FD37326`。
+- 离线测试：**89 checks ALL PASS**（v0.19.2 为 88；新增 v0.20.0 整叠取点/熔炼下限/守恒一组）。
+- 实机（2026-11-21）：
+  - 干净环境（只保留 DSPQS + DspBridge）能正常进主菜单并新建战斗模式存档；
+  - 新档 `dspqsnew` 保存成功，重进 `[QSystem][save] embedded quality trailer used ('dspqsnew')`；
+  - 装回星环（`ProjectOrbitalRing`）后启动日志 `[QSystem][orbitalring] armed … shared=True elevator=True`，
+    说明两条私有搬运路径的反射挂点与 Harmony 注册都成立；无 Harmony/补丁异常；
+  - 启动日志同时出现 `[QSystem][construction] armed …`、`[QSystem][collector] orbital-collector quality hook`，
+    `StationComponent.UpdateCollection` 已进入 `patched:` 列表。
+
+### 27.36.5 版本链
+
+- v0.19.1（§27.34）：293,376 B，94 checks。
+- v0.19.2（§27.35）：298,496 B，88 checks。
+- **v0.20.0（本节）：316,928 B，89 checks**。
+

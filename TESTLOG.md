@@ -930,3 +930,33 @@ powershell ... -Mode key -Key f5        # 看 inputLevel 是否被 inputs 节点
 - 取证方式（临时补丁，已删除）：`Patches\P9_StorageDiag.cs` 对 `FactoryStorage.TakeBackItems_Storage(Player,int)` 挂只读 prefix/postfix，打印 `storage/eid/size/nonEmpty/sumCount` 与每件 `TryAddItemToPackage` 结果；实测没走到该路径（`nonEmpty` 未变化），印证是 `ClearItemsInEntity` 分支。
 - 版本状态：代码零改动；已移除临时诊断并把发布产物 `A0BE6EBF…`（298,496 B）重新部署，`tests/run-tests.ps1` 仍为 `ALL PASS (88 checks)`。
 - 备注：本机重新构建同类源码得到 `A784716A…`（同样 298,496 B），说明本地 dotnet 构建非逐字节可复现，交付以 dist 包内 DLL 为准。
+
+## v0.20.0 离线 + 实机验证（2026-11-21）
+
+### 离线（无需游戏）
+
+- `tests\run-tests.ps1`：**ALL PASS (89 checks)**。
+- 新增 `tests\OfflineTests\Checks.V0200.cs`：`QualityMath.TakeStackAbove` 的整叠取点（每件封顶 10、请求数超过池数量时钳制、余数留池、负/零退化）、熔炼下限（平均 6 点 > 下限 4 时照常取；等于/高于平均时一点不取）、以及 20 万次随机“取 + 留”守恒（`taken + remaining == added`、取件数 ≤ 请求数、有下限时每件严格高于下限）。
+- 引擎侧：`build.ps1` 0 警告 0 错误；运行 DLL `316,928` B / SHA256 `85CD92923601C578BABF523734736E520136B63B2BCCB547CF8CBD132FD37326`（已部署到游戏目录并校验哈希）。
+
+### 实机（Windows / DSP 0.10.35.29151 / BepInEx 5.4.17）
+
+环境说明：本机游戏目录原有一套 16 mod 的环境，其主菜单演示存档 / 旧存档在本机较新的游戏版本上会触发 CommonAPI `IconSet.Create` 的 `IndexOutOfRange`（与本 MOD 无关）。为完成“正经存档”验证，临时只保留 `DSPQualitySystem` + `DspBridge` 启动，测完已恢复原插件集。
+
+| # | 项目 | 取证 | 结果 |
+|---|---|---|---|
+| 1 | v0.20.0 启动 | `[QSystem] === DSP Quality System v0.20.0 ===`、`patchedMethods=19`、`patched:` 列表含 `StationComponent.UpdateCollection` | **通过** |
+| 2 | 基站守卫安装 | `[QSystem][construction] armed: validates/prunes stale build+repair drone targets before PreLaunchDrone …`、`construction guard armed=True reason=- prunedBuild=0 prunedRepair=0` | **通过（安装与空转）** |
+| 3 | 轨道采集器钩子 | `[QSystem][collector] orbital-collector quality hook (station storage inc, active=0 zeroRolls=0)` | **通过（安装）** |
+| 4 | 新建正经存档 | 菜单 →“新游戏”→ 种子 61360156 / 64 星 / 战斗模式 → 保存为 `dspqsnew.dsv`（5,569,588 B） | **通过** |
+| 5 | 存读档往返 | 重进后 `[QSystem][save] embedded quality trailer used ('dspqsnew'): … bytes=64`，正常进入星球、无异常 | **通过** |
+| 6 | 星环兼容 | 从 `BepInEx\暂不使用的MOD` 装回 `ProjectOrbitalRing` 后启动：`[QSystem][orbitalring] armed: … (shared=True elevator=True)`；无 Harmony/补丁异常 | **通过（安装与反射锚点）** |
+| 7 | 回归 | 全程无 `[QSystem][patch] … failed`、无 Harmony 警告；`/health` 持续正常 | **通过** |
+
+### 尚未覆盖（需要用户实档 / 后期存档）
+
+1. **基站建造**真实崩溃复现：需要在战斗中让战场分析基站长时间建造/重建，并等预建物被摧毁或池 flush 后仍保留旧目标；本机新档还没有该建筑与科技。
+2. **星环新增建筑产物点数**的正向链路：需要已建成的太空船坞/水培仓/温室 + 带点数建筑 + 正在生产；本机新档没有星环科技与产线（但两条搬运路径的 Harmony 锚点已确认全部安装成功）。
+3. **轨道采集器**：需要气态巨星上的采集器 + 带点数建筑 + 一段时间采集；本机新档未到达该阶段。
+4. **矿机偶发 0 点**：属并发竞态，已在代码层消除（线程局部缓存 + 并发字典 + 每星球锁）；长时间多星球并行是复现条件，离线无法等价构造。
+

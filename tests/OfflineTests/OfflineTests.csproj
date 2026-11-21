@@ -40,6 +40,7 @@
     <Compile Include="Checks.V0180.cs" />
     <Compile Include="Checks.P7Recycler.cs" />
     <Compile Include="Checks.V0191.cs" />
+    <Compile Include="Checks.V0200.cs" />
     <Compile Include="..\..\QualityMath.cs" Link="QualityMath.cs" />
     <Compile Include="..\..\QualityMath.Curves.cs" Link="QualityMath.Curves.cs" />
     <Compile Include="..\..\QualityMath.Blueprint.cs" Link="QualityMath.Blueprint.cs" />

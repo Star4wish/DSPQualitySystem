@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <!--
     DSP Quality System.
@@ -14,9 +14,9 @@
     <LangVersion>latest</LangVersion>
     <AssemblyName>DSPQualitySystem</AssemblyName>
     <RootNamespace>DSPQualitySystem</RootNamespace>
-    <Version>0.19.2</Version>
-    <AssemblyVersion>0.19.2.0</AssemblyVersion>
-    <FileVersion>0.19.2.0</FileVersion>
+    <Version>0.20.0</Version>
+    <AssemblyVersion>0.20.0.0</AssemblyVersion>
+    <FileVersion>0.20.0.0</FileVersion>
     <Description>DSP Quality System - linear inc tables, product inc pool, build quality</Description>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <DebugType>none</DebugType>
@@ -61,3 +61,4 @@
   </Target>
 
 </Project>
+

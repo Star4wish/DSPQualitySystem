@@ -1,23 +1,23 @@
-# DSP Quality System v0.19.2 —— 源码 + 开发文档打包
+# DSP Quality System v0.20.0 —— 源码 + 开发文档打包
 
 本包用于在另一台机器上继续开发：包含**完整源码**（含离线测试工程、打包脚本、离线 NuGet 缓存、Unity 引用 DLL）与**开发文档**。
 
 ## 1 目录结构
 
 ```
-DSPQualitySystem/                 ← 源码包根目录（dist\DSPQualitySystem-0.19.2-source.zip）
+DSPQualitySystem/                 ← 源码包根目录（dist\DSPQualitySystem-0.20.0-source.zip）
 ├─ README-打包说明.md          ← 本文件
 ├─ 文档/
-│  ├─ DSP品质系统-MOD开发文档.md  ← 主开发文档（v0.19.2，设计 + 实现 + 测试 + 已知限制 + 版本历史）
+│  ├─ DSP品质系统-MOD开发文档.md  ← 主开发文档（v0.20.0，设计 + 实现 + 测试 + 已知限制 + 版本历史）
 │  ├─ README-工程.md           ← 工程说明（目录职责、构建流水线）
 │  └─ 在线调试环境-使用说明.md    ← 实机调试（BepInEx 日志、启动参数、存档路径）
 ├─ build.ps1                   ← 一键构建（可选 -Deploy 复制到游戏 plugins）
-├─ DSPQualitySystem.csproj     ← net472 插件工程（Version 0.19.2）
+├─ DSPQualitySystem.csproj     ← net472 插件工程（Version 0.20.0）
 ├─ Plugin.cs / Quality*.cs / QualityData.SprayUses.cs / StorageGrids.cs / QualityData.Recycler.cs …  ← 插件源码（根目录）
-├─ Patches/                    ← 39 个 .cs 文件 / 42 个 Harmony 补丁类（20 特性类 + 22 手工类；v0.19.0 新增 P6_SprayCount.cs / P7_Recycler.cs，v0.19.1 新增 P6_SprayUses.cs 并重写 P5_SorterFilter.cs，v0.19.2 新增 P6_FilterCopy.cs 并再次重写 P5_SorterFilter.cs 的储物仓分支与缓存门控）
+├─ Patches/                    ← 42 个 .cs 文件 / 45 个 Harmony 补丁类（21 特性类 + 24 手工类；v0.20.0 新增 P0_OrbitalCollector.cs / P1_ConstructionGuard.cs / P8_OrbitalRingCompat.cs）
 ├─ Save/                       ← 存档尾块编解码、legacy 迁移
 ├─ Diag/                       ← 启动自检（StartupAudit）
-├─ tests/                      ← 离线测试（net10.0，88 checks，无需游戏）
+├─ tests/                      ← 离线测试（net10.0，89 checks，无需游戏）
 ├─ tools/                      ← 打包脚本（package.ps1 / pack-r2modman.ps1 / pack-r2modman.py）+ tools\r2\（R2 元数据/图标）+ nuget-local（离线包）+ unity-refs（Unity 引用）
 ├─ README.md / DEVLOG.md / TESTLOG.md  ← 玩家说明 / 开发日志 / 实机测试记录（篇幅较大）
 └─ nuget.config                ← 指向 tools\nuget-local 的离线还原配置
@@ -27,15 +27,23 @@ DSPQualitySystem/                 ← 源码包根目录（dist\DSPQualitySystem
 
 | 项 | 值 |
 |---|---|
-| MOD 版本 | v0.19.2（`DSPQualitySystem.csproj` `<Version>0.19.2</Version>`） |
-| 插件 DLL | **`298,496` B** / SHA256 `A0BE6EBF3EEF1BB587C7EB6BA0FD32FEEFFDD8F7C98DC58C2B5308298775A8C7` / `2026-10-31 21:46:49` 构建（三个值已按 v0.19.2 实际构建回填；本仓 `.md` 中不存在 `@@DLL_*@@` 占位符） |
-| 离线测试 | **88 checks**，`ALL PASS (88 checks)` |
-| 启动自检 | `patchedMethods=18`（特性类计数口径）；补丁类总数与逐条锚点以开发文档 §4.2 各表为准（v0.19.2 统计：39 个补丁 .cs / 42 个补丁类 / **85 次方法级注册** / **78 个独立方法**，其中 v0.19.2 新增 `P6_FilterCopy` 1 类 11 锚点） |
-| 手动发布包 | `dist\DSPQualitySystem-0.19.2.zip`（体积与 SHA256 以打包后 `Get-FileHash` 为准） |
-| R2 发布包 | `dist\DSPQualitySystem-0.19.2-r2modman.zip`（体积与 SHA256 以打包后 `Get-FileHash` 为准） |
-| 源码包 | `dist\DSPQualitySystem-0.19.2-source.zip`（根目录 `DSPQualitySystem/`；本文件就在包内，因此体积与 SHA256 同样以打包后为准，不在表内自引用） |
+| MOD 版本 | v0.20.0（`DSPQualitySystem.csproj` `<Version>0.20.0</Version>`） |
+| 插件 DLL | **`316,928` B** / SHA256 `85CD92923601C578BABF523734736E520136B63B2BCCB547CF8CBD132FD37326` / `2026-11-21` 构建 |
+| 离线测试 | **89 checks**，`ALL PASS (89 checks)` |
+| 启动自检 | `patchedMethods=19`（特性类计数口径）；补丁统计（v0.20.0）：42 个补丁 .cs / 45 个补丁类，其中 v0.20.0 新增 `P1_ConstructionGuard`（1 prefix）、`P0_OrbitalCollector`（1 特性类 prefix/postfix）、`P8_OrbitalRingCompat`（2 条反射安装） |
+| 手动发布包 | `dist\DSPQualitySystem-0.20.0.zip`（体积与 SHA256 以打包后 `Get-FileHash` 为准） |
+| R2 发布包 | `dist\DSPQualitySystem-0.20.0-r2modman.zip`（体积与 SHA256 以打包后 `Get-FileHash` 为准） |
+| 源码包 | `dist\DSPQualitySystem-0.20.0-source.zip`（根目录 `DSPQualitySystem/`；本文件就在包内，因此体积与 SHA256 同样以打包后为准，不在表内自引用） |
 
-v0.19.2 关键变更（详见开发文档 §2.6/§2.8/§3.3/§4.2.6/§4.2.9/§5/§6/§7.8/§7.9/§9）：
+v0.20.0 关键变更（详见 DEVLOG §27.36 / TESTLOG「v0.20.0 离线 + 实机验证」）：
+
+1. **战场分析基站建造崩溃修复**：新增 `Patches\P1_ConstructionGuard.cs`，在 `ConstructionModuleComponent.PreLaunchDrone` 前校验/整理 build+repair 目标表（原版对 `factory.prebuildPool[buildTargets[0].objectId]` 无边界检查）。健康表零行为变化。
+2. **星环（OrbitalRing）兼容修复**：新增 `Patches\P8_OrbitalRingCompat.cs`，仅在检测到 `ProjectOrbitalRing` 时安装（全反射）。修正 `ShareStorageForOrbitalAssembler` / `OrbitalAssemblerInternalUpdate` 两条产物搬运路径——原版只给熔炼配方补固定 4 点，其它配方 inc=0；现在按实际搬运件数从本 MOD 品质池取点写入共享空间/电梯仓储，熔炼只补高于 4 点的部分、封顶 10 点/件。
+3. **轨道采集器点数修复**：新增 `Patches\P0_OrbitalCollector.cs`，给 `StationComponent.UpdateCollection` 的转移量补 `storage[i].inc`（与 v0.16.0 大矿机同型根因）。
+4. **品质数据线程安全（矿机偶发 0 点根因）**：`QualityData` 单槽静态缓存改为线程局部 + 代际失效，`planets` 改并发字典，`PlanetQuality` 扩容/池读写加锁；新增纯函数 `QualityMath.TakeStackAbove`（整叠取点、守恒、可设每件下限），离线 88 → 89 checks。
+5. **恢复缺失源码文件**：`Save\QualityBlobCodec.cs`（仓库未跟踪导致工程编不过，从 0.19.2 source 包原文恢复）。
+
+v0.19.2 关键变更（历史，详见开发文档 §2.6/§2.8/§3.3/§4.2.6/§4.2.9/§5/§6/§7.8/§7.9/§9）：
 
 1. **新增 `Patches\P6_FilterCopy.cs`（11 个挂点）：品质筛选设置随复制/粘贴与蓝图迁移**——四向分流器的每口规则与分拣器的品质阈值，在 Shift 复制、Ctrl+C / Ctrl+V、蓝图复制粘贴时各自保留。**建筑设置**：`BuildingParameters.CopyFromFactoryObject`、`BuildingParameters.PasteToFactoryObject`、`PlanetFactory.CopyBuildingSetting`、`PlanetFactory.PasteBuildingSetting`。**蓝图两段式**：`BuildTool_BlueprintPaste.CreatePrebuilds()` prefix 遍历 `blueprint.buildings`，用 `TryReadBlueprintBlock(building.parameters)` 解码入队（日志 `bp-stage queued=N buildings=M`）→ `PlanetFactory.AddPrebuildDataWithComponents` postfix 按 protoId 绑到 prebuildId（日志 `bp-stage prebuild id=.. proto=.. kind=.. min=..`）→ `PlanetFactory.AddEntityDataWithComponents` postfix 写到落地实体。**持久化**：`BuildingParameters.ToParamsArray` postfix / `FromParamsArray` prefix / `GenerateBlueprintData` prefix+postfix 把 **9 个 int 的魔数块**塞进 `BlueprintBuilding.parameters` 尾部随 `.bp` 文件走——magic `0x51465042`（字母 QFPB）、version 1、kind 1=四向分流器 / 2=分拣器、protoId、rule0..3、min。启动日志 `[QSystem][filtercopy] armed=True reason=patched 11/11 (BuildingParameters copy/paste/apply + Copy/PasteBuildingSetting + blueprint params/save/load + prebuild stage)`，11 个锚点全或无。
 2. **分拣器品质阈值过滤修复**（`Patches\P5_SorterFilter.cs`）——真根因是储物仓分支把「实体 id」当成 `storagePool` 下标用了（原版要先 `entityPool[entityId].storageId` 映射、再取 `storagePool[storageId]`），命中空组件得到 `grids=0`，低品质货被当成 0 点放行（用户现象：仓库→传送带丢点数）。同时删掉 `lastEmptyItem` 缓存门控（阈值或物品过滤一改立即生效，「只设品质阈值、不选物品」也能生效），并补 `NotifyStorageChange()` 让仓库界面立刻刷新（此前取走货后界面残留旧货、要重开才消失）。覆盖来源：传送带 / 储物仓 / 机器产物口 / 弹射器 / 发射井；物流站、研究站、发电机不支持。启动日志 `[QSystem][sorterfilter] armed: sorter quality threshold is enforced on tick=3/3 belt=2/2 pickFrom=1/1`。

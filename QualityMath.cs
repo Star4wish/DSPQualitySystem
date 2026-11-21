@@ -57,6 +57,68 @@ namespace DSPQualitySystem
             return perItem;
         }
 
+        /// <summary>
+        /// v0.20.0 (issues 2/3): hand out the pooled points for up to <paramref name="count"/>
+        /// products in one call, optionally keeping a per-item floor in the pool.
+        ///
+        /// Each product takes `floor(remainingInc / remainingCount)` (clamped to maxLevel) exactly
+        /// like <see cref="TakeOne"/>, so points are conserved and no item exceeds maxLevel. When
+        /// `minPerItem` is greater than 0 the take stops as soon as the next product would receive
+        /// minPerItem or less, leaving the rest pooled (used for OrbitalRing smelters, which already
+        /// add a flat 4 points per item themselves: only the quality above that flat value is added,
+        /// and low quality is never silently consumed).
+        /// </summary>
+        public static int TakeStackAbove(int poolInc, int poolCount, int count, int minPerItem,
+            int maxLevel, out int newPoolInc, out int newPoolCount)
+        {
+            int inc = poolInc < 0 ? 0 : poolInc;
+            int cnt = poolCount;
+            int points = 0;
+
+            if (minPerItem < 0)
+            {
+                minPerItem = 0;
+            }
+            if (maxLevel < 0)
+            {
+                maxLevel = 0;
+            }
+            if (cnt <= 0 || count <= 0)
+            {
+                newPoolInc = inc;
+                newPoolCount = cnt;
+                return 0;
+            }
+            if (count > cnt)
+            {
+                count = cnt;
+            }
+
+            for (int i = 0; i < count && cnt > 0; i++)
+            {
+                int perItem = inc / cnt;
+                if (perItem < 0)
+                {
+                    perItem = 0;
+                }
+                else if (perItem > maxLevel)
+                {
+                    perItem = maxLevel;
+                }
+                if (perItem <= minPerItem)
+                {
+                    break;
+                }
+                inc -= perItem;
+                cnt--;
+                points += perItem;
+            }
+
+            newPoolInc = inc;
+            newPoolCount = cnt;
+            return points;
+        }
+
         public static int ClampLevel(int level, int maxLevel)
         {
             if (maxLevel < 0)

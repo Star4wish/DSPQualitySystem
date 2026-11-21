@@ -50,6 +50,10 @@ namespace DSPQualitySystem.Patches
                 // (the nodePool fields are persistent, but the quality data only now came back).
                 Patches.P5_PowerRange.ResetState();
                 Patches.P1_DeferredPay.ResetState();
+                // v0.20.0: session counters only (the guard and the OrbitalRing adapter keep no
+                // cross-save state; resetting them keeps the diagnostics readable).
+                Patches.P1_ConstructionGuard.ResetState();
+                Patches.P8_OrbitalRingCompat.ResetState();
                 Save.QualitySave.ReadEmbedded(__instance, __0);
             }
             catch (Exception e)
@@ -133,6 +137,8 @@ namespace DSPQualitySystem.Patches
                 Patches.P5_SorterFilter.ResetState();
                 Patches.P5_PowerRange.ResetState();
                 Patches.P1_DeferredPay.ResetState();
+                Patches.P1_ConstructionGuard.ResetState();
+                Patches.P8_OrbitalRingCompat.ResetState();
                 if (Plugin.Log != null)
                 {
                     Plugin.Log.LogInfo("[QSystem][save] new game: quality data cleared");

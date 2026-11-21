@@ -135,6 +135,8 @@ namespace DSPQualitySystem.OfflineTests
                 CheckSorterFilter);
             Check("v0.19.1 batch input level (round half up / clamps / reported 29 of 5 case)",
                 CheckBatchInputLevel);
+            Check("v0.20.0 stack take (bulk points / maxLevel / smelter floor / conservation)",
+                CheckStackTake);
 
             Console.WriteLine("-----------------------------------------------------");
             if (_failures == 0)

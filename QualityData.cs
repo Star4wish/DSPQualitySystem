@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace DSPQualitySystem
@@ -47,6 +48,15 @@ namespace DSPQualitySystem
         /// </summary>
         public int[] storageBase = new int[0];
 
+        /// <summary>
+        /// v0.20.0 (issue 4): guards <see cref="EnsureCapacity"/> and the pool counters against the
+        /// game's parallel factory ticks (`GameLogic._assembler_parallel` / `_miner_parallel` run the
+        /// same planet's components on several worker threads). Without it two concurrent
+        /// EnsureCapacity calls could copy into two different arrays and silently drop the points the
+        /// other thread had just written.
+        /// </summary>
+        internal readonly object SyncRoot = new object();
+
         public int Capacity
         {
             get { return buildingInc.Length; }
@@ -59,40 +69,49 @@ namespace DSPQualitySystem
                 return;
             }
 
-            int newCapacity = buildingInc.Length < 64 ? 64 : buildingInc.Length * 2;
-            if (newCapacity < capacity)
+            lock (SyncRoot)
             {
-                newCapacity = capacity;
-            }
+                // Re-check inside the lock: another worker may have grown the arrays meanwhile.
+                if (capacity <= buildingInc.Length)
+                {
+                    return;
+                }
 
-            int previousLevelLength = inputLevel == null ? 0 : inputLevel.Length;
-            buildingInc = Grow(buildingInc, newCapacity);
-            poolInc = Grow(poolInc, newCapacity);
-            poolCount = Grow(poolCount, newCapacity);
-            inputLevel = Grow(inputLevel, newCapacity);
-            // -1: "no batch observed yet"; 0 is a valid quality level.
-            for (int i = previousLevelLength; i < inputLevel.Length; i++)
-            {
-                inputLevel[i] = -1;
-            }
+                int newCapacity = buildingInc.Length < 64 ? 64 : buildingInc.Length * 2;
+                if (newCapacity < capacity)
+                {
+                    newCapacity = capacity;
+                }
 
-            int previousPendingLength = pendingLevel == null ? 0 : pendingLevel.Length;
-            pendingLevel = Grow(pendingLevel, newCapacity);
-            for (int i = previousPendingLength; i < pendingLevel.Length; i++)
-            {
-                pendingLevel[i] = -1;
-            }
-            wasReplicating = Grow(wasReplicating, newCapacity);
-            storageBase = Grow(storageBase, newCapacity);
-            pickedSinceTick = Grow(pickedSinceTick, newCapacity);
+                int previousLevelLength = inputLevel == null ? 0 : inputLevel.Length;
+                buildingInc = Grow(buildingInc, newCapacity);
+                poolInc = Grow(poolInc, newCapacity);
+                poolCount = Grow(poolCount, newCapacity);
+                inputLevel = Grow(inputLevel, newCapacity);
+                // -1: "no batch observed yet"; 0 is a valid quality level.
+                for (int i = previousLevelLength; i < inputLevel.Length; i++)
+                {
+                    inputLevel[i] = -1;
+                }
 
-            int previousProducedLength = prevProduced == null ? 0 : prevProduced.Length;
-            prevProduced = Grow(prevProduced, newCapacity * QualityData.ProducedSlots);
-            // -1 means "not observed yet": the first postfix call records a baseline instead
-            // of counting a save-loaded produced[] buffer as fresh production.
-            for (int i = previousProducedLength; i < prevProduced.Length; i++)
-            {
-                prevProduced[i] = -1;
+                int previousPendingLength = pendingLevel == null ? 0 : pendingLevel.Length;
+                pendingLevel = Grow(pendingLevel, newCapacity);
+                for (int i = previousPendingLength; i < pendingLevel.Length; i++)
+                {
+                    pendingLevel[i] = -1;
+                }
+                wasReplicating = Grow(wasReplicating, newCapacity);
+                storageBase = Grow(storageBase, newCapacity);
+                pickedSinceTick = Grow(pickedSinceTick, newCapacity);
+
+                int previousProducedLength = prevProduced == null ? 0 : prevProduced.Length;
+                prevProduced = Grow(prevProduced, newCapacity * QualityData.ProducedSlots);
+                // -1 means "not observed yet": the first postfix call records a baseline instead
+                // of counting a save-loaded produced[] buffer as fresh production.
+                for (int i = previousProducedLength; i < prevProduced.Length; i++)
+                {
+                    prevProduced[i] = -1;
+                }
             }
         }
 
@@ -124,49 +143,70 @@ namespace DSPQualitySystem
         /// </summary>
         public const int MaxEntityId = 1 << 20;
 
-        public static readonly Dictionary<int, PlanetQuality> planets = new Dictionary<int, PlanetQuality>();
+        public static readonly ConcurrentDictionary<int, PlanetQuality> planets =
+            new ConcurrentDictionary<int, PlanetQuality>();
         public static readonly Dictionary<int, byte> prebuildInc = new Dictionary<int, byte>();
 
         // Hot path cache: patches resolve the planet once per factory tick thousands of times.
-        private static int _cachedPlanetId = int.MinValue;
-        private static PlanetQuality _cached;
+        //
+        // v0.20.0 (issue 4): the cache used to be a single static (planetId, PlanetQuality) pair
+        // written without any synchronisation. `GameLogic._assembler_parallel` / `_miner_parallel`
+        // call these accessors from several worker threads, so two threads could interleave the two
+        // stores and leave the pair permanently inconsistent (planetId = A, object = B). From then
+        // on every building/quality lookup of planet A read planet B's arrays, i.e. 0 points for all
+        // miners/assemblers until the next save load called ClearAll()/InvalidateCache() - exactly
+        // the reported "quality miners randomly stop producing quality items, reload fixes it".
+        // The cache is thread-local now, and a global generation counter drops every thread's entry
+        // when the registry is cleared (new game / save load / planet removal).
+        private static volatile int _generation;
+        private static int _generationCounter;
+
+        [System.ThreadStatic] private static int _cachedPlanetId;
+        [System.ThreadStatic] private static int _cachedGeneration;
+        [System.ThreadStatic] private static PlanetQuality _cached;
 
         private static void InvalidateCache()
         {
-            _cachedPlanetId = int.MinValue;
-            _cached = null;
+            // Bump first: threads that read the new generation after their generation check simply
+            // miss the cache once and reload from the (already updated) registry.
+            _generationCounter++;
+            _generation = _generationCounter;
         }
 
         public static PlanetQuality Get(int planetId)
         {
-            if (_cachedPlanetId == planetId)
+            PlanetQuality cached = _cached;
+            if (cached != null && _cachedPlanetId == planetId && _cachedGeneration == _generation)
             {
-                return _cached;
+                return cached;
             }
 
             PlanetQuality quality;
             planets.TryGetValue(planetId, out quality);
             _cachedPlanetId = planetId;
+            _cachedGeneration = _generation;
             _cached = quality;
             return quality;
         }
 
         public static PlanetQuality GetOrCreate(int planetId)
         {
-            PlanetQuality quality;
-            if (planetId == _cachedPlanetId && _cached != null)
+            PlanetQuality cached = _cached;
+            if (cached != null && _cachedPlanetId == planetId && _cachedGeneration == _generation)
             {
-                return _cached;
+                return cached;
             }
-            if (!planets.TryGetValue(planetId, out quality))
-            {
-                quality = new PlanetQuality();
-                quality.planetId = planetId;
-                planets[planetId] = quality;
-            }
+
+            PlanetQuality quality = planets.GetOrAdd(planetId, CreatePlanetQuality);
             _cachedPlanetId = planetId;
+            _cachedGeneration = _generation;
             _cached = quality;
             return quality;
+        }
+
+        private static PlanetQuality CreatePlanetQuality(int planetId)
+        {
+            return new PlanetQuality { planetId = planetId };
         }
 
         public static void EnsureCapacity(PlanetQuality quality, int capacity)
@@ -180,7 +220,8 @@ namespace DSPQualitySystem
 
         public static void RemovePlanet(int planetId)
         {
-            planets.Remove(planetId);
+            PlanetQuality removed;
+            planets.TryRemove(planetId, out removed);
             // v0.16.1 (C-2 / C-3): the filter side tables live next to the planet data.
             ClearFiltersForPlanet(planetId);
             InvalidateCache();
@@ -251,12 +292,15 @@ namespace DSPQualitySystem
             }
             PlanetQuality quality = GetOrCreate(planetId);
             quality.EnsureCapacity(entityId + 1);
-            int newInc;
-            int newCount;
-            QualityMath.AddPool(quality.poolInc[entityId], quality.poolCount[entityId], incPoints, productCount,
-                out newInc, out newCount);
-            quality.poolInc[entityId] = newInc;
-            quality.poolCount[entityId] = newCount;
+            lock (quality.SyncRoot)
+            {
+                int newInc;
+                int newCount;
+                QualityMath.AddPool(quality.poolInc[entityId], quality.poolCount[entityId], incPoints,
+                    productCount, out newInc, out newCount);
+                quality.poolInc[entityId] = newInc;
+                quality.poolCount[entityId] = newCount;
+            }
         }
 
         /// <summary>Pool read: hand out the average quality of the pool and consume one product.</summary>
@@ -268,13 +312,63 @@ namespace DSPQualitySystem
                 return 0;
             }
 
-            int newInc;
-            int newCount;
-            int perItem = QualityMath.TakeOne(quality.poolInc[entityId], quality.poolCount[entityId],
-                Cargo.kIncLevelMax, out newInc, out newCount);
-            quality.poolInc[entityId] = newInc;
-            quality.poolCount[entityId] = newCount;
-            return perItem;
+            lock (quality.SyncRoot)
+            {
+                int newInc;
+                int newCount;
+                int perItem = QualityMath.TakeOne(quality.poolInc[entityId], quality.poolCount[entityId],
+                    Cargo.kIncLevelMax, out newInc, out newCount);
+                quality.poolInc[entityId] = newInc;
+                quality.poolCount[entityId] = newCount;
+                return perItem;
+            }
+        }
+
+        /// <summary>
+        /// v0.20.0 (issues 2/3): hand out the pooled points for <paramref name="count"/> products in
+        /// one call. Used when a whole produced stack leaves a machine outside the vanilla
+        /// `PlanetFactory.PickFrom` path (OrbitalRing shared storage / elevator storage). The total
+        /// points are `count * floor(poolInc/poolCount)` with the integer remainder kept in the pool,
+        /// so points are conserved and each item stays within 0..Cargo.kIncLevelMax. Returns 0 when
+        /// nothing is pooled or for degenerate input.
+        /// </summary>
+        public static int TakeProductInc(int planetId, int entityId, int count)
+        {
+            return TakeProductIncAbove(planetId, entityId, count, 0);
+        }
+
+        /// <summary>
+        /// Same as <see cref="TakeProductInc"/> but keeps every product whose pooled per-item level
+        /// is at or below <paramref name="minPerItem"/> in the pool. OrbitalRing smelters already add
+        /// a flat 4 points per item on their own, so only the quality above that flat value is taken.
+        /// </summary>
+        public static int TakeProductIncAbove(int planetId, int entityId, int count, int minPerItem)
+        {
+            if (entityId < 0 || entityId > MaxEntityId || count <= 0)
+            {
+                return 0;
+            }
+            PlanetQuality quality = Get(planetId);
+            if (quality == null)
+            {
+                return 0;
+            }
+
+            lock (quality.SyncRoot)
+            {
+                if (entityId >= quality.poolInc.Length || entityId >= quality.poolCount.Length)
+                {
+                    return 0;
+                }
+                int newInc;
+                int newCount;
+                int points = QualityMath.TakeStackAbove(quality.poolInc[entityId],
+                    quality.poolCount[entityId], count, minPerItem, Cargo.kIncLevelMax,
+                    out newInc, out newCount);
+                quality.poolInc[entityId] = newInc;
+                quality.poolCount[entityId] = newCount;
+                return points;
+            }
         }
 
         public static int GetPoolInc(int planetId, int entityId)
@@ -284,7 +378,10 @@ namespace DSPQualitySystem
             {
                 return 0;
             }
-            return quality.poolInc[entityId];
+            lock (quality.SyncRoot)
+            {
+                return quality.poolInc[entityId];
+            }
         }
 
         public static int GetPoolCount(int planetId, int entityId)
@@ -294,7 +391,10 @@ namespace DSPQualitySystem
             {
                 return 0;
             }
-            return quality.poolCount[entityId];
+            lock (quality.SyncRoot)
+            {
+                return quality.poolCount[entityId];
+            }
         }
 
         /// <summary>Snapshot of AssemblerComponent.produced used by the M1 delta accounting.</summary>
@@ -342,9 +442,12 @@ namespace DSPQualitySystem
             }
             PlanetQuality quality = GetOrCreate(planetId);
             quality.EnsureCapacity(entityId + 1);
-            if (entityId < quality.pickedSinceTick.Length && quality.pickedSinceTick[entityId] < int.MaxValue)
+            lock (quality.SyncRoot)
             {
-                quality.pickedSinceTick[entityId]++;
+                if (entityId < quality.pickedSinceTick.Length && quality.pickedSinceTick[entityId] < int.MaxValue)
+                {
+                    quality.pickedSinceTick[entityId]++;
+                }
             }
         }
 
@@ -356,9 +459,12 @@ namespace DSPQualitySystem
             {
                 return 0;
             }
-            int picks = quality.pickedSinceTick[entityId];
-            quality.pickedSinceTick[entityId] = 0;
-            return picks;
+            lock (quality.SyncRoot)
+            {
+                int picks = quality.pickedSinceTick[entityId];
+                quality.pickedSinceTick[entityId] = 0;
+                return picks;
+            }
         }
 
         public static short GetPendingLevel(int planetId, int entityId)

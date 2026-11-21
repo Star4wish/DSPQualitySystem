@@ -15,7 +15,7 @@ namespace DSPQualitySystem
     public class Plugin : BaseUnityPlugin
     {
         public const string GUID = "dsp.qualitysystem";
-        public const string VERSION = "0.19.2";
+        public const string VERSION = "0.20.0";
 
         internal static ManualLogSource Log;
 
@@ -94,12 +94,28 @@ namespace DSPQualitySystem
                 Patches.P4_ConsumePriority.Apply(harmony);
                 Log.LogInfo("[QSystem][consume] " + Patches.P4_ConsumePriority.Describe());
 
+                // v0.20.0 (issue 1): the battlefield analysis base keeps its own build/repair drone
+                // target cache; vanilla PreLaunchDrone indexes prebuildPool with it unchecked. The
+                // guard drops stale entries before the vanilla body runs (normal caches untouched).
+                Patches.P1_ConstructionGuard.Apply(harmony);
+                Log.LogInfo("[QSystem][construction] " + Patches.P1_ConstructionGuard.Describe());
+
                 // v0.18.0 (issue 4): a white ghost pre-build that was placed before its materials
                 // existed now inherits the points of the items the construction module pays for it
                 // later (vanilla drops that TakeTailItems inc). Registered right after the consume
                 // layer, which it guards with PayWindowActive.
                 Patches.P1_DeferredPay.Apply(harmony);
                 Log.LogInfo("[QSystem][deferred] " + Patches.P1_DeferredPay.Describe());
+
+                // v0.20.0 (issue 3): gas-giant orbital collectors wrote storage[].count only; the
+                // station storage inc gets the rolled quality of the collected items.
+                Patches.StationComponent_UpdateCollection_OutputInc.ResetState();
+                Log.LogInfo("[QSystem][collector] " + Patches.StationComponent_UpdateCollection_OutputInc.Describe());
+
+                // v0.20.0 (issue 2): OrbitalRing's own production buildings drain produced[] into
+                // its shared/elevator storage without points; installed only when the mod is loaded.
+                Patches.P8_OrbitalRingCompat.Apply(harmony);
+                Log.LogInfo("[QSystem][orbitalring] " + Patches.P8_OrbitalRingCompat.Describe());
 
                 // v0.12.0 (task-16): the five "A class" facility bonuses. Every switch is independent
                 // and a disabled switch means the patch is never registered at all, so the vanilla

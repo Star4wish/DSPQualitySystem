@@ -2,12 +2,12 @@
 
 | 项目 | 内容 |
 |---|---|
-| 适用版本 | **v0.19.2** |
-| 代码基线 | `C:\XCM\DSP MOD\DSPQualitySystem\`（`Plugin.cs` 中 `VERSION = "0.19.2"`；`DSPQualitySystem.csproj` 为 `0.19.2` / `0.19.2.0` / `0.19.2.0`） |
+| 适用版本 | **v0.20.0** |
+| 代码基线 | `C:\XCM\DSP MOD\DSPQualitySystem\`（`Plugin.cs` 中 `VERSION = "0.20.0"`；`DSPQualitySystem.csproj` 为 `0.20.0` / `0.20.0.0` / `0.20.0.0`） |
 | 游戏 / 运行时 | Dyson Sphere Program **0.10.35**；BepInEx **5.4.x**（`BepInEx.Core 5.4.21`）；.NET Framework **4.7.2** |
 | 插件标识 | GUID `dsp.qualitysystem`，配置段 `[quality]`，配置文件 `BepInEx\config\dsp.qualitysystem.cfg` |
-| 交付形态 | 单个 `DSPQualitySystem.dll`（v0.19.2：`298,496` 字节，SHA256 `A0BE6EBF3EEF1BB587C7EB6BA0FD32FEEFFDD8F7C98DC58C2B5308298775A8C7`，`2026-10-31 21:46:49` 构建） |
-| 文档范围 | 只描述 v0.19.2 的现状；不含被移除功能、历史计划与过程记录 |
+| 交付形态 | 单个 `DSPQualitySystem.dll`（v0.20.0：`316,928` 字节，SHA256 `85CD92923601C578BABF523734736E520136B63B2BCCB547CF8CBD132FD37326`，`2026-11-21` 构建） |
+| 文档范围 | 只描述 v0.20.0 的现状；v0.20.0 的四项修复（基站守卫 / 星环兼容 / 轨道采集器 / 品质数据线程安全）见 DEVLOG §27.36 与 TESTLOG「v0.20.0 离线 + 实机验证」 |
 
 > **核对约定**：文中 `asm:NNNNN` 指反编译参考 `C:\WorkWork\DSP MOD\_analysis\quality-system\asm_full.cs` 的行号；`文件.cs:NN` 指当前源码行号。凡本文与代码不一致之处，**以代码为准**。
 
