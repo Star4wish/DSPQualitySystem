@@ -960,3 +960,32 @@ powershell ... -Mode key -Key f5        # 看 inputLevel 是否被 inputs 节点
 3. **轨道采集器**：需要气态巨星上的采集器 + 带点数建筑 + 一段时间采集；本机新档未到达该阶段。
 4. **矿机偶发 0 点**：属并发竞态，已在代码层消除（线程局部缓存 + 并发字典 + 每星球锁）；长时间多星球并行是复现条件，离线无法等价构造。
 
+## v0.20.1 星环共享空间点数修复（2026-11-22，实机）
+
+用户装上 OrbitalRing 后反馈：问题 1、3 已好；问题 2 仍无效，且**从共享空间取货时增产点数显示负数**。
+
+### 取证（临时诊断插件 `_tmp\QsDiag`，未入包）
+
+- 测试档 `dspqsnew`：星环建筑 6264/6254、配方 714，`bld=4`、`in=3~4`、池 `pool ≈ 4.0~4.2/件`。
+- 修复前共享存储/电梯存储抽样：`1031 6529/26116`（4/件）、`1000 87694/304970`、`6205 8624/25588`、`6277 7864/31456`、电梯 `1000=1702/6808`、`6205=10008/31160` —— 说明 P8 写入本身没问题。
+- 根因：`OrbitalRingStorageCalculate.ShareStorageForOrbitalStation` 把**整栈总 inc** 用 `(short)` 强转后加进站点仓储（方法内仅两处 `conv.i2`），几万点会溢出成负数 → 取货 UI/下游出货按坏 inc 分配，表现为负数与“产物不带点数”。
+- 速度：临时探针在 `AssemblerComponent.InternalUpdate` **postfix** 读取最终 `power`，建筑 4 点的星环建筑 `power=1.1000`（+10%），证明加速已生效；随机升品按 `buildingChancePerPoint=1.5%/点/周期` 概率发生（4 点 ≈ 6%/周期），短时观感弱属预期。
+
+### 修复与验证
+
+- `P8_OrbitalRingCompat` 增加 transpiler，把 `ShareStorageForOrbitalStation` 两处 `conv.i2` 改为 `conv.i4`。
+- 启动日志：`[QSystem][orbitalring] ShareStorageForOrbitalStation: widened 2 conv.i2 to conv.i4 (station inc truncation fix)`、`armed: … stationShareConv=True`。
+- 载入 `dspqsnew` 后：`[QSystem][orbitalring] … moved=4 points=16` 持续；仓储 inc 全部为正且与件数成比例；`power=1.1000`。
+- 构建：**321,536 B** / SHA256 `F28530A1972A3BFB3D70B649F15A20DA8E9DF97C72FE386F6CEEC3F7196ECECA`；离线 **89 checks ALL PASS**。
+- 待用户手动确认：共享空间“取货到背包”的 UI 交互（本次取证到站点/电梯仓储层）。
+- 同版另修：实机日志中的 `non-concurrent collections … corrupted`（回收机探针/账本被并行喷涂 tick 并发写）——探针换 `ConcurrentDictionary`、账本加 `RecyclerSync` 锁；复测该告警消失，`v0.20.1` 正常载入 `dspqsnew`。
+
+### 追加：太空船坞（6257）直送电梯丢点数（2026-11-22 实机复核）
+
+- 取证：`SHIPSTORE station=13 eid=16227 slot=2 count=251 inc=0` 持续增长；探针显示船坞 `produced=1` → `ShareStorageForOrbitalStation count+1 inc 0->0`，P8 `entries=0`。
+- 根因：共享存储里该物品键在调用前已被上一次同步删除，P8 只登记已存在的键 ⇒ 每次新建键的这批产物无目标槽。
+- 修复：`CollectShared` 对不存在的键登记 `CountBefore=0` 占位项。
+- 验证：`count 251 inc 0 → 253 inc 8 → 255 inc 16`，最终 `count 276→279 inc 100→112`（4 点/件）；离线 89 checks 全过；DLL `321,536` B / SHA `90E93CD9…`。
+
+
+

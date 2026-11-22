@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.20.1
+
+- **星环（OrbitalRing）兼容修复（仅检测到该 Mod 时启用，全反射不硬依赖）**：
+  - `ShareStorageForOrbitalStation` 把共享空间库存并入站点仓储时，对整栈总点数做了 `(short)` 强转，几万点会溢出成负数（表现为「共享空间取货点数为负、下游产物不带点数」）；transpiler 把该方法内两处 `conv.i2` 放宽为 `conv.i4`。
+  - 太空船坞（6257）直送太空电梯的勘探船（6280）点数丢失：共享存储里该物品的键往往在调用前已被上一次同步删除，而兼容补丁只登记「已存在的键」；现在对不存在的键也登记 `CountBefore=0` 占位，调用后新建的键即可正常补点。
+  - 修复回收机探针/账本被并行喷涂 tick 并发写普通字典导致的 `non-concurrent collections … corrupted`：探针改 `ConcurrentDictionary`、账本加统一锁。
+- **调试输出收口（release 默认静默）**：所有周期性的 `effective=` 计数、光环统计、回收机探针、星环搬运明细、立即建造绑定、品质角标刷新、分拣器诊断等改为仅在 `DSPQS_DEV=1` 时输出；普通游玩只保留启动 `armed` 行、一次性 `[Audit]` 自检与必要的 `[save]` 行。
+- 修复 `powerrange.tick` 在星球卸载/加载瞬间的空引用告警（补 `factory.planet == null` 守卫）。
+- 离线测试 89 checks 全过。
+
+## 0.20.0
+
+- **战场分析基站建造崩溃修复**：反编译确认崩溃点为 `ConstructionModuleComponent.PreLaunchDrone` 对 `prebuildPool[buildTargets[0].objectId]` 的无界索引；新增 `P1_ConstructionGuard`，在原版方法前校验并整理 build/repair 目标表（丢弃已回收/已摧毁/未付清的失效目标、压缩目标组、重算计数），健康目标表行为不变。
+- **星环新增生产建筑产物带点数**：星环把 `produced[]` 搬进共享空间/电梯仓储时只给熔炼配方补固定 4 点；新增 `P8_OrbitalRingCompat`（仅检测到 `ProjectOrbitalRing` 时安装），按实际搬运件数从本 Mod 品质池取点写回，熔炼只补高于 4 点的部分、封顶 10 点/件。
+- **轨道采集器产物带点数**：`StationComponent.UpdateCollection` 只写 `count` 不写 `inc`；新增 `P0_OrbitalCollector` 按转移量补 `storage[i].inc`。
+- **品质数据线程安全**：单槽静态星球缓存被并行工厂 tick 写坏后整颗星球点数读成 0、读档才恢复；改为线程局部缓存 + 代际失效 + `ConcurrentDictionary` + 每星球锁，并新增 `QualityMath.TakeStackAbove` 整叠取点纯函数。
+- 补回仓库缺失的 `Save\QualityBlobCodec.cs`（否则工程无法编译），修正 `.gitignore` 的 `save/` 规则误吞源码目录。
+
 ## 0.19.2
 
 - **品质筛选设置随「复制/粘贴」与蓝图一起走**：四向分流器的每口规则、分拣器的品质阈值，现在在 Shift 复制、Ctrl+C / Ctrl+V 与蓝图复制粘贴时都会各自保留（此前只有建筑本身的品质点数会跟随，筛选规则永远回到默认）。新增补丁 `Patches\P6_FilterCopy.cs`（11 个 Harmony 挂点）：建筑设置走 `BuildingParameters.CopyFromFactoryObject` / `PasteToFactoryObject` 与 `PlanetFactory.CopyBuildingSetting` / `PasteBuildingSetting`；蓝图走**两段式**通道——`BuildTool_BlueprintPaste.CreatePrebuilds()` prefix 先从 `BlueprintBuilding.parameters` 解出筛选块（日志 `bp-stage queued=N buildings=M`），再在 `PlanetFactory.AddPrebuildDataWithComponents` postfix 按 protoId 绑到 prebuildId（`bp-stage prebuild id=.. proto=.. kind=.. min=..`），最后由 `AddEntityDataWithComponents` postfix 写到落地实体；筛选块本身由 `BuildingParameters.ToParamsArray` / `FromParamsArray` / `GenerateBlueprintData` 三处挂点写成 `parameters` 尾部的魔数块（magic `0x51465042` 即 `QFPB`、version 1、kind 1=四向分流器 / 2=分拣器、protoId、rule0..3、min），随 `.bp` 文件持久化。

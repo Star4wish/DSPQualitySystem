@@ -1,6 +1,6 @@
 # DSP 品质系统 · R2 简介（中英双语）
 
-> 当前版本 **v0.19.2**（DLL 298,496 字节），适用于 **DSP 0.10.35 + BepInEx 5**
+> 当前版本 **v0.20.1**（DLL 321,536 字节），适用于 **DSP 0.10.35 + BepInEx 5**
 
 ---
 
@@ -28,6 +28,9 @@
 - **升品概率复用速度曲线**：1..10 点 → 2.5% / 5% / 7.5% / 10% / 15% / 20% / 30% / 40% / 60% / 100%，7 点起额外再判一次，10 点直接 +2。
 - **品质筛选可以搬运**：分流器每口规则、分拣器阈值随 Shift / Ctrl+C·V / 蓝图迁移；分拣器覆盖传送带、储物仓、机器产物口、弹射器、发射井。
 - **品质回收机**：把带点数的物品从喷涂机的催化剂进料口送入，每 4 点换 1 次喷涂（v0.19.0）。
+- **星环（OrbitalRing）兼容**（v0.20.x，仅在检测到星环 Mod 时启用）：太空船坞 / 轨道水培舱 / 生态温室等星环生产建筑的产物带点数；太空船坞直送太空电梯的船只保留点数；共享空间取货时点数不再显示为负。
+- **轨道采集器带点数**（v0.20.0）：气态巨星轨道采集器产出的物品会按建筑点数带上品质。
+- **稳定性**（v0.20.x）：战场分析基站建造不再越界崩溃；品质数据改为线程安全，修复「带品质矿机偶发不产点数、读档才恢复」。
 - **16 项中文开关 + 零风险**：不新增物品、不改配方；任何补丁失败都安静回退原版；品质数据写在存档尾部，卸载不丢物品。
 
 ## 四、安装
@@ -51,7 +54,7 @@
 
 ## English
 
-> **v0.19.2** (DLL 298,496 bytes) · for **DSP 0.10.35 + BepInEx 5**
+> **v0.20.1** (DLL 321,536 bytes) · for **DSP 0.10.35 + BepInEx 5**
 
 ### What it is
 
@@ -75,13 +78,16 @@ Vanilla has an internal "proliferator points" value hidden behind the spray coat
 - **Upgrade chance reuses the speed curve**: 2.5%/5%/7.5%/10%/15%/20%/30%/40%/60%/100% for 1..10 points; 7+ gets an extra roll; 10 points is a guaranteed +2.
 - **Filter settings are portable**: splitter rules and sorter thresholds follow Shift-copy, Ctrl+C·V and blueprints; sorters cover belts, storages, machine output slots, ejectors and silos.
 - **Quality recycler**: feed point-carrying items into the coater's proliferator input — every 4 points becomes one spray (v0.19.0).
+- **OrbitalRing compatibility** (v0.20.x, only active when OrbitalRing is installed): products of the space dock / orbital hydroponics / greenhouse carry quality points; probe ships sent straight to the space elevator keep their points; shared-storage withdrawals no longer show negative points.
+- **Orbital collectors carry points** (v0.20.0): gas-giant collectors produce items with the building's quality points.
+- **Stability** (v0.20.x): building through the battlefield analysis base no longer crashes with an out-of-range exception; quality data is thread-safe, fixing the occasional "quality miner stops producing points until reload".
 - **16 Chinese-commented toggles, low risk**: no new items or recipes, every patch fails safe back to vanilla, quality data lives in the save trailer so uninstalling loses nothing.
 
 ### Install / Uninstall
 
 - Requirements: DSP 0.10.35, BepInEx 5.4.x (CommonAPI pulled in by r2modman).
 - Manual: drop `DSPQualitySystem.dll` into `BepInEx\plugins\DSPQualitySystem\`.
-- Verify: look for `=== DSP Quality System v0.19.2 ===` and per-feature `armed` lines in `LogOutput.log`.
+- Verify: look for `=== DSP Quality System v0.20.1 ===` and per-feature `armed` lines in `LogOutput.log`.
 - Uninstall: delete the DLL; quality data is an ignored trailer, buildings revert to vanilla, and nothing is lost (storage quality expansion was retired in v0.19.2).
 
 ### Config
@@ -90,4 +96,4 @@ Vanilla has an internal "proliferator points" value hidden behind the spray coat
 
 ---
 
-当前版本 v0.19.2 ｜ DLL 298,496 字节 ｜ SHA256 `A0BE6EBF…775A8C7` ｜ 88 项离线测试全部通过
+当前版本 v0.20.1 ｜ DLL 321,536 字节 ｜ SHA256 `F28530A1…96ECECA` ｜ 89 项离线测试全部通过

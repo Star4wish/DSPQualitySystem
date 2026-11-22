@@ -74,7 +74,7 @@ namespace DSPQualitySystem.Patches
 
         internal const int MaxDebugLogs = 20;
         internal const int MaxDiagLogs = 60;
-        internal const int AlwaysDiagLogs = 8;
+        internal const int AlwaysDiagLogs = 0; // v0.20.1: diagnostics are DEV-only
         internal const int SourceCount = 8;
 
         internal const int SrcBelt = 0;

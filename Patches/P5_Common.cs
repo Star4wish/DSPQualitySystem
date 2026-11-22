@@ -97,6 +97,12 @@ namespace DSPQualitySystem.Patches
         {
             try
             {
+                // v0.20.1: release builds stay quiet; the periodic "effective" counters are a
+                // development aid and are enabled only with DSPQS_DEV=1.
+                if (!DebugOn)
+                {
+                    return;
+                }
                 long n = ++hits;
                 if (n % EffectiveLogEvery != 0)
                 {

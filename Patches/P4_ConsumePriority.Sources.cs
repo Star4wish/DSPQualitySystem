@@ -392,6 +392,10 @@ namespace DSPQualitySystem.Patches
         {
             try
             {
+                if (!QualityConfig.DevMode)
+                {
+                    return;
+                }
                 long n = ++_effective;
                 if (n % EffectiveLogEvery != 0)
                 {

@@ -318,6 +318,10 @@ namespace DSPQualitySystem.Patches
         {
             try
             {
+                if (!QualityConfig.DevMode)
+                {
+                    return;
+                }
                 var log = Plugin.Log;
                 if (log != null)
                 {

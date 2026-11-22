@@ -40,6 +40,7 @@ namespace DSPQualitySystem.Patches
         private static long _prunedBuild;
         private static long _prunedRepair;
         private static int _debugLogs;
+        private static bool _firstPruneLogged;
 
         internal static void Apply(Harmony harmony)
         {
@@ -187,8 +188,12 @@ namespace DSPQualitySystem.Patches
             {
                 module.buildTargetTotalCount = CountNonZero(targets);
                 _prunedBuild += pruned;
-                if (_prunedBuild <= DebugLogLimit || _prunedBuild % EffectiveLogEvery == 0)
+                // One concise line when the guard actually prevents the vanilla crash; the per-group
+                // details and periodic totals stay behind DSPQS_DEV.
+                if (!_firstPruneLogged
+                    || (QualityConfig.DevMode && _prunedBuild % EffectiveLogEvery == 0))
                 {
+                    _firstPruneLogged = true;
                     P5Common.Info(Tag + "build targets pruned=" + pruned + " total=" + _prunedBuild
                         + " remaining=" + module.buildTargetTotalCount + " planet=" + planetId);
                 }
@@ -260,8 +265,10 @@ namespace DSPQualitySystem.Patches
             {
                 module.repairTargetTotalCount = write;
                 _prunedRepair += pruned;
-                if (_prunedRepair <= DebugLogLimit || _prunedRepair % EffectiveLogEvery == 0)
+                if (!_firstPruneLogged
+                    || (QualityConfig.DevMode && _prunedRepair % EffectiveLogEvery == 0))
                 {
+                    _firstPruneLogged = true;
                     P5Common.Info(Tag + "repair targets pruned=" + pruned + " total=" + _prunedRepair
                         + " remaining=" + write + " planet=" + planetId);
                 }

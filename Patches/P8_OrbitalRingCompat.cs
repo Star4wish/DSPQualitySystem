@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Reflection.Emit;
 using HarmonyLib;
 
 namespace DSPQualitySystem.Patches
@@ -61,12 +62,18 @@ namespace DSPQualitySystem.Patches
         private static FieldInfo _pairStationField;
         private static FieldInfo _pairTypeField;
         private static object _assemblerStationType;
+        private static Type _storageCalcType;
+        private static Type _ringStorageType;
 
         private static long _moves;
         private static long _points;
         private static long _zeroPool;
+        private static long _missedMoves;
+        private static long _sharedMoves;
+        private static long _elevatorMoves;
         private static int _debugLogs;
         private static bool _firstLogged;
+        private static bool _firstMissLogged;
 
         /// <summary>Per-thread call state: OrbitalRing ticks can run on several worker threads.</summary>
         [ThreadStatic] private static CallState _state;
@@ -151,10 +158,37 @@ namespace DSPQualitySystem.Patches
                             "ElevatorPostfix", BindingFlags.NonPublic | BindingFlags.Static)));
                 }
 
+                // OrbitalRing's shared-storage <-> station-storage sync truncates the slot's TOTAL inc
+                // to short (`stationComponent.storage[i].inc += (short)…`), so a stock of tens of
+                // thousands of points overflows into a negative value as soon as the player takes
+                // items out of the shared storage. Both sites are a plain conv.i2 right before the
+                // int add; widening them to conv.i4 keeps the arithmetic in int and the displayed
+                // points stay correct.
+                MethodInfo stationShare = null;
+                if (_storageCalcType != null && _ringStorageType != null)
+                {
+                    stationShare = _storageCalcType.GetMethod("ShareStorageForOrbitalStation",
+                        BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static, null,
+                        new[] { typeof(StationComponent).MakeByRefType(), _ringStorageType.MakeByRefType() },
+                        null);
+                }
+                if (stationShare != null)
+                {
+                    harmony.Patch(stationShare,
+                        transpiler: new HarmonyMethod(typeof(P8_OrbitalRingCompat).GetMethod(
+                            "StationShareTranspiler", BindingFlags.NonPublic | BindingFlags.Static)));
+                }
+                else
+                {
+                    P5Common.Info(Tag + "ShareStorageForOrbitalStation not found; the short-truncation"
+                        + " fix for the station sync is skipped (large stocks may show negative points)");
+                }
+
                 _armed = true;
                 P5Common.Info(Tag + "armed: quality points now follow OrbitalRing products into shared"
                     + " storage / elevator storage (shared=" + (shared != null)
-                    + " elevator=" + (elevator != null) + ")");
+                    + " elevator=" + (elevator != null)
+                    + " stationShareConv=" + (stationShare != null) + ")");
             }
             catch (Exception e)
             {
@@ -208,6 +242,8 @@ namespace DSPQualitySystem.Patches
             Type ringData = Type.GetType("ProjectOrbitalRing.Patches.Logic.OrbitalRing.PlanetOrbitalRingData, " + AssemblyName);
             Type ring = Type.GetType("ProjectOrbitalRing.Patches.Logic.OrbitalRing.EquatorRing, " + AssemblyName);
             Type ringStorage = Type.GetType("ProjectOrbitalRing.Patches.Logic.OrbitalRing.OrbitalRingStorage, " + AssemblyName);
+            _storageCalcType = Type.GetType("ProjectOrbitalRing.Patches.Logic.OrbitalRing.OrbitalRingStorageCalculate, " + AssemblyName);
+            _ringStorageType = ringStorage;
 
             if (manager == null || ringData == null || ring == null || ringStorage == null)
             {
@@ -328,6 +364,30 @@ namespace DSPQualitySystem.Patches
         private static void ElevatorPostfix(ref AssemblerComponent __0, int __1)
         {
             End(ref __0);
+        }
+
+        /// <summary>
+        /// Widen the two `(short)` truncations in OrbitalRing's
+        /// `ShareStorageForOrbitalStation` (shared storage -> station storage inc) to int adds.
+        /// Both are the only conv.i2 in that method; the surrounding code is
+        /// `… storage[i].inc += (short)value;`, where conversion to int changes nothing for small
+        /// values and prevents the sign flip for large stocks.
+        /// </summary>
+        private static IEnumerable<CodeInstruction> StationShareTranspiler(
+            IEnumerable<CodeInstruction> instructions)
+        {
+            int widened = 0;
+            foreach (CodeInstruction instruction in instructions)
+            {
+                if (instruction.opcode == OpCodes.Conv_I2)
+                {
+                    instruction.opcode = OpCodes.Conv_I4;
+                    widened++;
+                }
+                yield return instruction;
+            }
+            P5Common.Info(Tag + "ShareStorageForOrbitalStation: widened " + widened
+                + " conv.i2 to conv.i4 (station inc truncation fix)");
         }
 
         // ---------------------------------------------------------------- transfer observation
@@ -454,17 +514,34 @@ namespace DSPQualitySystem.Patches
                 for (int i = 0; i < products.Length; i++)
                 {
                     int itemId = products[i];
-                    if (itemId <= 0 || !storageItem.TryGetValue(itemId, out array) || array == null || array.Length < 2)
+                    if (itemId <= 0)
                     {
                         continue;
                     }
-                    entries.Add(new Entry
+                    if (storageItem.TryGetValue(itemId, out array) && array != null && array.Length >= 2)
                     {
-                        ItemId = itemId,
-                        CountBefore = array[0],
-                        Dict = storageItem,
-                        SharedArray = array
-                    });
+                        entries.Add(new Entry
+                        {
+                            ItemId = itemId,
+                            CountBefore = array[0],
+                            Dict = storageItem,
+                            SharedArray = array
+                        });
+                    }
+                    else
+                    {
+                        // v0.20.1: the key is often absent before the transfer because the station
+                        // sync removes it once the previous stack was pulled out (this is exactly the
+                        // space-dock probe-ship case). Register a placeholder so the postfix can see
+                        // the key OrbitalRing creates during the call and add its points.
+                        entries.Add(new Entry
+                        {
+                            ItemId = itemId,
+                            CountBefore = 0,
+                            Dict = storageItem,
+                            SharedArray = null
+                        });
+                    }
                 }
             }
         }
@@ -576,6 +653,8 @@ namespace DSPQualitySystem.Patches
                         continue;
                     }
 
+                    int movedTotal = moved;
+                    int matched = 0;
                     for (int e = 0; e < state.Entries.Count && moved > 0; e++)
                     {
                         Entry entry = state.Entries[e];
@@ -591,6 +670,7 @@ namespace DSPQualitySystem.Patches
                         }
                         int take = delta < moved ? delta : moved;
                         moved -= take;
+                        matched += take;
 
                         // Smelters: OrbitalRing already added 4 points per item before this
                         // postfix runs, so only pooled quality above that flat 4 is consumed/added.
@@ -605,24 +685,50 @@ namespace DSPQualitySystem.Patches
                         AddPoints(ref entry, points);
                         _moves++;
                         _points += points;
+                        if (state.Mode == ModeSharedStorage)
+                        {
+                            _sharedMoves++;
+                        }
+                        else
+                        {
+                            _elevatorMoves++;
+                        }
 
                         if (!_firstLogged)
                         {
                             _firstLogged = true;
-                            Info("OrbitalRing product quality path active: planet=" + state.PlanetId
-                                + " entity=" + state.EntityId + " item=" + product
-                                + " moved=" + take + " points=" + points);
+                            Info("OrbitalRing product quality path active: mode=" + ModeName(state.Mode)
+                                + " planet=" + state.PlanetId + " entity=" + state.EntityId
+                                + " item=" + product + " moved=" + take + " points=" + points);
                         }
                         if (_moves % EffectiveLogEvery == 0)
                         {
                             Info("OrbitalRing transfers=" + _moves + " points=" + _points
-                                + " zeroPool=" + _zeroPool);
+                                + " zeroPool=" + _zeroPool + " missed=" + _missedMoves
+                                + " shared=" + _sharedMoves + " elevator=" + _elevatorMoves);
                         }
                         if (QualityConfig.DevMode && _debugLogs < DebugLogLimit)
                         {
                             _debugLogs++;
-                            Info("OrbitalRing transfer mode=" + state.Mode + " item=" + product
+                            Info("OrbitalRing transfer mode=" + ModeName(state.Mode) + " item=" + product
                                 + " take=" + take + " points=" + points + " smelt=" + smelt);
+                        }
+                    }
+
+                    if (matched < movedTotal)
+                    {
+                        // The assembler moved products but we did not find the destination slot
+                        // (or the slot count did not grow). Log once per mode so a missing output
+                        // path is visible instead of silently losing the points.
+                        _missedMoves++;
+                        if (!_firstMissLogged)
+                        {
+                            _firstMissLogged = true;
+                            Info("OrbitalRing transfer destination NOT matched: mode="
+                                + ModeName(state.Mode) + " planet=" + state.PlanetId
+                                + " entity=" + state.EntityId + " item=" + product
+                                + " moved=" + movedTotal + " matched=" + matched
+                                + " entries=" + state.Entries.Count);
                         }
                     }
                 }
@@ -631,6 +737,11 @@ namespace DSPQualitySystem.Patches
             {
                 QualityEnv.WarnOnce("orbitalring.postfix", e);
             }
+        }
+
+        private static string ModeName(int mode)
+        {
+            return mode == ModeSharedStorage ? "shared" : "elevator";
         }
 
         private static int CurrentCount(ref Entry entry)
@@ -695,6 +806,10 @@ namespace DSPQualitySystem.Patches
 
         private static void Info(string message)
         {
+            if (!QualityConfig.DevMode)
+            {
+                return;
+            }
             if (Plugin.Log != null)
             {
                 Plugin.Log.LogInfo(Tag + message);
@@ -704,7 +819,8 @@ namespace DSPQualitySystem.Patches
         internal static string Describe()
         {
             return "OrbitalRing compat armed=" + _armed + " reason=" + (_reason ?? "-")
-                + " transfers=" + _moves + " points=" + _points + " zeroPool=" + _zeroPool;
+                + " transfers=" + _moves + " points=" + _points + " zeroPool=" + _zeroPool
+                + " missed=" + _missedMoves + " shared=" + _sharedMoves + " elevator=" + _elevatorMoves;
         }
 
         internal static void ResetState()

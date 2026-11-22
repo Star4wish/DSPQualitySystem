@@ -487,6 +487,10 @@ namespace DSPQualitySystem.Patches
             {
                 return;
             }
+            if (!QualityConfig.DevMode)
+            {
+                return;
+            }
 
             Plugin.Log.LogInfo("[QSystem][halo] marked=" + _marked + " visible=" + _visible
                 + " max=" + QualityConfig.TenPointHaloMaxClamped);

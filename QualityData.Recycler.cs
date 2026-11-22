@@ -117,6 +117,14 @@ namespace DSPQualitySystem
         private static readonly Dictionary<int, Dictionary<int, RecyclerState>> RecyclersByPlanet =
             new Dictionary<int, Dictionary<int, RecyclerState>>();
 
+        /// <summary>
+        /// v0.20.1: spray-coater ticks run on parallel worker threads, so the nested dictionaries
+        /// above must never be read/mutated concurrently (the same class of bug as the v0.20.0
+        /// QualityData planet cache). Accounts are tiny and touched once per collected stack, so one
+        /// short global lock is cheaper than a concurrent structure and keeps read-modify-write atomic.
+        /// </summary>
+        private static readonly object RecyclerSync = new object();
+
         private static Dictionary<int, RecyclerState> GetOrCreateRecyclerMap(int planetId)
         {
             Dictionary<int, RecyclerState> map;
@@ -138,12 +146,15 @@ namespace DSPQualitySystem
                 return 0;
             }
 
-            Dictionary<int, RecyclerState> map = GetOrCreateRecyclerMap(planetId);
-            RecyclerState state;
-            map.TryGetValue(entityId, out state);
-            state.Points = QualityRecyclerMath.MergePoints(state.Points, points);
-            map[entityId] = state;
-            return state.Points;
+            lock (RecyclerSync)
+            {
+                Dictionary<int, RecyclerState> map = GetOrCreateRecyclerMap(planetId);
+                RecyclerState state;
+                map.TryGetValue(entityId, out state);
+                state.Points = QualityRecyclerMath.MergePoints(state.Points, points);
+                map[entityId] = state;
+                return state.Points;
+            }
         }
 
         /// <summary>Spend <paramref name="take"/> carried points on a spray use. Returns how many
@@ -155,39 +166,42 @@ namespace DSPQualitySystem
                 return 0;
             }
 
-            Dictionary<int, RecyclerState> map;
-            if (!RecyclersByPlanet.TryGetValue(planetId, out map) || map == null)
+            lock (RecyclerSync)
             {
-                return 0;
-            }
-
-            RecyclerState state;
-            if (!map.TryGetValue(entityId, out state))
-            {
-                return 0;
-            }
-
-            int spent = take < state.Points ? take : state.Points;
-            if (spent <= 0)
-            {
-                return 0;
-            }
-
-            state.Points -= spent;
-            if (state.Points <= 0)
-            {
-                map.Remove(entityId);
-                if (map.Count == 0)
+                Dictionary<int, RecyclerState> map;
+                if (!RecyclersByPlanet.TryGetValue(planetId, out map) || map == null)
                 {
-                    RecyclersByPlanet.Remove(planetId);
+                    return 0;
                 }
-            }
-            else
-            {
-                map[entityId] = state;
-            }
 
-            return spent;
+                RecyclerState state;
+                if (!map.TryGetValue(entityId, out state))
+                {
+                    return 0;
+                }
+
+                int spent = take < state.Points ? take : state.Points;
+                if (spent <= 0)
+                {
+                    return 0;
+                }
+
+                state.Points -= spent;
+                if (state.Points <= 0)
+                {
+                    map.Remove(entityId);
+                    if (map.Count == 0)
+                    {
+                        RecyclersByPlanet.Remove(planetId);
+                    }
+                }
+                else
+                {
+                    map[entityId] = state;
+                }
+
+                return spent;
+            }
         }
 
         /// <summary>Write the account back verbatim (used when points could not be spent yet).</summary>
@@ -204,98 +218,125 @@ namespace DSPQualitySystem
                 return;
             }
 
-            Dictionary<int, RecyclerState> map = GetOrCreateRecyclerMap(planetId);
-            RecyclerState state;
-            map.TryGetValue(entityId, out state);
-            state.Points = points;
-            map[entityId] = state;
+            lock (RecyclerSync)
+            {
+                Dictionary<int, RecyclerState> map = GetOrCreateRecyclerMap(planetId);
+                RecyclerState state;
+                map.TryGetValue(entityId, out state);
+                state.Points = points;
+                map[entityId] = state;
+            }
         }
 
         public static RecyclerState GetRecyclerState(int planetId, int entityId)
         {
-            Dictionary<int, RecyclerState> map;
-            if (!RecyclersByPlanet.TryGetValue(planetId, out map) || map == null)
+            lock (RecyclerSync)
             {
-                return default(RecyclerState);
-            }
+                Dictionary<int, RecyclerState> map;
+                if (!RecyclersByPlanet.TryGetValue(planetId, out map) || map == null)
+                {
+                    return default(RecyclerState);
+                }
 
-            RecyclerState state;
-            return map.TryGetValue(entityId, out state) ? state : default(RecyclerState);
+                RecyclerState state;
+                return map.TryGetValue(entityId, out state) ? state : default(RecyclerState);
+            }
         }
 
         /// <summary>Forget everything about one recycler (demolished / no longer a recycler).</summary>
         public static void ClearRecyclerState(int planetId, int entityId)
         {
-            Dictionary<int, RecyclerState> map;
-            if (!RecyclersByPlanet.TryGetValue(planetId, out map) || map == null)
+            lock (RecyclerSync)
             {
-                return;
-            }
+                Dictionary<int, RecyclerState> map;
+                if (!RecyclersByPlanet.TryGetValue(planetId, out map) || map == null)
+                {
+                    return;
+                }
 
-            map.Remove(entityId);
-            if (map.Count == 0)
-            {
-                RecyclersByPlanet.Remove(planetId);
+                map.Remove(entityId);
+                if (map.Count == 0)
+                {
+                    RecyclersByPlanet.Remove(planetId);
+                }
             }
         }
 
         /// <summary>Lazy entity-existence probe helper for the tick path.</summary>
         public static bool HasRecyclerState(int planetId, int entityId)
         {
-            Dictionary<int, RecyclerState> map;
-            return RecyclersByPlanet.TryGetValue(planetId, out map)
-                && map != null
-                && map.ContainsKey(entityId);
+            lock (RecyclerSync)
+            {
+                Dictionary<int, RecyclerState> map;
+                return RecyclersByPlanet.TryGetValue(planetId, out map)
+                    && map != null
+                    && map.ContainsKey(entityId);
+            }
         }
 
         /// <summary>Snapshot of the entity ids that still carry state on one planet.</summary>
         public static List<int> RecyclerEntityIds(int planetId)
         {
-            Dictionary<int, RecyclerState> map;
-            if (!RecyclersByPlanet.TryGetValue(planetId, out map) || map == null)
+            lock (RecyclerSync)
             {
-                return new List<int>();
-            }
+                Dictionary<int, RecyclerState> map;
+                if (!RecyclersByPlanet.TryGetValue(planetId, out map) || map == null)
+                {
+                    return new List<int>();
+                }
 
-            return new List<int>(map.Keys);
+                return new List<int>(map.Keys);
+            }
         }
 
         /// <summary>Planet ids that carry recycler state. Used by the save writer when it has to
         /// enumerate planets that own no PlanetQuality entry yet (recycler on a fresh planet).</summary>
         public static List<int> PlanetIdsWithRecyclers()
         {
-            return new List<int>(RecyclersByPlanet.Keys);
+            lock (RecyclerSync)
+            {
+                return new List<int>(RecyclersByPlanet.Keys);
+            }
         }
 
         public static void ClearRecyclerPlanet(int planetId)
         {
-            RecyclersByPlanet.Remove(planetId);
+            lock (RecyclerSync)
+            {
+                RecyclersByPlanet.Remove(planetId);
+            }
         }
 
         public static void ClearAllRecyclers()
         {
-            RecyclersByPlanet.Clear();
+            lock (RecyclerSync)
+            {
+                RecyclersByPlanet.Clear();
+            }
         }
 
         /// <summary>Totals for the startup / describe logs.</summary>
         public static void RecyclerStats(out int planetCount, out int entryCount, out int carriedPoints)
         {
-            planetCount = RecyclersByPlanet.Count;
-            entryCount = 0;
-            carriedPoints = 0;
-            foreach (KeyValuePair<int, Dictionary<int, RecyclerState>> planet in RecyclersByPlanet)
+            lock (RecyclerSync)
             {
-                if (planet.Value == null)
+                planetCount = RecyclersByPlanet.Count;
+                entryCount = 0;
+                carriedPoints = 0;
+                foreach (KeyValuePair<int, Dictionary<int, RecyclerState>> planet in RecyclersByPlanet)
                 {
-                    continue;
-                }
-
-                foreach (KeyValuePair<int, RecyclerState> entry in planet.Value)
-                {
-                    entryCount++;
-                    if (entry.Value.Points > 0)
+                    if (planet.Value == null)
                     {
-                        carriedPoints += entry.Value.Points;
+                        continue;
+                    }
+
+                    foreach (KeyValuePair<int, RecyclerState> entry in planet.Value)
+                    {
+                        entryCount++;
+                        if (entry.Value.Points > 0)
+                        {
+                            carriedPoints += entry.Value.Points;
+                        }
                     }
                 }
             }
@@ -309,51 +350,54 @@ namespace DSPQualitySystem
         /// </summary>
         public static int AppendRecyclersJson(StringBuilder sb, int planetId)
         {
-            Dictionary<int, RecyclerState> map;
-            if (sb == null || !RecyclersByPlanet.TryGetValue(planetId, out map) || map == null || map.Count == 0)
+            lock (RecyclerSync)
             {
-                return 0;
+                Dictionary<int, RecyclerState> map;
+                if (sb == null || !RecyclersByPlanet.TryGetValue(planetId, out map) || map == null || map.Count == 0)
+                {
+                    return 0;
+                }
+
+                var ids = new List<int>(map.Keys);
+                ids.Sort();
+                int written = 0;
+                sb.Append(",\"recyclers\":[");
+                for (int i = 0; i < ids.Count; i++)
+                {
+                    RecyclerState state;
+                    if (!map.TryGetValue(ids[i], out state))
+                    {
+                        continue;
+                    }
+
+                    if (state.Points <= 0)
+                    {
+                        continue;
+                    }
+
+                    if (written > 0)
+                    {
+                        sb.Append(',');
+                    }
+
+                    sb.Append("{\"e\":").Append(ids[i].ToString(CultureInfo.InvariantCulture))
+                        .Append(",\"p\":").Append(state.Points.ToString(CultureInfo.InvariantCulture)).Append('}');
+                    written++;
+                }
+
+                sb.Append(']');
+                if (written == 0)
+                {
+                    // Nothing usable: undo the opening so the document stays valid.
+                    int cut = sb.Length - ",\"recyclers\":[]".Length;
+                    if (cut >= 0)
+                    {
+                        sb.Length = cut;
+                    }
+                }
+
+                return written;
             }
-
-            var ids = new List<int>(map.Keys);
-            ids.Sort();
-            int written = 0;
-            sb.Append(",\"recyclers\":[");
-            for (int i = 0; i < ids.Count; i++)
-            {
-                RecyclerState state;
-                if (!map.TryGetValue(ids[i], out state))
-                {
-                    continue;
-                }
-
-                if (state.Points <= 0)
-                {
-                    continue;
-                }
-
-                if (written > 0)
-                {
-                    sb.Append(',');
-                }
-
-                sb.Append("{\"e\":").Append(ids[i].ToString(CultureInfo.InvariantCulture))
-                    .Append(",\"p\":").Append(state.Points.ToString(CultureInfo.InvariantCulture)).Append('}');
-                written++;
-            }
-
-            sb.Append(']');
-            if (written == 0)
-            {
-                // Nothing usable: undo the opening so the document stays valid.
-                int cut = sb.Length - ",\"recyclers\":[]".Length;
-                if (cut >= 0)
-                {
-                    sb.Length = cut;
-                }
-            }
-
-            return written;
         }
 
         /// <summary>
@@ -368,51 +412,54 @@ namespace DSPQualitySystem
                 return 0;
             }
 
-            ClearRecyclerPlanet(planetId);
-            if (planetNode == null)
+            lock (RecyclerSync)
             {
-                return 0;
-            }
-
-            object node;
-            if (!planetNode.TryGetValue("recyclers", out node) || node == null)
-            {
-                return 0;
-            }
-
-            var list = node as List<object>;
-            if (list == null)
-            {
-                return 0;
-            }
-
-            Dictionary<int, RecyclerState> map = GetOrCreateRecyclerMap(planetId);
-            int applied = 0;
-            for (int i = 0; i < list.Count; i++)
-            {
-                var entry = list[i] as Dictionary<string, object>;
-                if (entry == null)
+                ClearRecyclerPlanet(planetId);
+                if (planetNode == null)
                 {
-                    continue;
+                    return 0;
                 }
 
-                int entityId = ReadRecyclerInt(entry, "e");
-                int points = ReadRecyclerInt(entry, "p");
-                if (entityId <= 0 || points <= 0)
+                object node;
+                if (!planetNode.TryGetValue("recyclers", out node) || node == null)
                 {
-                    continue;
+                    return 0;
                 }
 
-                map[entityId] = new RecyclerState { Points = points };
-                applied++;
-            }
+                var list = node as List<object>;
+                if (list == null)
+                {
+                    return 0;
+                }
 
-            if (map.Count == 0)
-            {
-                RecyclersByPlanet.Remove(planetId);
-            }
+                Dictionary<int, RecyclerState> map = GetOrCreateRecyclerMap(planetId);
+                int applied = 0;
+                for (int i = 0; i < list.Count; i++)
+                {
+                    var entry = list[i] as Dictionary<string, object>;
+                    if (entry == null)
+                    {
+                        continue;
+                    }
 
-            return applied;
+                    int entityId = ReadRecyclerInt(entry, "e");
+                    int points = ReadRecyclerInt(entry, "p");
+                    if (entityId <= 0 || points <= 0)
+                    {
+                        continue;
+                    }
+
+                    map[entityId] = new RecyclerState { Points = points };
+                    applied++;
+                }
+
+                if (map.Count == 0)
+                {
+                    RecyclersByPlanet.Remove(planetId);
+                }
+
+                return applied;
+            }
         }
 
         private static int ReadRecyclerInt(Dictionary<string, object> entry, string key)

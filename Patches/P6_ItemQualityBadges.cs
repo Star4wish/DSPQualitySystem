@@ -168,7 +168,7 @@ namespace DSPQualitySystem.Patches
                 host.SyncCapacity(__instance);
                 host.Refresh(__instance);
                 _gridRefreshes++;
-                if (_gridRefreshes == 1 || _gridRefreshes % EffectiveLogEvery == 0)
+                if (QualityConfig.DevMode && (_gridRefreshes == 1 || _gridRefreshes % EffectiveLogEvery == 0))
                 {
                     Info("grid badges effective=" + _gridRefreshes
                         + " badges=" + host.BadgeCount
@@ -195,7 +195,7 @@ namespace DSPQualitySystem.Patches
                 if (host == null) return;
                 host.Refresh(__instance);
                 _handRefreshes++;
-                if (_handRefreshes == 1 || _handRefreshes % EffectiveLogEvery == 0)
+                if (QualityConfig.DevMode && (_handRefreshes == 1 || _handRefreshes % EffectiveLogEvery == 0))
                 {
                     Info("hand tip badge effective=" + _handRefreshes);
                 }

@@ -1,4 +1,4 @@
-# DSP Quality System v0.20.0 —— 源码 + 开发文档打包
+# DSP Quality System v0.20.1 —— 源码 + 开发文档打包
 
 本包用于在另一台机器上继续开发：包含**完整源码**（含离线测试工程、打包脚本、离线 NuGet 缓存、Unity 引用 DLL）与**开发文档**。
 
@@ -8,13 +8,13 @@
 DSPQualitySystem/                 ← 源码包根目录（dist\DSPQualitySystem-0.20.0-source.zip）
 ├─ README-打包说明.md          ← 本文件
 ├─ 文档/
-│  ├─ DSP品质系统-MOD开发文档.md  ← 主开发文档（v0.20.0，设计 + 实现 + 测试 + 已知限制 + 版本历史）
+│  ├─ DSP品质系统-MOD开发文档.md  ← 主开发文档（v0.20.1，设计 + 实现 + 测试 + 已知限制 + 版本历史）
 │  ├─ README-工程.md           ← 工程说明（目录职责、构建流水线）
 │  └─ 在线调试环境-使用说明.md    ← 实机调试（BepInEx 日志、启动参数、存档路径）
 ├─ build.ps1                   ← 一键构建（可选 -Deploy 复制到游戏 plugins）
 ├─ DSPQualitySystem.csproj     ← net472 插件工程（Version 0.20.0）
 ├─ Plugin.cs / Quality*.cs / QualityData.SprayUses.cs / StorageGrids.cs / QualityData.Recycler.cs …  ← 插件源码（根目录）
-├─ Patches/                    ← 42 个 .cs 文件 / 45 个 Harmony 补丁类（21 特性类 + 24 手工类；v0.20.0 新增 P0_OrbitalCollector.cs / P1_ConstructionGuard.cs / P8_OrbitalRingCompat.cs）
+├─ Patches/                    ← 42 个 .cs 文件 / 45 个 Harmony 补丁类（21 特性类 + 24 手工类；v0.20.1 新增 P0_OrbitalCollector.cs / P1_ConstructionGuard.cs / P8_OrbitalRingCompat.cs）
 ├─ Save/                       ← 存档尾块编解码、legacy 迁移
 ├─ Diag/                       ← 启动自检（StartupAudit）
 ├─ tests/                      ← 离线测试（net10.0，89 checks，无需游戏）
@@ -27,15 +27,15 @@ DSPQualitySystem/                 ← 源码包根目录（dist\DSPQualitySystem
 
 | 项 | 值 |
 |---|---|
-| MOD 版本 | v0.20.0（`DSPQualitySystem.csproj` `<Version>0.20.0</Version>`） |
-| 插件 DLL | **`316,928` B** / SHA256 `85CD92923601C578BABF523734736E520136B63B2BCCB547CF8CBD132FD37326` / `2026-11-21` 构建 |
+| MOD 版本 | v0.20.1（`DSPQualitySystem.csproj` `<Version>0.20.1</Version>`） |
+| 插件 DLL | **`321,536` B** / SHA256 `F28530A1972A3BFB3D70B649F15A20DA8E9DF97C72FE386F6CEEC3F7196ECECA` / `2026-11-21` 构建 |
 | 离线测试 | **89 checks**，`ALL PASS (89 checks)` |
-| 启动自检 | `patchedMethods=19`（特性类计数口径）；补丁统计（v0.20.0）：42 个补丁 .cs / 45 个补丁类，其中 v0.20.0 新增 `P1_ConstructionGuard`（1 prefix）、`P0_OrbitalCollector`（1 特性类 prefix/postfix）、`P8_OrbitalRingCompat`（2 条反射安装） |
+| 启动自检 | `patchedMethods=19`（特性类计数口径）；补丁统计（v0.20.1）：42 个补丁 .cs / 45 个补丁类，其中 v0.20.1 新增 `P1_ConstructionGuard`（1 prefix）、`P0_OrbitalCollector`（1 特性类 prefix/postfix）、`P8_OrbitalRingCompat`（2 条反射安装） |
 | 手动发布包 | `dist\DSPQualitySystem-0.20.0.zip`（体积与 SHA256 以打包后 `Get-FileHash` 为准） |
 | R2 发布包 | `dist\DSPQualitySystem-0.20.0-r2modman.zip`（体积与 SHA256 以打包后 `Get-FileHash` 为准） |
 | 源码包 | `dist\DSPQualitySystem-0.20.0-source.zip`（根目录 `DSPQualitySystem/`；本文件就在包内，因此体积与 SHA256 同样以打包后为准，不在表内自引用） |
 
-v0.20.0 关键变更（详见 DEVLOG §27.36 / TESTLOG「v0.20.0 离线 + 实机验证」）：
+v0.20.1 关键变更（详见 DEVLOG §27.36 / TESTLOG「v0.20.1 离线 + 实机验证」）：
 
 1. **战场分析基站建造崩溃修复**：新增 `Patches\P1_ConstructionGuard.cs`，在 `ConstructionModuleComponent.PreLaunchDrone` 前校验/整理 build+repair 目标表（原版对 `factory.prebuildPool[buildTargets[0].objectId]` 无边界检查）。健康表零行为变化。
 2. **星环（OrbitalRing）兼容修复**：新增 `Patches\P8_OrbitalRingCompat.cs`，仅在检测到 `ProjectOrbitalRing` 时安装（全反射）。修正 `ShareStorageForOrbitalAssembler` / `OrbitalAssemblerInternalUpdate` 两条产物搬运路径——原版只给熔炼配方补固定 4 点，其它配方 inc=0；现在按实际搬运件数从本 MOD 品质池取点写入共享空间/电梯仓储，熔炼只补高于 4 点的部分、封顶 10 点/件。

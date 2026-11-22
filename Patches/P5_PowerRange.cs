@@ -135,7 +135,7 @@ namespace DSPQualitySystem.Patches
                 return;
             }
             PlanetFactory factory = powerSystem.factory;
-            if (factory == null || powerSystem.nodePool == null)
+            if (factory == null || factory.planet == null || powerSystem.nodePool == null)
             {
                 return;
             }

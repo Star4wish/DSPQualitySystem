@@ -177,6 +177,10 @@ namespace DSPQualitySystem.Patches
 
         private static void Info(string message)
         {
+            if (!QualityConfig.DevMode)
+            {
+                return;
+            }
             if (Plugin.Log != null)
             {
                 Plugin.Log.LogInfo(Tag + message);

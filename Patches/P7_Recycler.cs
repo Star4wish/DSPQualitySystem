@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
@@ -93,8 +94,12 @@ namespace DSPQualitySystem.Patches
         private static int _tickCounter;
         private static int _currentPlanetId = -1;
 
-        private static readonly Dictionary<int, int> ProbeCalls = new Dictionary<int, int>();
-        private static readonly Dictionary<int, int> ProbeSignature = new Dictionary<int, int>();
+        // Diagnostics only, but the probe runs on the parallel sprayer ticks: plain dictionaries
+        // would throw "concurrent update corrupted its state" (observed live on 2026-11-22).
+        private static readonly ConcurrentDictionary<int, int> ProbeCalls =
+            new ConcurrentDictionary<int, int>();
+        private static readonly ConcurrentDictionary<int, int> ProbeSignature =
+            new ConcurrentDictionary<int, int>();
 
         internal static bool Armed
         {
@@ -595,6 +600,12 @@ namespace DSPQualitySystem.Patches
         {
             try
             {
+                // v0.20.1: the probe is a development aid only; releases must not write per-machine
+                // diagnostic lines (and it also avoids the per-tick signature bookkeeping).
+                if (!QualityConfig.DevMode)
+                {
+                    return;
+                }
                 int calls;
                 ProbeCalls.TryGetValue(compId, out calls);
                 calls++;

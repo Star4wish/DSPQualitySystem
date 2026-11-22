@@ -2759,7 +2759,7 @@ Lead 实机复核（m02553）报告两处仍未修复：
 - **v0.19.2（本节）：品质筛选随复制/粘贴与蓝图迁移 + 分拣器储物仓映射修复 + 储物舱扩容停用 + 88 checks**（DLL `298,496` B，SHA `A0BE6EBF3EEF1BB587C7EB6BA0FD32FEEFFDD8F7C98DC58C2B5308298775A8C7`，`2026-10-31 21:46:49` 构建）。
 - 补丁统计（v0.19.2）：`Patches\` 下 **39 个补丁 .cs / 42 个补丁类**（20 特性 + 22 手工；实测口径），**85 次方法级注册 / 去重 78 个独立方法**；本版新增 `P6_FilterCopy` 一类 11 个锚点。
 
-## 27.36 v0.20.0：基站建造越界守卫 + 星环产物点数 + 轨道采集器点数 + 品质数据线程安全（2026-11-21）
+## 27.36 v0.20.1：基站建造越界守卫 + 星环产物点数 + 轨道采集器点数 + 品质数据线程安全（2026-11-21）
 
 ### 27.36.1 动机（用户四项反馈）
 
@@ -2815,9 +2815,9 @@ Lead 实机复核（m02553）报告两处仍未修复：
 
 ### 27.36.4 构建与测试
 
-- 版本：`Plugin.cs` 的 `VERSION = "0.20.0"`；`DSPQualitySystem.csproj` 为 `0.20.0` / `0.20.0.0` / `0.20.0.0`。
-- 运行 DLL：**316,928 字节**，SHA256 `85CD92923601C578BABF523734736E520136B63B2BCCB547CF8CBD132FD37326`。
-- 离线测试：**89 checks ALL PASS**（v0.19.2 为 88；新增 v0.20.0 整叠取点/熔炼下限/守恒一组）。
+- 版本：`Plugin.cs` 的 `VERSION = "0.20.0"`；`DSPQualitySystem.csproj` 为 `0.20.0` / `0.20.1.0` / `0.20.1.0`。
+- 运行 DLL：**321,536 字节**，SHA256 `F28530A1972A3BFB3D70B649F15A20DA8E9DF97C72FE386F6CEEC3F7196ECECA`。
+- 离线测试：**89 checks ALL PASS**（v0.19.2 为 88；新增 v0.20.1 整叠取点/熔炼下限/守恒一组）。
 - 实机（2026-11-21）：
   - 干净环境（只保留 DSPQS + DspBridge）能正常进主菜单并新建战斗模式存档；
   - 新档 `dspqsnew` 保存成功，重进 `[QSystem][save] embedded quality trailer used ('dspqsnew')`；
@@ -2830,5 +2830,52 @@ Lead 实机复核（m02553）报告两处仍未修复：
 
 - v0.19.1（§27.34）：293,376 B，94 checks。
 - v0.19.2（§27.35）：298,496 B，88 checks。
-- **v0.20.0（本节）：316,928 B，89 checks**。
+- **v0.20.1（本节）：321,536 B，89 checks**。
+
+## 27.37 v0.20.1：星环「共享空间取货点数为负 / 产物点数丢失」修复（2026-11-22）
+
+### 27.37.1 实机反馈（用户装上 OrbitalRing 后）
+
+- 问题 1（基站崩溃）不再出现，问题 3（轨道采集器）已生效。
+- 问题 2 仍无效：星环新增生产建筑产物不带点数；带品质建筑“没有加速、没有随机升品”；并且**从共享空间取货时增产点数显示为负数**。
+
+### 27.37.2 取证与根因
+
+- 临时诊断插件（`_tmp\QsDiag`，未入发布包）打印了测试档 `dspqsnew` 的真实状态：
+  - 测试建筑 `6264`/`6254`、配方 714：`bld=4`（建筑点数）、`in=3~4`（原料每件点数）、品质池累计 `pool ≈ 4.0~4.2/件`；
+  - 星环共享存储：`1031 6529 件 / 26116 点`（4/件）、`1000 87694 件 / 304970 点`、`6205 8624/25588`、`6277 7864/31456`（4/件）；电梯站点存储 `1000=1702/6808`、`6205=10008/31160`。
+  - 即：**P0 的品质记账和 P8 的写入都在工作**，点数确实进了星环仓储。
+- **负数的真根因**：OrbitalRing 的 `OrbitalRingStorageCalculate.ShareStorageForOrbitalStation(ref StationComponent, ref OrbitalRingStorage)` 在把共享空间存货并入**站点仓储**时，对整栈总 inc 做了 `(short)` 强转：
+  - `stationComponent.storage[i].inc += (short)num2;`
+  - `stationComponent.storage[i].inc += (short)orbitalRingStorage.storageItem[val.itemId][1];`
+  该方法内只有这两处 `conv.i2`。上万件存货的总点数（几万）超出 short 范围后会溢出成负数/错误值，随后站点→传送带、站点 UI、共享空间取货都按这个坏 inc 分配，表现为“取货点数为负、产物不带点数”。
+- **关于“没有加速/升品”**：用临时探针在 `AssemblerComponent.InternalUpdate` 的 **postfix**（所有前缀执行后）读取最终 `power`：建筑 4 点的星环建筑 `power=1.1000`，说明 DSPQS 的速度加成确实已经乘进 power（4 点 = +10%）。随机升品是按配置概率（`buildingChancePerPoint` 默认 1.5%/点/周期）发生的低频事件，短时间观感不明显；池均值 `≈4.0~4.2/件` 也印证升品在按概率发生。
+
+### 27.37.3 修复
+
+- `P8_OrbitalRingCompat` 增加 Harmony **transpiler**：把 `ShareStorageForOrbitalStation` 内两处 `conv.i2` 改为 `conv.i4`（仅此两处；单次交易的小值语义不变，整栈总量不再截断）。启动日志：
+  - `[QSystem][orbitalring] ShareStorageForOrbitalStation: widened 2 conv.i2 to conv.i4 (station inc truncation fix)`
+  - arm 行带 `stationShareConv=True`。
+- **顺带修掉并行写普通字典**：实机冒烟出现 `[QSystem][p5] recycler.probe … Operations that change non-concurrent collections must have exclusive access`——品质回收机的探针 `ProbeCalls/ProbeSignature` 与账本 `QualityData.Recycler.RecyclersByPlanet` 都在并行喷涂机 tick 里被读写。探针改为 `ConcurrentDictionary`；账本加了统一短锁 `RecyclerSync`（Add/Take/Set/Get/Clear/枚举/存读档全部覆盖）。
+- 版本 **0.20.1**（`Plugin.cs` / csproj / 文档同步）；离线测试仍 **89 checks ALL PASS**。
+
+### 27.37.4 实机验证（同一测试档 `dspqsnew`）
+
+- 载入：`embedded quality trailer used ('dspqsnew')`；启动日志 `widened 2` + `stationShareConv=True`；运行中 `[QSystem][orbitalring] OrbitalRing product quality path active … moved=4 points=16` 持续出现。
+- 修复后共享/电梯仓储 inc 抽样（全部为正且与件数成比例）：`1031 6529/26116`、`1000 87694/304970`、`6205 8624/25588`、`6277 7864/31456`、电梯 `1000=1702/6808`、`6205=10008/31160`。
+- 速度探针：`eid=7356 power=1.1000`（建筑 4 点 → +10% 生效）。
+- 遗留说明：玩家个人取货 UI 的完整交互需要用户手动点一次确认（本次只到站点/电梯仓储层取证）。
+
+### 27.37.5 追加：太空船坞（6257）直送太空电梯丢点数（空键占位）
+
+- 现象：太空船坞 recipe 808 产出 `6280 勘探船`，进入 13 号太空电梯仓储后 `inc = 0`（数量持续增长，说明产线在跑）。
+- 取证（临时诊断插件）：
+  - 全工厂扫描：唯一生产 6280 的装配机是 `eid=16226 / proto 6257 太空船坞`；唯一持有 6280 的站点是 `station 13 / eid 16227`（太空电梯）。
+  - 探针：船坞完成一批时 `dockInternal produced=1` → 随后 `ShareStorageForOrbitalStation: station=13 count+1 inc 0->0`；同时 P8 打印 `transfer skipped … entries=0`。
+  - 环状态探针：搬运瞬间 `IsOneFull = True,True`（与静态 dump 的 False 不同，说明环完成状态会随产线/连接变化）。
+- 根因：星环把船写进共享存储时，**该物品的键在调用前往往不存在**——上一批被 `ShareStorageForOrbitalStation` 同步进电梯后，键被 `Remove`；而 P8 的 `CollectShared` 只收集“调用前已存在”的 `storageItem[item]` 键，于是本次新建键的船没有目标槽可匹配，点数没有发放。
+- 修复：`CollectShared` 对每个产品 id 在键不存在时也登记一个 `CountBefore = 0` 的占位 Entry（`Dict` 指向字典、`SharedArray = null`）；postfix 的 `CurrentCount` 会取调用后新建的数组，`delta = 新数量`，正常取池点并写入。
+- 验证：`SHIPSTORE count 251 inc 0 → 253 inc 8 → 255 inc 16`，最终 `count 276→279 inc 100→112`（4 点/件）；`shared=102 elevator=98` 持续；无异常。
+
+
 

@@ -219,8 +219,13 @@ namespace DSPQualitySystem.Patches
         {
             try
             {
-                bool debug = QualityConfig.DevMode;
-                if (_bound <= 3 || _bound % EffectiveLogEvery == 0 || (debug && _debugLogs < DebugLogLimit))
+                // v0.20.1: release builds do not log routine build bindings; DSPQS_DEV=1 keeps the
+                // original behaviour (first three + every 200 + a bounded debug sample).
+                if (!QualityConfig.DevMode)
+                {
+                    return;
+                }
+                if (_bound <= 3 || _bound % EffectiveLogEvery == 0 || _debugLogs < DebugLogLimit)
                 {
                     if (!(_bound <= 3) && !(_bound % EffectiveLogEvery == 0))
                     {

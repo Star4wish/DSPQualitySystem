@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Reflection;
 using BepInEx;
@@ -15,7 +15,7 @@ namespace DSPQualitySystem
     public class Plugin : BaseUnityPlugin
     {
         public const string GUID = "dsp.qualitysystem";
-        public const string VERSION = "0.20.0";
+        public const string VERSION = "0.20.1";
 
         internal static ManualLogSource Log;
 
@@ -391,3 +391,4 @@ namespace DSPQualitySystem
         }
     }
 }
+
